@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BBL區塊鏈驗證平台</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="container mx-auto px-4 py-8 text-center">
+    <a href="https://www.biobizlaw.tw/">
+      <img src="images/logo.webp" alt="Logo" class="mx-auto mb-4 h-16">
+    </a>
+    <h1 class="text-3xl font-bold mb-4">Drag and Drop File</h1>
+    <div id="dropArea" class="border-2 border-dashed border-blue-500 p-40 mx-auto max-w-4xl cursor-pointer relative">
+      <input type="file" class="hidden absolute inset-0 w-full h-full opacity-0 cursor-pointer" id="fileInput">
+      <p class="text-gray-600">Drag and drop a PDF file here or click to select a file</p>
+    </div>
+    <div id="fileDetails" class="container mx-auto px-4 py-8 text-center mt-8">
+      <h2 class="text-xl font-semibold mb-2">File Details</h2>
+      <p><strong>File Name :</strong> <span id="fileName" class="font-mono"></span></p>
+      <p><strong>Verification results :</strong> <span id="fileSize" class="font-mono"></span> bytes</p>
+    </div>
+  </div>
+  
+  <div class="container mx-auto px-4 py-8 text-center mt-8">
+    <h2 class="text-xl font-semibold mb-2">Contact Us</h2>
+    <p class="text-gray-600">If you have any questions, feel free to contact us at <a href="mailto:contact@example.com" class="text-blue-600">cckccc@gmail.com</a>.</p>
+    <h3 class="text-lg font-semibold mt-4">Contact Information</h3>
+    <p class="text-gray-600">TEL：+886-2-27369139</p>
+    <p class="text-gray-600">FAX：+886-2-27363353</p>
+    <p class="text-gray-600">Email：cckccc@gmail.com</p>
+  </div>
+
+  <div class="container mx-auto px-4 py-2 text-center">
+    <button id="toggleLanguage" class="text-blue-600 underline">切換語言 / Toggle Language</button>
+  </div>
+
+  <footer class="bg-gray-200 text-center py-4">
+    <p class="text-gray-600">&copy; 2023 Biobizlaw Inc. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const dropArea = document.getElementById('dropArea');
+    const fileInput = document.getElementById('fileInput');
+    const fileDetails = document.getElementById('fileDetails');
+    const fileNameElement = document.getElementById('fileName');
+    const fileSizeElement = document.getElementById('fileSize');
+    const toggleLanguageButton = document.getElementById('toggleLanguage');
+
+    let currentLanguage = 'en';
+
+    dropArea.addEventListener('click', () => {
+      fileInput.click();
+    });
+
+    dropArea.addEventListener('dragenter', (e) => {
+      e.preventDefault();
+      dropArea.classList.add('border-blue-400');
+    });
+
+    dropArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropArea.classList.add('border-blue-400');
+    });
+
+    dropArea.addEventListener('dragleave', () => {
+      dropArea.classList.remove('border-blue-400');
+    });
+
+    dropArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropArea.classList.remove('border-blue-400');
+
+      const file = e.dataTransfer.files[0];
+
+      if (file && file.type === 'application/pdf') {
+        fileNameElement.textContent = file.name;
+        fileSizeElement.textContent = file.size;
+        fileDetails.classList.remove('hidden');
+      } else {
+        alert('Please drop a valid PDF file.');
+      }
+    });
+
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files[0];
+
+      if (file && file.type === 'application/pdf') {
+        fileNameElement.textContent = file.name;
+        fileSizeElement.textContent = file.size;
+        fileDetails.classList.remove('hidden');
+      } else {
+        alert('Please select a valid PDF file.');
+      }
+    });
+
+    toggleLanguageButton.addEventListener('click', () => {
+      currentLanguage = currentLanguage === 'en' ? 'zh' : 'en';
+      updateLanguage();
+    });
+
+    function updateLanguage() {
+      const languageStrings = {
+        en: {
+          header1: 'Drag and Drop File',
+          dragDrop: 'Drag and drop a PDF file here or click to select a file',
+          toggleLanguage: 'Toggle Language'
+        },
+        zh: {
+          header1: '上傳檔案',
+          dragDrop: '拖拉檔案至此或點擊以瀏覽您電腦上的檔案',
+          toggleLanguage: '切換語言'
+        }
+      };
+
+      dropArea.querySelector('p').textContent = languageStrings[currentLanguage].dragDrop;
+      toggleLanguageButton.textContent = languageStrings[currentLanguage].toggleLanguage;
+      header1.textContent = languageStrings[currentLanguage].header1;
+    }
+    updateLanguage(); // Set initial language
+  </script>
+</body>
+</html>
