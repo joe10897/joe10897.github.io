@@ -3,133 +3,111 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Simon 攝影作品集</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" integrity="sha512-q10JzEDVz40b4QgFMN7epFg8K4vXDWX9YEqLzNDPV3AqSpI8eVJ8k9wD59vdpBvq4HUmS2MoAmdNH5dkWthv6g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>光影拾光 Grainlight Studio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f7f7f7;
-      color: #333;
-      line-height: 1.6;
-      padding: 2rem;
+      scroll-behavior: smooth;
     }
-    h1, h2 {
-      color: #222;
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn ease-in-out 1s forwards;
     }
-    a {
-      color: #0066cc;
-      text-decoration: none;
+    .fade-in.delay-1 {
+      animation-delay: 0.5s;
     }
-    .section {
-      margin-bottom: 2rem;
+    .fade-in.delay-2 {
+      animation-delay: 1s;
     }
-    .portfolio-links a {
-      display: block;
-      margin-bottom: 0.5rem;
-    }
-    .tabs {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    .tab-button {
-      padding: 0.5rem 1rem;
-      background-color: #ddd;
-      border: none;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-    .tab-button.active {
-      background-color: #aaa;
-      color: white;
-    }
-    .gallery {
-      display: none;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .gallery.active {
-      display: flex;
-    }
-    .gallery a {
-      width: calc(25% - 10px);
-      display: block;
-    }
-    .gallery img {
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
-<body>
-  <h1>Simon 攝影作品集</h1>
-  <div class="section">
-    <p>您好，我是 <strong>Simon</strong>，來自香港，目前就讀於 <strong>台北科技大學資訊工程系</strong>，活躍於台灣北部地區。</p>
-    <p>我是一名自由攝影師，擁有跨足新聞、商業、人像與紀實等多樣影像經驗，並具備完整的拍攝與剪輯能力。</p>
-  </div>
+<body class="bg-black text-white font-sans">
+  <!-- 導覽列 -->
+  <header class="fixed top-0 w-full bg-black bg-opacity-80 z-50">
+    <nav class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="text-xl font-bold">光影拾光 Grainlight Studio</div>
+      <ul class="flex space-x-6 text-sm">
+        <li><a href="#portfolio" class="hover:underline">作品</a></li>
+        <li><a href="#about" class="hover:underline">關於</a></li>
+        <li><a href="#photographer" class="hover:underline">攝影師</a></li>
+        <li><a href="#info" class="hover:underline">資訊</a></li>
+      </ul>
+    </nav>
+  </header>
 
-  <div class="section">
-    <h2>📸 攝影經歷</h2>
-    <ul>
-      <li>任職一年新聞攝影記者，具備現場快速應變與故事捕捉經驗</li>
-      <li>曾擔任平面與動態影像助理，合作過劇組、商業拍攝與藝文項目</li>
-      <li>個人接案類型多元，包括：菜單攝影、婚禮紀錄、人像拍攝、商業形象照、文物拍攝</li>
-      <li>熟悉拍攝全流程，從前期規劃、現場執行至後製調整皆可獨立完成</li>
-    </ul>
-  </div>
+  <!-- Hero 區塊 -->
+  <section class="h-screen flex flex-col items-center justify-center bg-black text-white space-y-6">
+    <h1 class="text-4xl md:text-6xl font-bold text-center fade-in">拾起光影的每一刻</h1>
+    <h1 class="text-4xl md:text-6xl font-bold text-center fade-in delay-1">讓時光 有了影像的重量</h1>
+    <h1 class="text-4xl md:text-6xl font-bold text-center fade-in delay-2">光裡有影 影裡有你</h1>
+  </section>
 
-  <div class="section">
-    <h2>🎬 編輯與媒體製作經歷</h2>
-    <ul>
-      <li>曾任職新聞媒體總編輯，管理超過 30 萬訂閱的 YouTube 頻道</li>
-      <li>負責剪輯、文案撰寫、上架管理、企劃協作等</li>
-      <li>熟悉導播與影片流程製作，可獨立操作拍攝剪輯一條龍作業</li>
-      <li>具備網頁設計與 Instagram 經營經驗，擅長視覺整合與品牌呈現</li>
-    </ul>
-  </div>
-
-  <div class="section portfolio-links">
-    <h2>🔗 作品參考</h2>
-    <a href="https://www.canva.com/design/DAE8gfASxi0/PFZkxRBAJLL6jvhiGLox9w/view?utm_content=DAE8gfASxi0&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h9accdcf2c6" target="_blank">
-      📁 Portfolio（攝影作品總覽）
-    </a>
-    <a href="https://drive.google.com/file/d/1d13EDZ-TterbWSEhUlIMCu4MKDWK7e8N/view?usp=sharing" target="_blank">
-      🎂 兒童慶生紀錄影片
-    </a>
-  </div>
-
-  <div class="section">
-    <h2>🖼️ 攝影相簿</h2>
-    <div class="tabs">
-      <button class="tab-button active" onclick="showGallery('wedding')">婚禮</button>
-      <button class="tab-button" onclick="showGallery('portrait')">人像</button>
-      <button class="tab-button" onclick="showGallery('commercial')">商業</button>
+  <!-- 作品區塊 -->
+  <section id="portfolio" class="py-20 px-4 bg-gray-900">
+    <div class="container mx-auto">
+      <h2 class="text-3xl font-bold mb-8 text-center">作品</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <img src="/images/SAM_9859 1.jpg" alt="作品1" class="w-1080 h-1080" />
+        <img src="/images/SAM_9866.jpg" alt="作品2" class="w-1080 h-1080" />
+        <img src="/images/SAM_9787.jpg" alt="作品3" class="w-1080 h-1080" />
+      </div>
     </div>
+    <div class="container mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <img src="/images/20230427-por1.jpg" alt="作品1" class="w-1080 h-1080" />
+        <img src="/images/DSCF3480-編輯.jpg" alt="作品2" class="w-1080 h-1080" />
+        <img src="/images/DSCF4787.jpg" alt="作品3" class="w-1080 h-1080" />
+      </div>
+    </div>
+  </section>
 
-    <div id="wedding" class="gallery active">
-      <a href="images/wedding1.jpg" data-lightbox="wedding" data-title="婚禮 1"><img src="images/wedding1_thumb.jpg" alt="婚禮 1"></a>
-      <a href="images/wedding2.jpg" data-lightbox="wedding" data-title="婚禮 2"><img src="images/wedding2_thumb.jpg" alt="婚禮 2"></a>
+  <!-- 關於區塊 -->
+  <section id="about" class="py-20 px-4 bg-black">
+    <div class="container mx-auto max-w-3xl text-center">
+      <h2 class="text-3xl font-bold mb-6">關於我們</h2>
+      <p class="text-gray-300 mb-4">我們是一間相信光能說話、影能留聲的攝影工作室。</p>
+      <p class="text-gray-300 mb-4">「光影拾光」，拾起的是時光中稍縱即逝的片段，記錄的是你最真實的模樣。</p>
+      <p class="text-gray-300 mb-4">我們擅長以底片的溫度、自然光的層次，捕捉生活與情感的純粹。</p>
+      <p class="text-gray-300 mb-4">無論是日常的一瞥、婚禮的一瞬，還是個人肖像的深刻凝視，我們都希望——<br>當你回望這些照片時，能再次感受到那個當下的光與心跳。</p>
+      <p class="text-gray-300">這不只是攝影，<br>這是光影交織下，時光的收藏。</p>
     </div>
-    <div id="portrait" class="gallery">
-      <a href="images/portrait1.jpg" data-lightbox="portrait" data-title="人像 1"><img src="images/portrait1_thumb.jpg" alt="人像 1"></a>
-      <a href="images/portrait2.jpg" data-lightbox="portrait" data-title="人像 2"><img src="images/portrait2_thumb.jpg" alt="人像 2"></a>
-    </div>
-    <div id="commercial" class="gallery">
-      <a href="images/commercial1.jpg" data-lightbox="commercial" data-title="商業 1"><img src="images/commercial1_thumb.jpg" alt="商業 1"></a>
-      <a href="images/commercial2.jpg" data-lightbox="commercial" data-title="商業 2"><img src="images/commercial2_thumb.jpg" alt="商業 2"></a>
-    </div>
-  </div>
+  </section>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js" integrity="sha512-QDF6rfkXc3WyFbZ9Sm7pjYzvD16dS8qp9EjZzK8Nq1YvXmq8PSr3rr+Y0/UlUuKNGn3RNRo3c9IXE6M+rx7NdA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script>
-    function showGallery(id) {
-      document.querySelectorAll('.gallery').forEach(g => g.classList.remove('active'));
-      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      event.target.classList.add('active');
-    }
-  </script>
+  <!-- 攝影師區塊 -->
+  <section id="photographer" class="py-20 px-4 bg-gray-900">
+    <div class="container mx-auto max-w-4xl text-center">
+      <h2 class="text-3xl font-bold mb-6">攝影師 Photographer Simon</h2>
+      <div class="flex flex-col md:flex-row items-center md:space-x-6">
+        <img src="/images/366425.jpg" alt="攝影師照片" class="rounded-full w-48 h-48 mb-4 md:mb-0" />
+        <p class="text-gray-300">來自香港的攝影師，就讀於台北科技大學資訊工程系，活躍於台灣北部地區。擁有新聞、商業、人像和紀實等多樣影像經驗，具備完整的拍攝與剪輯能力。曾任職新聞攝影記者，新聞媒體總編輯，擅長快速應變與捕捉故事，接案類型包括菜單攝影、婚禮紀錄、人像拍攝、商業形象照和文物拍攝，熟悉拍攝全流程，能獨立完成從前期規劃到後製調整的工作。管理過超過 30 萬訂閱的 YouTube 頻道，負責剪輯、文案撰寫和企劃協作。</p>
+      </div>
+    </div>
+    <div class="container mx-auto max-w-4xl text-center">
+      <h2 class="text-3xl font-bold mb-6">攝影師 Photographer Rowan</h2>
+      <div class="flex flex-col md:flex-row items-center md:space-x-6">
+        <img src="/images/tw-11134207-7r98w-lwvf5e25u59ida.jpg" alt="攝影師照片" class="rounded-full w-48 h-48 mb-4 md:mb-0" />
+        <p class="text-gray-300">攝影師 Rowan，擁有十年以上經驗，專注於肖像與街拍，捕捉瞬間情感與光線交錯之美。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 資訊區塊 -->
+  <section id="info" class="py-20 px-4 bg-black">
+    <div class="container mx-auto max-w-2xl text-center">
+      <h2 class="text-3xl font-bold mb-6">聯絡資訊</h2>
+      <p class="text-gray-300 mb-2">Email: zxcv1234.fy@gmail.com</p>
+      <p class="text-gray-300 mb-2">Instagram: @w.iwatani</p>
+      <p class="text-gray-300">地址：新北市板橋區藝文街156號822</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-6 bg-gray-900 text-center text-gray-500">
+    &copy; 2025 光影拾光 Grainlight Studio
+  </footer>
 </body>
 </html>
