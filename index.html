@@ -5,29 +5,70 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>光影拾光 Grainlight Studio</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
       scroll-behavior: smooth;
+      font-family: 'Noto Serif TC', serif;
+      letter-spacing: 0.5px;
+      line-height: 1.8;
     }
     .fade-in {
       opacity: 0;
-      animation: fadeIn ease-in-out 1s forwards;
+      transform: translateY(30px);
+      transition: all 1s ease-out;
     }
-    .fade-in.delay-1 {
-      animation-delay: 0.5s;
+    .fade-in.show {
+      opacity: 1;
+      transform: translateY(0);
     }
-    .fade-in.delay-2 {
-      animation-delay: 1s;
+    img {
+      object-fit: cover;
+      width: 100%;
+      height: auto;
+      transition: transform 0.5s ease;
+      cursor: pointer;
     }
-    @keyframes fadeIn {
-      0% { opacity: 0; transform: translateY(10px); }
-      100% { opacity: 1; transform: translateY(0); }
+    img:hover {
+      transform: scale(1.05);
+    }
+    /* 浮動框樣式 */
+    .modal {
+      display: none; /* 隱藏 */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+    .modal-content {
+      position: relative;
+      max-width: 90%;
+      max-height: 90%;
+      overflow: auto;
+    }
+    .modal-content img {
+      width: 100%;
+      height: auto;
+    }
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body class="bg-black text-white font-sans">
+
   <!-- 導覽列 -->
-  <header class="fixed top-0 w-full bg-black bg-opacity-80 z-50">
+  <header class="fixed top-0 w-full bg-black bg-opacity-80 z-50 fade-in">
     <nav class="container mx-auto px-4 py-3 flex justify-between items-center">
       <div class="text-xl font-bold">光影拾光 Grainlight Studio</div>
       <ul class="flex space-x-6 text-sm">
@@ -40,33 +81,40 @@
   </header>
 
   <!-- Hero 區塊 -->
-  <section class="h-screen flex flex-col items-center justify-center bg-black text-white space-y-6">
-    <h1 class="text-4xl md:text-6xl font-bold text-center fade-in">拾起光影的每一刻</h1>
-    <h1 class="text-4xl md:text-6xl font-bold text-center fade-in delay-1">讓時光 有了影像的重量</h1>
-    <h1 class="text-4xl md:text-6xl font-bold text-center fade-in delay-2">光裡有影 影裡有你</h1>
+  <section class="h-screen flex flex-col items-center justify-center bg-black text-white space-y-6 fade-in">
+    <h1 class="text-4xl md:text-6xl font-bold text-center">拾起光影的每一刻</h1>
+    <h1 class="text-4xl md:text-6xl font-bold text-center">讓時光 有了影像的重量</h1>
+    <h1 class="text-4xl md:text-6xl font-bold text-center">光裡有影 影裡有你</h1>
   </section>
 
   <!-- 作品區塊 -->
-  <section id="portfolio" class="py-20 px-4 bg-gray-900">
+  <section id="portfolio" class="py-20 px-4 bg-gray-900 fade-in">
     <div class="container mx-auto">
       <h2 class="text-3xl font-bold mb-8 text-center">作品</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <img src="/images/SAM_9859 1.jpg" alt="作品1" class="w-1080 h-1080" />
-        <img src="/images/SAM_9866.jpg" alt="作品2" class="w-1080 h-1080" />
-        <img src="/images/SAM_9787.jpg" alt="作品3" class="w-1080 h-1080" />
+        <img src="/images/SAM_9859 1.jpg" alt="作品1" onclick="openModal('作品1')" />
+        <img src="/images/SAM_9866.jpg" alt="作品2" onclick="openModal('作品2')" />
+        <img src="/images/SAM_9787.jpg" alt="作品3" onclick="openModal('作品3')" />
       </div>
     </div>
-    <div class="container mx-auto">
+    <div class="container mx-auto mt-8">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <img src="/images/20230427-por1.jpg" alt="作品1" class="w-1080 h-1080" />
-        <img src="/images/DSCF3480-編輯.jpg" alt="作品2" class="w-1080 h-1080" />
-        <img src="/images/DSCF4787.jpg" alt="作品3" class="w-1080 h-1080" />
+        <img src="/images/20230427-por1.jpg" alt="作品4" onclick="openModal('作品4')" />
+        <img src="/images/DSCF3480-編輯.jpg" alt="作品5" onclick="openModal('作品5')" />
+        <img src="/images/DSCF4787.jpg" alt="作品6" onclick="openModal('作品6')" />
       </div>
     </div>
   </section>
+  <!-- 浮動框 -->
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <img id="modalImage" src="" alt="更多作品" />
+    </div>
+  </div>
 
   <!-- 關於區塊 -->
-  <section id="about" class="py-20 px-4 bg-black">
+  <section id="about" class="py-20 px-4 bg-black fade-in">
     <div class="container mx-auto max-w-3xl text-center">
       <h2 class="text-3xl font-bold mb-6">關於我們</h2>
       <p class="text-gray-300 mb-4">我們是一間相信光能說話、影能留聲的攝影工作室。</p>
@@ -78,28 +126,25 @@
   </section>
 
   <!-- 攝影師區塊 -->
-  <section id="photographer" class="py-20 px-4 bg-gray-900">
+  <section id="photographer" class="py-20 px-4 bg-gray-900 fade-in">
     <div class="container mx-auto max-w-4xl text-center">
       <h2 class="text-3xl font-bold mb-6">攝影師 Photographer Simon</h2>
       <div class="flex flex-col md:flex-row items-center md:space-x-6">
-        <img src="/images/366425.jpg" alt="攝影師照片" class="rounded-full w-48 h-48 mb-4 md:mb-0" />
-        <p class="text-gray-300">來自香港的攝影師，就讀於台北科技大學資訊工程系，活躍於台灣北部地區。擁有新聞、商業、人像和紀實等多樣影像經驗，具備完整的拍攝與剪輯能力。曾任職新聞攝影記者，新聞媒體總編輯，擅長快速應變與捕捉故事，接案類型包括菜單攝影、婚禮紀錄、人像拍攝、商業形象照和文物拍攝，熟悉拍攝全流程，能獨立完成從前期規劃到後製調整的工作。管理過超過 30 萬訂閱的 YouTube 頻道，負責剪輯、文案撰寫和企劃協作。</p>
+        <img src="/images/366425.jpg" alt="攝影師Simon" class="rounded-full w-48 h-48 mb-4 md:mb-0" />
+        <p class="text-gray-300">來自香港的攝影師，就讀於台北科技大學資訊工程系，活躍於台灣北部地區。擁有新聞、商業、人像和紀實等多樣影像經驗，具備完整的拍攝與剪輯能力。管理過超過30萬訂閱的YouTube頻道，負責剪輯、文案撰寫和企劃協作。</p>
       </div>
     </div>
-    <br>
-    <br>
-    <br>
-    <div class="container mx-auto max-w-4xl text-center">
+    <div class="container mx-auto max-w-4xl text-center mt-12">
       <h2 class="text-3xl font-bold mb-6">攝影師 Photographer Rowan</h2>
       <div class="flex flex-col md:flex-row items-center md:space-x-6">
-        <img src="/images/WhatsApp Image 2025-04-26 at 5.59.51 PM.jpeg" alt="攝影師照片" class="rounded-full w-48 h-48 mb-4 md:mb-0" />
+        <img src="/images/WhatsApp Image 2025-04-26 at 5.59.51 PM.jpeg" alt="攝影師Rowan" class="rounded-full w-48 h-48 mb-4 md:mb-0" />
         <p class="text-gray-300">攝影師 Rowan，擁有十年以上經驗，專注於肖像與街拍，捕捉瞬間情感與光線交錯之美。</p>
       </div>
     </div>
   </section>
 
   <!-- 資訊區塊 -->
-  <section id="info" class="py-20 px-4 bg-black">
+  <section id="info" class="py-20 px-4 bg-black fade-in">
     <div class="container mx-auto max-w-2xl text-center">
       <h2 class="text-3xl font-bold mb-6">聯絡資訊</h2>
       <p class="text-gray-300 mb-2">Email: zxcv1234.fy@gmail.com</p>
@@ -109,8 +154,39 @@
   </section>
 
   <!-- Footer -->
-  <footer class="py-6 bg-gray-900 text-center text-gray-500">
+  <footer class="py-6 bg-gray-900 text-center text-gray-500 fade-in">
     &copy; 2025 光影拾光 Grainlight Studio
   </footer>
+
+  <!-- Scroll Animation Script -->
+  <script>
+    const faders = document.querySelectorAll('.fade-in');
+    const appearOptions = { threshold: 0.2 };
+    const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('show');
+        appearOnScroll.unobserve(entry.target);
+      });
+    }, appearOptions);
+
+    faders.forEach(fader => {
+      appearOnScroll.observe(fader);
+    });
+
+    // 浮動框功能
+    function openModal(imageId) {
+      const modal = document.getElementById("myModal");
+      const modalImage = document.getElementById("modalImage");
+      modalImage.src = "/images/366425.jpg"; // 根據傳入的參數設置圖片來源
+      modal.style.display = "flex"; // 顯示浮動框
+    }
+
+    function closeModal() {
+      const modal = document.getElementById("myModal");
+      modal.style.display = "none"; // 隱藏浮動框
+    }
+  </script>
+
 </body>
 </html>
