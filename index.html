@@ -7,6 +7,32 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    .hero {
+        position: relative;
+        height: 100vh; /* 設定區塊高度 */
+        overflow: hidden;
+    }
+
+    .background-video {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        z-index: 1;
+        transform: translate(-50%, -50%);
+        filter: brightness(0.5); /* 設定亮度以達成半透明效果 */
+    }
+
+    .content {
+        position: relative;
+        z-index: 2; /* 確保內容在影片之上 */
+        color: white; /* 調整文字顏色 */
+        text-align: center; /* 文字置中 */
+        padding: 20px;
+    }
     body {
       scroll-behavior: smooth;
       font-family: 'Noto Serif TC', serif;
@@ -81,11 +107,20 @@
   </header>
 
   <!-- Hero 區塊 -->
-  <section class="h-screen flex flex-col items-center justify-center bg-black text-white space-y-6 fade-in">
-    <h1 class="text-4xl md:text-6xl font-bold text-center">拾起光影的每一刻</h1>
-    <h1 class="text-4xl md:text-6xl font-bold text-center">讓時光 有了影像的重量</h1>
-    <h1 class="text-4xl md:text-6xl font-bold text-center">光裡有影 影裡有你</h1>
-  </section>
+  <div class="hero">
+    <video autoplay muted loop class="background-video">
+      <source src="/images/bg.mp4" type="video/mp4">
+
+        您的瀏覽器不支援影片標籤。
+    </video>
+    <div class="content">
+        <section class="h-screen flex flex-col items-center justify-center bg-transparent text-white space-y-6 fade-in">
+            <h1 class="text-4xl md:text-6xl font-bold text-center">拾起光影的每一刻</h1>
+            <h1 class="text-4xl md:text-6xl font-bold text-center">讓時光 有了影像的重量</h1>
+            <h1 class="text-4xl md:text-6xl font-bold text-center">光裡有影 影裡有你</h1>
+        </section>
+    </div>
+  </div>
 
   <!-- 作品區塊 -->
   <section id="portfolio" class="py-20 px-4 bg-gray-900 fade-in">
@@ -134,7 +169,7 @@
       <h2 class="text-3xl font-bold mb-6">攝影師 Photographer Simon</h2>
       <div class="flex flex-col md:flex-row items-center md:space-x-6">
         <img src="/images/366425.jpg" alt="攝影師Simon" class="rounded-full w-48 h-48 mb-4 md:mb-0" />
-        <p class="text-gray-300">來自香港的攝影師，就讀於台北科技大學資訊工程系，活躍於台灣北部地區。擁有新聞、商業、人像和紀實等多樣影像經驗，具備完整的拍攝與剪輯能力。</p>
+        <p class="text-gray-300">來自香港的攝影師，就讀於台北科技大學資訊工程系，活躍於台灣北部地區。擁有新聞、商業、人像和紀實等多樣影像經驗，具備完整的拍攝與剪輯能力。曾任職新聞攝影記者，新聞媒體總編輯，擅長快速應變與捕捉故事，接案類型包括菜單攝影、婚禮紀錄、人像拍攝、商業形象照和文物拍攝，熟悉拍攝全流程，能獨立完成從前期規劃到後製調整的工作。</p>
       </div>
     </div>
     <div class="container mx-auto max-w-4xl text-center mt-12">
