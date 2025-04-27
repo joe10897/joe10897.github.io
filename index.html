@@ -105,9 +105,10 @@
       </div>
     </div>
   </section>
+
   <!-- 浮動框 -->
-  <div id="myModal" class="modal">
-    <div class="modal-content">
+  <div id="myModal" class="modal" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation();"> <!-- 阻止事件冒泡 -->
       <span class="close" onclick="closeModal()">&times;</span>
       <img id="modalImage" src="" alt="更多作品" />
     </div>
@@ -131,7 +132,7 @@
       <h2 class="text-3xl font-bold mb-6">攝影師 Photographer Simon</h2>
       <div class="flex flex-col md:flex-row items-center md:space-x-6">
         <img src="/images/366425.jpg" alt="攝影師Simon" class="rounded-full w-48 h-48 mb-4 md:mb-0" />
-        <p class="text-gray-300">來自香港的攝影師，就讀於台北科技大學資訊工程系，活躍於台灣北部地區。擁有新聞、商業、人像和紀實等多樣影像經驗，具備完整的拍攝與剪輯能力。管理過超過30萬訂閱的YouTube頻道，負責剪輯、文案撰寫和企劃協作。</p>
+        <p class="text-gray-300">來自香港的攝影師，就讀於台北科技大學資訊工程系，活躍於台灣北部地區。擁有新聞、商業、人像和紀實等多樣影像經驗，具備完整的拍攝與剪輯能力。</p>
       </div>
     </div>
     <div class="container mx-auto max-w-4xl text-center mt-12">
@@ -178,7 +179,7 @@
     function openModal(imageId) {
       const modal = document.getElementById("myModal");
       const modalImage = document.getElementById("modalImage");
-      modalImage.src = "/images/366425.jpg"; // 根據傳入的參數設置圖片來源
+      modalImage.src = "/images/SAM_9866.jpg"; // 根據傳入的參數設置圖片來源
       modal.style.display = "flex"; // 顯示浮動框
     }
 
