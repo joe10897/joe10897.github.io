@@ -22,8 +22,9 @@
         width: auto;
         height: auto;
         z-index: 1;
+        object-fit: cover;
         transform: translate(-50%, -50%);
-        filter: brightness(0.5); /* 設定亮度以達成半透明效果 */
+        filter: brightness(0.4); /* 設定亮度以達成半透明效果 */
     }
 
     .content {
@@ -89,6 +90,23 @@
       font-size: 24px;
       cursor: pointer;
     }
+    /* 滾動到頂部按鈕樣式 */
+    #scrollToTop {
+      display: none; /* 隱藏按鈕 */
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      background-color: #85858d; /* 按鈕顏色 */
+      color: black;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 100;
+      transition: background-color 0.3s;
+    }
+    #scrollToTop:hover {
+      background-color: #304ba3; /* 懸停顏色 */
+    }
   </style>
 </head>
 <body class="bg-black text-white font-sans">
@@ -109,7 +127,7 @@
   <!-- Hero 區塊 -->
   <div class="hero">
     <video autoplay muted loop class="background-video">
-      <source src="/images/bg.mp4" type="video/mp4">
+      <source src="/images/home_vdo - Made with Clipchamp.mp4" type="video/mp4">
 
         您的瀏覽器不支援影片標籤。
     </video>
@@ -185,8 +203,14 @@
   <section id="info" class="py-20 px-4 bg-black fade-in">
     <div class="container mx-auto max-w-2xl text-center">
       <h2 class="text-3xl font-bold mb-6">聯絡資訊</h2>
-      <p class="text-gray-300 mb-2">Email: zxcv1234.fy@gmail.com</p>
-      <p class="text-gray-300 mb-2">Instagram: @w.iwatani</p>
+      <p class="text-gray-300 mb-2">
+        Email: 
+        <a href="mailto:zxcv1234.fy@gmail.com" class="text-blue-400 hover:underline">zxcv1234.fy@gmail.com</a>
+      </p>
+      <p class="text-gray-300 mb-2">
+        Instagram: 
+        <a href="https://www.instagram.com/w.iwatani" target="_blank" class="text-blue-400 hover:underline">@w.iwatani</a>
+      </p>
       <p class="text-gray-300">地址：新北市板橋區藝文街156號822</p>
     </div>
   </section>
@@ -195,6 +219,11 @@
   <footer class="py-6 bg-gray-900 text-center text-gray-500 fade-in">
     &copy; 2025 光影拾光 Grainlight Studio
   </footer>
+
+  <!-- 滾動到頂部按鈕 -->
+  <button id="scrollToTop" onclick="scrollToTop()" class="bg-gray-300 text-black hover:bg-gray-400">
+    滑至頂端
+  </button>
 
   <!-- Scroll Animation Script -->
   <script>
@@ -270,6 +299,22 @@
       const modal = document.getElementById("myModal");
       modal.style.display = "none"; // 隱藏浮動框
     }
+
+    // 滾動到頂部的功能
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 當頁面滾動時顯示或隱藏滾動到頂部按鈕
+    window.onscroll = function() {
+      const button = document.getElementById('scrollToTop');
+      if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+        button.style.display = "block";
+      } else {
+        button.style.display = "none";
+      }
+    };
+
     // 網頁加載時滾動到頂部
     document.addEventListener('DOMContentLoaded', function() {
       window.scrollTo(0, 0); // 滾動到頁面頂端
