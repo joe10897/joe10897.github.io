@@ -52,7 +52,7 @@
       overflow: auto;
     }
     .modal-content img {
-      width: 100%;
+      width: 35%;
       height: auto;
     }
     .close {
@@ -91,17 +91,17 @@
   <section id="portfolio" class="py-20 px-4 bg-gray-900 fade-in">
     <div class="container mx-auto">
       <h2 class="text-3xl font-bold mb-8 text-center">作品</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <img src="/images/SAM_9859 1.jpg" alt="作品1" onclick="openModal('作品1')" />
-        <img src="/images/SAM_9866.jpg" alt="作品2" onclick="openModal('作品2')" />
-        <img src="/images/SAM_9787.jpg" alt="作品3" onclick="openModal('作品3')" />
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <img src="/images/SAM_9859 1.jpg" alt="作品1" class="w-full h-auto" onclick="openModal('作品1')" />
+        <img src="/images/SAM_9866.jpg" alt="作品2" class="w-full h-auto" onclick="openModal('作品2')" />
+        <img src="/images/SAM_9787.jpg" alt="作品3" class="w-full h-auto" onclick="openModal('作品3')" />
       </div>
     </div>
     <div class="container mx-auto mt-8">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <img src="/images/20230427-por1.jpg" alt="作品4" onclick="openModal('作品4')" />
-        <img src="/images/DSCF3480-編輯.jpg" alt="作品5" onclick="openModal('作品5')" />
-        <img src="/images/DSCF4787.jpg" alt="作品6" onclick="openModal('作品6')" />
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <img src="/images/20230427-por1.jpg" alt="作品4" class="w-full h-auto" onclick="openModal('作品4')" />
+        <img src="/images/DSCF3480-編輯.jpg" alt="作品5" class="w-full h-auto" onclick="openModal('作品5')" />
+        <img src="/images/DSCF4787.jpg" alt="作品6" class="w-full h-auto" onclick="openModal('作品6')" />
       </div>
     </div>
   </section>
@@ -110,7 +110,9 @@
   <div id="myModal" class="modal" onclick="closeModal()">
     <div class="modal-content" onclick="event.stopPropagation();"> <!-- 阻止事件冒泡 -->
       <span class="close" onclick="closeModal()">&times;</span>
-      <img id="modalImage" src="" alt="更多作品" />
+      <div id="modalImages" class="flex flex-wrap justify-center">
+        <!-- 圖片將在這裡動態添加 -->
+      </div>
     </div>
   </div>
 
@@ -178,8 +180,54 @@
     // 浮動框功能
     function openModal(imageId) {
       const modal = document.getElementById("myModal");
-      const modalImage = document.getElementById("modalImage");
-      modalImage.src = "/images/SAM_9859 1.jpg"; // 根據傳入的參數設置圖片來源
+      const modalImages = document.getElementById("modalImages");
+
+      // 每個作品的圖片來源
+      const imageCollections = {
+        '作品1': [
+          '/images/SAM_9859 1.jpg',
+          '/images/SAM_9859 1.jpg',
+          '/images/SAM_9859 1.jpg',
+          // 添加更多圖片路徑...
+        ],
+        '作品2': [
+          '/images/SAM_9866.jpg',
+          '/images/SAM_9866.jpg',
+          '/images/SAM_9866.jpg',
+          // 添加更多圖片路徑...
+        ],
+        '作品3': [
+          '/images/SAM_9787.jpg',
+          '/images/SAM_9787.jpg',
+          '/images/SAM_9787.jpg',
+          // 添加更多圖片路徑...
+        ],
+        '作品4': [
+          '/images/20230427-por1.jpg',
+          // 添加更多圖片路徑...
+        ],
+        '作品5': [
+          '/images/DSCF3480-編輯.jpg',
+          // 添加更多圖片路徑...
+        ],
+        '作品6': [
+          '/images/DSCF4787.jpg',
+          // 添加更多圖片路徑...
+        ],
+      };
+
+      // 清空之前的圖片
+      modalImages.innerHTML = '';
+
+      // 根據 imageId 添加圖片到浮動框
+      imageCollections[imageId].forEach(src => {
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = imageId;
+        img.className = 'w-full h-auto m-2'; // 可以調整樣式
+        modalImages.appendChild(img);
+      });
+
       modal.style.display = "flex"; // 顯示浮動框
     }
 
@@ -187,6 +235,10 @@
       const modal = document.getElementById("myModal");
       modal.style.display = "none"; // 隱藏浮動框
     }
+    // 網頁加載時滾動到頂部
+    document.addEventListener('DOMContentLoaded', function() {
+      window.scrollTo(0, 0); // 滾動到頁面頂端
+    });
   </script>
 
 </body>
