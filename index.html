@@ -3,6 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="光影拾光 Grainlight Studio 是專業的人像與紀實攝影工作室，致力捕捉光與情感的每一瞬間。">
+  <meta property="og:title" content="光影拾光 Grainlight Studio">
+  <meta property="og:description" content="我們擅長以底片的溫度、自然光的層次，捕捉生活與情感的純粹。">
+  <meta property="og:image" content="/images/cover.jpg">
+  <meta property="og:url" content="https://yourdomain.github.io/">
+
   <title>光影拾光 Grainlight Studio</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
@@ -107,6 +113,36 @@
     #scrollToTop:hover {
       background-color: #304ba3; /* 懸停顏色 */
     }
+    /* 圖片加載動畫 */
+    .image-container {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .loader {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 32px;
+      height: 32px;
+      border: 4px solid #fff;
+      border-top: 4px solid #888;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+    }
+
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    img.loading {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
   </style>
 </head>
 <body class="bg-black text-white font-sans">
@@ -141,23 +177,42 @@
   </div>
 
   <!-- 作品區塊 -->
-  <section id="portfolio" class="py-20 px-4 bg-gray-900 fade-in">
-    <div class="container mx-auto">
-      <h2 class="text-3xl font-bold mb-8 text-center">作品</h2>
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-        <img src="/images/peggy1.jpg" alt="作品1" class="w-full h-auto" onclick="openModal('作品1')" />
-        <img src="/images/bw1.jpg" alt="作品2" class="w-full h-auto" onclick="openModal('作品2')" />
-        <img src="/images/v1.jpg" alt="作品3" class="w-full h-auto" onclick="openModal('作品3')" />
+<section id="portfolio" class="py-20 px-4 bg-gray-900 fade-in">
+  <div class="container mx-auto">
+    <h2 class="text-3xl font-bold mb-8 text-center">作品</h2>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div class="image-container">
+        <div class="loader"></div>
+        <img src="/images/peggy1.jpg" alt="作品1" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('作品1')" />
+      </div>
+      <div class="image-container">
+        <div class="loader"></div>
+        <img src="/images/bw1.jpg" alt="作品2" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('作品2')" />
+      </div>
+      <div class="image-container">
+        <div class="loader"></div>
+        <img src="/images/v1.jpg" alt="作品3" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('作品3')" />
       </div>
     </div>
-    <div class="container mx-auto mt-8">
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-        <img src="/images/20230427-por1.jpg" alt="作品4" class="w-full h-auto" onclick="openModal('作品4')" />
-        <img src="/images/DSCF3480-編輯.jpg" alt="作品5" class="w-full h-auto" onclick="openModal('作品5')" />
-        <img src="/images/DSCF4787.jpg" alt="作品6" class="w-full h-auto" onclick="openModal('作品6')" />
+  </div>
+  <div class="container mx-auto mt-8">
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div class="image-container">
+        <div class="loader"></div>
+        <img src="/images/20230427-por1.jpg" alt="作品4" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('作品4')" />
+      </div>
+      <div class="image-container">
+        <div class="loader"></div>
+        <img src="/images/DSCF3480-編輯.jpg" alt="作品5" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('作品5')" />
+      </div>
+      <div class="image-container">
+        <div class="loader"></div>
+        <img src="/images/DSCF4787.jpg" alt="作品6" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('作品6')" />
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
 
   <!-- 浮動框 -->
   <div id="myModal" class="modal" onclick="closeModal()">
@@ -326,6 +381,15 @@
     document.addEventListener('DOMContentLoaded', function() {
       window.scrollTo(0, 0); // 滾動到頁面頂端
     });
+
+    function imageLoaded(img) {
+      img.classList.remove("loading");
+      const loader = img.previousElementSibling;
+      if (loader && loader.classList.contains("loader")) {
+        loader.remove();
+      }
+    }
+
   </script>
 
 </body>
