@@ -77,12 +77,18 @@
       justify-content: center;
       align-items: center;
       z-index: 100;
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
     .modal-content {
       position: relative;
       max-width: 90%;
       max-height: 90%;
       overflow: auto;
+    }
+    .modal.show {
+      display: flex;
+      opacity: 1;
     }
     .modal-content img {
       width: 20%;
@@ -300,6 +306,7 @@
     function openModal(imageId) {
       const modal = document.getElementById("myModal");
       const modalImages = document.getElementById("modalImages");
+      modal.classList.add('show')
 
       // 每個作品的圖片來源
       const imageCollections = {
@@ -360,6 +367,7 @@
     function closeModal() {
       const modal = document.getElementById("myModal");
       modal.style.display = "none"; // 隱藏浮動框
+      modal.classList.add('show')
     }
 
     // 滾動到頂部的功能
