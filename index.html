@@ -168,9 +168,8 @@
 
   <!-- Hero 區塊 -->
   <div class="hero">
-    <video autoplay muted loop class="background-video">
+    <video autoplay muted loop class="background-video" poster="/images/preview.jpg">
       <source src="/images/bg.mp4" type="video/mp4">
-
         您的瀏覽器不支援影片標籤。
     </video>
     <div class="content">
@@ -391,8 +390,26 @@
     };
 
     // 網頁加載時滾動到頂部
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        window.scrollTo(0, 0); // 滾動到頁面頂端
+      }, 100); // 延遲 100 毫秒
+    });
+    
     document.addEventListener('DOMContentLoaded', function() {
-      window.scrollTo(0, 0); // 滾動到頁面頂端
+      // window.scrollTo(0, 0); // 滾動到頁面頂端
+      const heroVideo = document.querySelector('.background-video');
+      // 監測視口
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            heroVideo.src = '/images/bg.mp4'; // 設置影片來源
+            heroVideo.load(); // 加載影片
+            observer.disconnect(); // 停止觀察
+          }
+        });
+      });
+      observer.observe(heroVideo); // 觀察影片
     });
 
     function imageLoaded(img) {
