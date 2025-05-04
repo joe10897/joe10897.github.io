@@ -222,7 +222,8 @@
 
   <!-- 浮動框 -->
   <div id="myModal" class="modal" onclick="closeModal()">
-    <div class="modal-content" onclick="event.stopPropagation();"> <!-- 阻止事件冒泡 -->
+    <div class="modal-content" onclick="event.stopPropagation();"> 
+      <!-- 阻止事件冒泡 -->
       <span class="close" onclick="closeModal()">&times;</span>
       <div id="modalImages" class="flex flex-wrap justify-center">
         <!-- 圖片將在這裡動態添加 -->
@@ -358,6 +359,10 @@
         img.src = src;
         img.alt = imageId;
         img.className = 'w-full h-auto m-2'; // 可以調整樣式
+      //當圖片被點擊時，打開新視窗顯示原圖
+      img.onclick = function() {
+        window.open(src, '_blank'); // 打開新視窗
+      };
         modalImages.appendChild(img);
       });
 
