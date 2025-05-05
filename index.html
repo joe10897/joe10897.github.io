@@ -6,10 +6,11 @@
   <meta name="description" content="光影拾光 Grainlight Studio 是專業的人像與紀實攝影工作室，致力捕捉光與情感的每一瞬間。">
   <meta property="og:title" content="光影拾光 Grainlight Studio">
   <meta property="og:description" content="我們擅長以底片的溫度、自然光的層次，捕捉生活與情感的純粹。">
-  <meta property="og:image" content="/images/cover.jpg">
+  <meta property="og:image" content="/images/logo.ico">
   <meta property="og:url" content="https://yourdomain.github.io/">
 
   <title>光影拾光 Grainlight Studio</title>
+  <link rel="icon" href="images/logo.ico" type="image/logo-icon">
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -124,6 +125,24 @@
       position: relative;
       width: 100%;
       overflow: hidden;
+      padding-top:120%;
+    }
+
+    .image-container img {
+    position: absolute; /* 絕對定位 */
+    top: 50%; /* 垂直居中 */
+    left: 50%; /* 水平居中 */
+    width: 100%; /* 使圖片寬度填滿容器 */
+    height: auto; /* 自動調整高度 */
+    max-height: 100%; /* 限制最大高度為容器高度 */
+    transform: translate(-50%, -50%); /* 調整位置 */
+    object-fit: cover; /* 確保圖片不變形並覆蓋整個區域 */
+    z-index: 1;
+    transition: transform 0.3s ease; /* 添加過渡效果 */
+    }
+
+    .image-container img:hover {
+    transform: translate(-50%, -50%) scale(1.05); /* 懸停時放大 */
     }
 
     .loader {
@@ -137,7 +156,7 @@
       border-radius: 50%;
       animation: spin 1s linear infinite;
       transform: translate(-50%, -50%);
-      z-index: 10;
+      z-index: 20;
     }
 
     @keyframes spin {
@@ -149,6 +168,7 @@
       opacity: 0;
       transition: opacity 0.3s ease;
     }
+    
   </style>
 </head>
 <body class="bg-black text-white font-sans">
@@ -188,27 +208,39 @@
     <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
       <div class="image-container">
         <div class="loader"></div>
-        <img src="/images/peggy1.jpg" alt="作品1" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('作品1')" />
+        <img src="/images/Peggy1/peggy1.jpg" alt="peggy1" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('peggy1')" />
       </div>
       <div class="image-container">
         <div class="loader"></div>
-        <img src="/images/bw1.jpg" alt="作品2" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('作品2')" />
+        <img src="/images/BW1/bw1.jpg" alt="作品2" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('作品2')" />
       </div>
       <div class="image-container">
         <div class="loader"></div>
-        <img src="/images/v1.jpg" alt="作品3" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('作品3')" />
+        <img src="/images/Vivian/v1.jpg" alt="作品3" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('作品3')" />
       </div>
     </div>
   </div>
   <div class="container mx-auto mt-8">
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
       <div class="image-container">
         <div class="loader"></div>
-        <img src="/images/20230427-por1.jpg" alt="作品4" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('作品4')" />
+        <img src="/images/INTRO_menu/LINE_ALBUM_INTRO_240401_17.jpg" alt="INTRO1" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('INTRO1')" />
       </div>
       <div class="image-container">
         <div class="loader"></div>
-        <img src="/images/DSCF3480-編輯.jpg" alt="作品5" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('作品5')" />
+        <img src="/images/INTRO_menu/LINE_ALBUM_INTRO_240401_6.jpg" alt="INTRO2" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('INTRO2')" />
+      </div>
+      <div class="image-container">
+        <div class="loader"></div>
+        <img src="/images/INTRO_menu/LINE_ALBUM_INTRO_240401_13.jpg" alt="INTRO3" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('INTRO3')" />
+      </div>
+      <div class="image-container">
+        <div class="loader"></div>
+        <img src="/images/INTRO_menu/LINE_ALBUM_INTRO_240401_8.jpg" alt="INTRO4" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('INTRO4')" />
+      </div>
+      <div class="image-container">
+        <div class="loader"></div>
+        <img src="/images/C&Y/DSCF3480-編輯.jpg" alt="C&Y" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('C&Y')" />
       </div>
       <div class="image-container">
         <div class="loader"></div>
@@ -310,37 +342,63 @@
 
       // 每個作品的圖片來源
       const imageCollections = {
-        '作品1': [
-          '/images/peggy2.jpg',
-          '/images/peggy3.jpg',
-          '/images/peggy4.jpg',
-          '/images/peggy5.jpg',
-          '/images/peggy6.jpg'
+        'peggy1': [
+          '/images/Peggy1/peggy2.jpg',
+          '/images/Peggy1/peggy3.jpg',
+          '/images/Peggy1/peggy4.jpg',
+          '/images/Peggy1/peggy5.jpg',
+          '/images/Peggy1/peggy6.jpg'
         ],
         '作品2': [
-          '/images/bw2.jpg',
-          '/images/bw3.jpg',
-          '/images/bw4.jpg',
-          '/images/bw5.jpg',
-          '/images/bw6.jpg'
+          '/images/BW1/bw2.jpg',
+          '/images/BW1/bw3.jpg',
+          '/images/BW1/bw4.jpg',
+          '/images/BW1/bw5.jpg',
+          '/images/BW1/bw6.jpg'
         ],
         '作品3': [
-          '/images/v2.jpg',
-          '/images/v3.jpg',
-          '/images/v4.jpg',
-          '/images/v5.jpg',
-          '/images/v6.jpg',
-          '/images/v7.jpg',
-          '/images/v8.jpg',
-          '/images/v9.jpg',
+          '/images/Vivian/v2.jpg',
+          '/images/Vivian/v3.jpg',
+          '/images/Vivian/v4.jpg',
+          '/images/Vivian/v5.jpg',
+          '/images/Vivian/v6.jpg',
+          '/images/Vivian/v7.jpg',
+          '/images/Vivian/v8.jpg',
+          '/images/Vivian/v9.jpg',
           // 添加更多圖片路徑...
         ],
-        '作品4': [
-          '/images/20230427-por1.jpg',
+        'INTRO1': [
+          '/images/INTRO_menu/LINE_ALBUM_INTRO_240401_17.jpg',
+          '/images/INTRO_menu/LINE_ALBUM_INTRO_240401_15.jpg',
+          '/images/INTRO_menu/LINE_ALBUM_INTRO_240401_1.jpg',
+          '/images/INTRO_menu/LINE_ALBUM_INTRO_240401_4.jpg',
           // 添加更多圖片路徑...
         ],
-        '作品5': [
-          '/images/DSCF3480-編輯.jpg',
+        'INTRO2': [
+          '/images/INTRO_menu/LINE_ALBUM_INTRO_240401_6.jpg',
+          '/images/INTRO_menu/LINE_ALBUM_INTRO_240401_5.jpg',
+          '/images/INTRO_menu/LINE_ALBUM_INTRO_240401_16.jpg',
+          '/images/INTRO_menu/LINE_ALBUM_INTRO_240401_1.jpg',
+          // 添加更多圖片路徑...
+        ],
+        'INTRO3': [
+          '/images/INTRO_menu/LINE_ALBUM_INTRO_240401_7.jpg',
+          '/images/INTRO_menu/LINE_ALBUM_INTRO_240401_10.jpg',
+          '/images/INTRO_menu/LINE_ALBUM_INTRO_240401_11.jpg',
+          '/images/INTRO_menu/LINE_ALBUM_INTRO_240401_13.jpg',
+          // 添加更多圖片路徑...
+        ],
+        'INTRO4': [
+          '/images/INTRO_menu/LINE_ALBUM_INTRO_240401_8.jpg',
+          '/images/INTRO_menu/LINE_ALBUM_INTRO_240401_9.jpg',
+          '/images/INTRO_menu/LINE_ALBUM_INTRO_240401_14.jpg',
+          // 添加更多圖片路徑...
+        ],
+        'C&Y': [
+          '/images/C&Y/DSCF3480-編輯.jpg',
+          '/images/C&Y/2X8A3450-編輯.jpg',
+          '/images/C&Y/2X8A3099-編輯.jpg',
+          '/images/C&Y/DSCF3464-編輯.jpg',
           // 添加更多圖片路徑...
         ],
         '作品6': [
@@ -395,7 +453,7 @@
         window.scrollTo(0, 0); // 滾動到頁面頂端
       }, 100); // 延遲 100 毫秒
     });
-    
+
     document.addEventListener('DOMContentLoaded', function() {
       // window.scrollTo(0, 0); // 滾動到頁面頂端
       const heroVideo = document.querySelector('.background-video');
