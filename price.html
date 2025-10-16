@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simon 攝影服務方案</title>
+    <!-- 載入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 載入 Lucide Icons for aesthetic icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* 使用 Inter 字體以確保現代、專業感 */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen flex items-center justify-center p-4 sm:p-8">
+
+    <!-- 調整最大寬度以容納三欄 -->
+    <div class="w-full max-w-6xl bg-gray-800 rounded-xl shadow-2xl overflow-hidden transform transition duration-500 hover:scale-[1.01]">
+        <!-- 頂部標題與識別 -->
+        <header class="p-6 sm:p-8 border-b border-gray-700 bg-gray-900">
+            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-1">
+                攝影服務方案
+            </h1>
+            <p class="text-sm sm:text-base text-gray-400 font-light">
+                攝影師：Simon <span class="text-yellow-400 font-semibold">| Monochrome Lab 單色研究室</span>
+            </p>
+        </header>
+
+        <!-- Packages Container - 調整為三欄佈局 (小螢幕一欄，中螢幕兩欄，大螢幕三欄) -->
+        <div class="p-4 sm:p-8 bg-gray-800 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- PACKAGE 1: 跟拍體驗 - NT$1500 (現在排在第一位) -->
+            <div class="bg-gray-900 p-6 rounded-lg shadow-lg border-2 border-yellow-500/50 transition duration-300 hover:scale-[1.03] hover:shadow-2xl hover:border-yellow-400 cursor-pointer">
+                <h2 class="text-2xl font-black text-yellow-400 mb-2">跟拍體驗</h2>
+                <p class="text-lg font-semibold text-gray-300 mb-4">城市漫遊紀實 (限時特惠)</p>
+
+                <!-- Price -->
+                <div class="mb-6">
+                    <span class="text-xl font-bold text-yellow-400 mr-0.5">NT$</span>
+                    <span class="text-5xl font-black text-white leading-none">1,500</span>
+                    <span class="text-base font-light text-gray-300 ml-0.5">元</span>
+                </div>
+
+                <!-- Details -->
+                <ul class="space-y-4 text-sm text-gray-300">
+                    <li class="flex items-start">
+                        <i data-lucide="camera" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span>作品挑選與精修：**15 張**（高畫質細節修正）</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i data-lucide="map-pin" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span>服務範圍：台北／新北地區</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i data-lucide="clock" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span>拍攝時間：**2 小時**（限時高效拍攝）</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i data-lucide="image-down" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span>其餘照片提供：調色快修檔</span>
+                    </li>
+                </ul>
+            </div>
+
+
+            <!-- PACKAGE 2: 寫真委託 (個人寫真) - NT$3000 (排在第二位) -->
+            <div class="bg-gray-900 p-6 rounded-lg shadow-xl border-2 border-yellow-500/50 transition duration-300 hover:scale-[1.03] hover:shadow-2xl hover:border-yellow-400 cursor-pointer">
+                <h2 class="text-2xl font-black text-yellow-400 mb-2">寫真委託</h2>
+                <p class="text-lg font-semibold text-gray-300 mb-4">個人寫真專案 (高階定製)</p>
+
+                <!-- Price -->
+                <div class="mb-6">
+                    <span class="text-xl font-bold text-yellow-400 mr-0.5">NT$</span>
+                    <span class="text-5xl font-black text-white leading-none">3,000</span>
+                    <span class="text-base font-light text-gray-300 ml-0.5">元起</span>
+                </div>
+
+                <!-- Details -->
+                <ul class="space-y-4 text-sm text-gray-300">
+                    <li class="flex items-start">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span>作品挑選與精修：**30 張**（高畫質精緻修圖）</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i data-lucide="dollar-sign" class="w-4 h-4 text-yellow-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span>**加購精修**：每張 **NT$200** 元</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i data-lucide="map" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span>服務範圍：<span class="font-bold text-white">台北／新北／新竹／桃園</span></span>
+                    </li>
+                    <li class="flex items-start">
+                        <i data-lucide="clock" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span>拍攝時間：詳議（根據主題需求客製化）</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i data-lucide="cloud-download" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span>線上雲端交件：提供 7 天下載連結</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- PACKAGE 3: 底片寫真委託 - NT$4000 (現在排在第三位) -->
+            <div class="bg-gray-900 p-6 rounded-lg shadow-xl border-2 border-yellow-500/50 transition duration-300 hover:scale-[1.03] hover:shadow-2xl hover:border-yellow-400 cursor-pointer">
+                <h2 class="text-2xl font-black text-yellow-400 mb-2">底片寫真委託</h2>
+                <p class="text-lg font-semibold text-gray-300 mb-4">底片個人寫真 (經典復古質感)</p>
+
+                <!-- Price -->
+                <div class="mb-6">
+                    <span class="text-xl font-bold text-yellow-400 mr-0.5">NT$</span>
+                    <span class="text-5xl font-black text-white leading-none">4,000</span>
+                    <span class="text-base font-light text-gray-300 ml-0.5">元起</span>
+                </div>
+
+                <!-- Details -->
+                <ul class="space-y-4 text-sm text-gray-300">
+                    <li class="flex items-start">
+                        <i data-lucide="film" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span>含兩卷底片（約 **72 張**）</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i data-lucide="scan" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span>底片拍攝、沖洗、掃描與基本調色</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i data-lucide="map" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span>服務範圍：<span class="font-bold text-white">台北／新北／新竹／桃園</span></span>
+                    </li>
+                    <li class="flex items-start">
+                        <i data-lucide="clock" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span>拍攝時間：詳議（配合底片特性客製化）</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i data-lucide="cloud-download" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span>線上雲端交件：提供 7 天下載連結</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 聯絡與備註 -->
+        <footer class="p-6 sm:p-8 border-t border-gray-700 bg-gray-900">
+            <p class="text-sm font-medium text-gray-400 mb-3">預約與服務說明</p>
+            <div class="text-xs text-gray-500 leading-relaxed space-y-2">
+                <p>* **NT$1,500 跟拍體驗專案** 旨在累積街拍作品集，故以超值體驗價提供服務。</p>
+                <p>* **NT$4,000 底片寫真委託** 包含兩卷底片的費用、沖洗、掃描成本及工時，適合追求底片獨特質感者。</p>
+                <p>* **NT$3,000 寫真委託** 與 **NT$4,000 底片寫真委託** 方案皆可服務至新竹、桃園地區。</p>
+                <p>* 所有服務請提前私訊確認可拍攝日期。</p>
+            </div>
+            <!-- 主要聯繫按鈕 (新增預設主旨) -->
+            <a href="mailto:monoclab1999@gmail.com?subject=攝影服務洽詢-來自價目表" class="mt-4 w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition duration-300 shadow-md flex items-center justify-center space-x-2">
+                 <i data-lucide="message-square" class-type="fill" class="w-5 h-5"></i>
+                 <span>點此聯繫 Simon (monoclab1999@gmail.com) 洽詢細節！</span>
+            </a>
+            <!-- 新增作品集連結按鈕 -->
+            <a href="https://nomochrome.site" target="_blank" class="mt-3 w-full border-2 border-gray-500 hover:border-yellow-400 text-gray-300 hover:text-yellow-400 font-bold py-3 rounded-lg transition duration-300 shadow-md flex items-center justify-center space-x-2">
+                <i data-lucide="gallery-vertical" class-type="fill" class="w-5 h-5"></i>
+                <span>觀看作品集 (https://nomochrome.site)</span>
+            </a>
+            
+            <!-- 僅保留 Instagram 連結 -->
+            <div class="flex justify-center space-x-6 mt-6">
+                <a href="https://www.instagram.com/w.iwatani" target="_blank" class="text-gray-400 hover:text-yellow-400 transition duration-300" title="Instagram w.iwatani">
+                    <i data-lucide="instagram" class="w-6 h-6"></i>
+                </a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 初始化 Lucide Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
