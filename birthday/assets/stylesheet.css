@@ -1291,23 +1291,22 @@ audio {
 }
 
 .btn-primary {
-        border-color: #FF69B4; /* Hot Pink */
-        padding: 12px 20px; /* Slightly larger padding */
+        border-color: #466baf;
+        padding: 10px;
         text-transform: uppercase;
         font-family: 'Signika', sans-serif;
         font-weight: 700;
         color: #fff;
-        background-color: #FF69B4; /* Hot Pink */
-        margin: 5px; /* Add margin around buttons */
+        background-color: #466baf;
 }
     .btn-primary:hover,
     .btn-primary:focus,
     .btn-primary:active,
     .btn-primary.active,
     .open .dropdown-toggle.btn-primary {
-        border-color: #FF1493; /* Deeper Pink */
+        border-color: #fff;
         color: #fff;
-        background-color: #FF1493; /* Deeper Pink */
+        background-color: #466baf;
     }
 
 
