@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2024-2025 AI新興技術發展與企業應用趨勢</title>
+    <!-- 載入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 設定字體為 Inter (確保中文字體顯示良好) -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Noto+Sans+TC:wght@300;500;700&display=swap');
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .section-anchor {
+            scroll-margin-top: 6rem; /* 確保固定導覽列不會遮擋標題 */
+        }
+        /* 模擬頁面邊界與背景 */
+        .report-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 1rem;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        /* 動漫效果：內容淡入與上浮 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in-item {
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0; /* Initial hidden state */
+        }
+
+        /* 導覽列連結 hover 效果 */
+        .nav-link:hover {
+            color: #4f46e5;
+            transform: scale(1.05);
+        }
+    </style>
+
+    <script>
+        // JavaScript for Scroll Progress Bar
+        document.addEventListener('DOMContentLoaded', () => {
+            const progressBar = document.getElementById('progressBar');
+            
+            // Function to calculate and update progress bar width
+            function updateProgressBar() {
+                // totalHeight = Document full height - Viewport height
+                const totalHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                
+                // currentScroll is the vertical scroll position from the top
+                const currentScroll = window.scrollY;
+                
+                // Calculate progress percentage
+                // If totalHeight is 0 (i.e., document fits on one screen), progress is 0.
+                const progress = totalHeight > 0 ? (currentScroll / totalHeight) * 100 : 0;
+                
+                // Update the width of the progress bar element
+                progressBar.style.width = progress + '%';
+            }
+
+            // Attach the function to the scroll event
+            window.addEventListener('scroll', updateProgressBar);
+
+            // Run once on load to initialize the bar's state (useful if page is loaded mid-scroll)
+            updateProgressBar();
+        });
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- 固定導覽列 (模擬目錄導航) -->
+    <nav class="fixed top-0 left-0 right-0 bg-white shadow-2xl z-50 p-4"> <!-- 移除原有的底部邊框 -->
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <span class="text-2xl font-bold text-indigo-700 transition duration-300 hover:text-indigo-900 hover:scale-105">AI 新技術報告 (共 6 頁)</span>
+            <div class="space-x-4 text-sm md:text-base font-semibold">
+                <a href="#page1" class="nav-link transition duration-300">封面</a>
+                <a href="#page2" class="nav-link transition duration-300">目錄/摘要</a>
+                <a href="#page3" class="nav-link transition duration-300">多模態 AI</a>
+                <a href="#page4" class="nav-link transition duration-300">AI 代理</a>
+                <a href="#page5" class="nav-link transition duration-300">邊緣 AI</a>
+                <a href="#page6" class="nav-link transition duration-300">結論/參考</a>
+            </div>
+        </div>
+        <!-- Scroll Progress Bar (4px height) - 位於導覽列底部 -->
+        <div class="absolute bottom-0 left-0 right-0 h-1 bg-gray-200">
+            <div id="progressBar" class="h-full bg-indigo-600 transition-all duration-100 ease-out" style="width: 0%;"></div>
+        </div>
+    </nav>
+
+    <!-- Page 1: 封面 -->
+    <section id="page1" class="report-page bg-gray-900 text-white pt-24">
+        <div class="text-center max-w-4xl mx-auto p-20 rounded-2xl bg-gray-800 bg-opacity-80 shadow-3xl border-t-8 border-indigo-500">
+            <h1 class="text-6xl md:text-7xl font-extrabold mb-4 tracking-tighter text-indigo-400 transform hover:scale-[1.02] transition duration-500">
+                AI 新興技術深度報告
+            </h1>
+            <h2 class="text-3xl md:text-4xl font-light mb-12 border-b-2 border-indigo-500 pb-4 text-gray-200">
+                2024-2025 關鍵技術與企業應用趨勢
+            </h2>
+
+            <div class="space-y-4 text-xl md:text-2xl text-gray-300 mt-16 fade-in-item" style="animation-delay: 0.5s;">
+                <p>課程名稱：人工智慧概論</p>
+                <p>指導教授：彭建文教授</p>
+            </div>
+            <div class="space-y-2 text-lg md:text-xl text-gray-400 mt-8 fade-in-item" style="animation-delay: 0.8s;">
+                <p>學生：黃澤然</p>
+                <p>學號：107590049</p>
+                <p class="mt-4">提交日期：期中考當天</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Page 2: 摘要與目錄 -->
+    <section id="page2" class="report-page items-start pt-24 section-anchor bg-indigo-50">
+        <div class="max-w-4xl w-full mx-auto p-8 bg-white rounded-xl shadow-2xl fade-in-item">
+            <h1 class="text-4xl font-extrabold text-indigo-700 mb-6 border-b-4 border-indigo-300 pb-2 transition duration-300 hover:text-indigo-900">I. 摘要 (Abstract)</h1>
+            <p class="text-lg leading-relaxed mb-10 text-gray-700 fade-in-item" style="animation-delay: 0.3s;">
+                本報告聚焦於 2024 年後最具影響力與學術突破性的三項 AI 新興技術：**多模態 AI 模型 (Multimodal AI)**、具備自主規劃能力的 **AI 代理 (Autonomous Agents)**，以及結合硬體架構的 **邊緣 AI 運算與模型輕量化 (Edge AI & Model Optimization)**。這些技術均有頂尖學術會議 (如 NeurIPS, ICML) 論文與大型企業 (如 Google, OpenAI, Meta) 產品應用作為依據。報告將詳細闡述其技術細節、核心論文成果，並分析其在金融、製造與軟體開發等企業場景中的實際價值與挑戰。
+            </p>
+
+            <h1 class="text-4xl font-extrabold text-indigo-700 mb-6 border-b-4 border-indigo-300 pb-2 mt-12 transition duration-300 hover:text-indigo-900">II. 目錄 (Table of Contents)</h1>
+            <ul class="list-disc ml-6 space-y-3 text-lg text-gray-700 fade-in-item" style="animation-delay: 0.6s;">
+                <li><a href="#page3" class="hover:text-indigo-600 font-semibold transition duration-300">III. 技術一：多模態 AI 模型</a> (p.3)</li>
+                <li><a href="#page4" class="hover:text-indigo-600 font-semibold transition duration-300">IV. 技術二：自主 AI 代理 (Autonomous Agents)</a> (p.4)</li>
+                <li><a href="#page5" class="hover:text-indigo-600 font-semibold transition duration-300">V. 技術三：邊緣 AI 與模型輕量化</a> (p.5)</li>
+                <li><a href="#page6" class="hover:text-indigo-600 font-semibold transition duration-300">VI. 綜合分析、結論與參考資料</a> (p.6)</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Page 3: 多模態 AI 模型 -->
+    <section id="page3" class="report-page items-start pt-24 section-anchor bg-white">
+        <div class="max-w-4xl w-full mx-auto p-8">
+            <h1 class="text-4xl font-extrabold text-indigo-700 mb-8 border-b-4 border-indigo-400 pb-2 transition duration-300 hover:text-indigo-900">III. 技術一：多模態 AI 模型 (Multimodal AI)</h1>
+
+            <h2 class="text-2xl font-bold text-gray-800 mt-6 mb-4 fade-in-item" style="animation-delay: 0.1s;">描述與細節說明</h2>
+            <p class="text-lg leading-relaxed mb-4 fade-in-item" style="animation-delay: 0.2s;">
+                多模態 AI 旨在建立能夠同時處理和理解兩種或多種數據模態（例如：文字、圖像、音訊、影片）的模型。核心突破在於**統一的表示學習（Unified Representation Learning）**，使不同模態的輸入能夠在相同的潛在空間中進行對齊和推理。
+            </p>
+            <ul class="list-disc ml-6 space-y-2 text-gray-700 fade-in-item" style="animation-delay: 0.3s;">
+                <li>**核心技術：** 擴展的 Transformer 架構，如 **MoE (Mixture of Experts)**，以有效地處理來自不同感官的異構數據。</li>
+                <li>**相較傳統技術優勢：** 能處理更複雜的**情境推理**，例如根據一張圖表 (圖像) 和一個問題 (文字) 進行準確回答。</li>
+            </ul>
+
+            <h2 class="text-2xl font-bold text-gray-800 mt-8 mb-4 fade-in-item" style="animation-delay: 0.4s;">學術研究依據 (Papers)</h2>
+            <p class="text-lg leading-relaxed mb-4 font-semibold fade-in-item" style="animation-delay: 0.5s;">
+                這一領域的重大進展是大型語言模型的視覺化延伸與融合：
+            </p>
+            <ul class="list-disc ml-6 space-y-2 text-gray-700 fade-in-item" style="animation-delay: 0.6s;">
+                <li>**GPT-4V (Vision):** OpenAI (2023) 在技術報告中展示了模型對圖像內容的深度理解與推理能力，標誌著多模態 AI 實用化的里程碑。</li>
+                <li>**Gemini (Google DeepMind):** (2023) 該模型被設計為原生多模態 (Natively Multimodal)，從訓練階段就同時處理多種模態，而非事後拼接。</li>
+                <li>**學術論文範例 (LVMs):** 論文如 *Vision-Language Pre-training* 系列，專注於圖像和文字的共同嵌入空間對齊。</li>
+            </ul>
+
+            <h2 class="text-2xl font-bold text-gray-800 mt-8 mb-4 fade-in-item" style="animation-delay: 0.7s;">企業實戰應用</h2>
+            <ul class="list-disc ml-6 space-y-2 text-gray-700 fade-in-item" style="animation-delay: 0.8s;">
+                <li>**金融業 (合規審查)：** 模型同時審查交易記錄 (文字/表格)、客戶簽名圖像 (圖像) 和電話錄音 (音訊)，進行更全面的風險評估。</li>
+                <li>**醫療影像 (輔助診斷)：** 同時分析 X 光片 (圖像) 和病患歷史報告 (文字)，提供更精準的診斷建議。</li>
+            </ul>
+
+            <!-- 圖文表示 - 多模態 AI 架構 -->
+            <div class="fade-in-item mt-12 p-8 bg-gray-50 border border-indigo-200 rounded-xl shadow-xl transition duration-500 hover:shadow-2xl" style="animation-delay: 1.0s;">
+                <p class="text-center font-bold text-2xl mb-6 text-indigo-700">圖 III-1：多模態 AI 架構模擬圖</p>
+                <div class="flex flex-col items-center">
+                    <!-- 輸入層 -->
+                    <div class="flex justify-center space-x-6 mb-4">
+                        <div class="p-4 bg-red-100 border-2 border-red-400 rounded-lg text-center shadow-md transform hover:scale-105 transition duration-300">
+                            <svg class="w-8 h-8 mx-auto mb-1 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            <span class="text-sm font-semibold">文本 (Text)</span>
+                        </div>
+                        <div class="p-4 bg-green-100 border-2 border-green-400 rounded-lg text-center shadow-md transform hover:scale-105 transition duration-300">
+                            <svg class="w-8 h-8 mx-auto mb-1 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-12 5h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            <span class="text-sm font-semibold">圖像 (Image)</span>
+                        </div>
+                        <div class="p-4 bg-blue-100 border-2 border-blue-400 rounded-lg text-center shadow-md transform hover:scale-105 transition duration-300">
+                            <svg class="w-8 h-8 mx-auto mb-1 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                            <span class="text-sm font-semibold">音訊 (Audio)</span>
+                        </div>
+                    </div>
+
+                    <!-- 箭頭 -->
+                    <span class="text-4xl text-gray-500 block animate-bounce" style="animation-duration: 2s; animation-iteration-count: infinite;">&darr;</span>
+
+                    <!-- 核心模型 -->
+                    <div class="p-6 bg-indigo-500 text-white rounded-2xl font-extrabold text-xl shadow-2xl mt-4 w-3/4 text-center transform hover:rotate-1 transition duration-500">
+                        統一潛在空間 (Unified Latent Space)
+                    </div>
+
+                    <!-- 箭頭 -->
+                    <span class="text-4xl text-gray-500 block animate-bounce" style="animation-delay: 0.5s; animation-duration: 2s; animation-iteration-count: infinite;">&darr;</span>
+
+                    <!-- 輸出 -->
+                    <div class="p-4 bg-yellow-400 text-gray-900 rounded-lg font-bold shadow-lg mt-4 w-1/2 text-center transform hover:scale-105 transition duration-300">
+                        跨模態推理與輸出 (e.g., Video, Code)
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Page 4: 自主 AI 代理 (Autonomous AI Agents) -->
+    <section id="page4" class="report-page items-start pt-24 section-anchor bg-indigo-50">
+        <div class="max-w-4xl w-full mx-auto p-8">
+            <h1 class="text-4xl font-extrabold text-indigo-700 mb-8 border-b-4 border-indigo-400 pb-2 transition duration-300 hover:text-indigo-900">IV. 技術二：自主 AI 代理 (Autonomous Agents)</h1>
+
+            <h2 class="text-2xl font-bold text-gray-800 mt-6 mb-4 fade-in-item" style="animation-delay: 0.1s;">描述與細節說明</h2>
+            <p class="text-lg leading-relaxed mb-4 fade-in-item" style="animation-delay: 0.2s;">
+                自主 AI 代理 (Agent) 是結合大型語言模型 (LLM) 的推理與規劃能力，使其能夠在複雜的數位環境中**自主設定目標、規劃多步驟行動、調用外部工具，並根據環境反饋進行自我修正**。這標誌著 AI 從「回答者」轉向「執行者」。
+            </p>
+            <ul class="list-disc ml-6 space-y-2 text-gray-700 fade-in-item" style="animation-delay: 0.3s;">
+                <li>**核心能力：** **ReAct (Reasoning and Acting)** 框架、長期/短期記憶管理、動態工具調用。</li>
+                <li>**相較傳統技術優勢：** 能夠處理跨應用程式、跨平臺、非線性的複雜任務流。</li>
+            </ul>
+
+            <h2 class="text-2xl font-bold text-gray-800 mt-8 mb-4 fade-in-item" style="animation-delay: 0.4s;">學術研究依據 (Papers)</h2>
+            <p class="text-lg leading-relaxed mb-4 font-semibold fade-in-item" style="animation-delay: 0.5s;">
+                Agent 研究的重點在於如何優化其決策、規劃和自我反思機制：
+            </p>
+            <ul class="list-disc ml-6 space-y-2 text-gray-700 fade-in-item" style="animation-delay: 0.6s;">
+                <li>**ReAct (Yao et al., 2023):** 來自普林斯頓大學/Google 等的研究，提出將 Reasoning (推理) 和 Acting (行動) 步驟交錯進行，顯著提升 LLM 在複雜任務上的效能。</li>
+                <li>**Self-Correction/Reflection (Shinn et al., 2023):** 研究 Agent 如何通過自我批評和反思機制，從錯誤中學習並迭代優化其行動計畫。</li>
+            </ul>
+
+            <h2 class="text-2xl font-bold text-gray-800 mt-8 mb-4 fade-in-item" style="animation-delay: 0.7s;">企業實戰應用</h2>
+            <ul class="list-disc ml-6 space-y-2 text-gray-700 fade-in-item" style="animation-delay: 0.8s;">
+                <li>**軟體開發 (Cognition Devin):** **Devin** 被譽為首個 AI 軟體工程師，能自主規劃、調用程式碼編輯器、執行單元測試並修復 Bug，將複雜的工程任務自動化。</li>
+                <li>**數據分析與營運：** 企業利用 Agent 串聯數據庫、雲端服務和報告工具，實現**端到端**的市場分析與報告自動生成。</li>
+            </ul>
+
+            <!-- 圖文表示 - 自主 AI 代理工作流程 (ReAct 模擬) -->
+            <div class="fade-in-item mt-12 p-8 bg-white border border-indigo-200 rounded-xl shadow-xl" style="animation-delay: 1.0s;">
+                <p class="text-center font-bold text-2xl mb-6 text-indigo-700">圖 IV-1：自主 AI 代理工作流程 (ReAct 循環)</p>
+                <div class="flex flex-col items-center space-y-3">
+
+                    <!-- Step 1: Input -->
+                    <div class="bg-indigo-600 text-white p-3 rounded-xl w-full text-center font-bold shadow-lg transform hover:scale-[1.01] transition duration-300">
+                        1. 輸入/目標 (Goal): 部署一個網頁應用
+                    </div>
+                    <span class="text-2xl text-indigo-500 font-bold animate-pulse" style="animation-duration: 1.5s;">START</span>
+
+                    <!-- Step 2: Reasoning -->
+                    <div class="relative w-full">
+                        <div class="bg-yellow-400 p-4 rounded-xl shadow-lg w-full text-center border-b-4 border-yellow-600 transform hover:translate-y-[-2px] transition duration-300">
+                            2. **規劃/推理 (Reasoning):** LLM 分解任務
+                        </div>
+                        <div class="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-yellow-400 via-indigo-500 to-yellow-400 animate-pulse rounded-b-xl"></div>
+                    </div>
+                    <span class="text-4xl text-gray-500">&darr;</span>
+
+                    <!-- Step 3: Action -->
+                    <div class="bg-green-400 p-4 rounded-xl shadow-lg w-full text-center border-b-4 border-green-600 transform hover:translate-y-[-2px] transition duration-300">
+                        3. **行動 (Action):** 調用工具 (e.g., 執行程式碼)
+                    </div>
+                    <span class="text-4xl text-gray-500">&darr;</span>
+
+                    <!-- Step 4: Observation -->
+                    <div class="bg-red-400 p-4 rounded-xl shadow-lg w-full text-center border-b-4 border-red-600 transform hover:translate-y-[-2px] transition duration-300">
+                        4. **觀察/反饋 (Observation):** 接收環境結果 (成功/錯誤)
+                    </div>
+
+                    <!-- Step 5: Reflection (Loop back) -->
+                    <span class="text-5xl text-blue-500 font-extrabold transform rotate-90 my-2">&rArr;</span>
+                    <div class="bg-blue-400 p-4 rounded-xl shadow-lg w-full text-center font-bold text-lg border-b-4 border-blue-600 transform hover:translate-y-[-2px] transition duration-300">
+                        5. **自我修正 (Reflection):** 評估並迭代計畫 (Loop to 2)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Page 5: 邊緣 AI 與模型輕量化 -->
+    <section id="page5" class="report-page items-start pt-24 section-anchor bg-white">
+        <div class="max-w-4xl w-full mx-auto p-8">
+            <h1 class="text-4xl font-extrabold text-indigo-700 mb-8 border-b-4 border-indigo-400 pb-2 transition duration-300 hover:text-indigo-900">V. 技術三：邊緣 AI 與模型輕量化</h1>
+
+            <h2 class="text-2xl font-bold text-gray-800 mt-6 mb-4 fade-in-item" style="animation-delay: 0.1s;">描述與細節說明</h2>
+            <p class="text-lg leading-relaxed mb-4 fade-in-item" style="animation-delay: 0.2s;">
+                邊緣 AI (Edge AI) 是將 AI 運算部署在靠近數據源的終端設備，以實現低延遲、高隱私和節省頻寬的目的。實現這一目標的關鍵技術是**模型輕量化 (Model Compression)**，旨在減少大型模型的運算複雜度與記憶體佔用，使其能運行在資源受限的設備上。
+            </p>
+            <ul class="list-disc ml-6 space-y-2 text-gray-700 fade-in-item" style="animation-delay: 0.3s;">
+                <li>**核心技術：**
+                    <ul>
+                        <li>**量化 (Quantization)：** 將模型權重從 32 位浮點數降至 8 位或 4 位整數，大幅減少模型大小與記憶體需求。</li>
+                        <li>**知識蒸餾 (Knowledge Distillation)：** 使用大型教師模型 (Teacher Model) 的輸出，訓練一個更小、更快的學生模型 (Student Model)。</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h2 class="text-2xl font-bold text-gray-800 mt-8 mb-4 fade-in-item" style="animation-delay: 0.4s;">學術研究依據 (Papers)</h2>
+            <p class="text-lg leading-relaxed mb-4 font-semibold fade-in-item" style="animation-delay: 0.5s;">
+                模型輕量化是學術界與業界解決部署瓶頸的核心議題：
+            </p>
+            <ul class="list-disc ml-6 space-y-2 text-gray-700 fade-in-item" style="animation-delay: 0.6s;">
+                <li>**LLM Quantization (e.g., Q-LoRA, GPTQ):** 這些技術專注於將數百億參數的 LLM 進行高效能的量化，使其能在單一消費級 GPU 甚至手機晶片上運行。</li>
+                <li>**MobileNet/ShuffleNet (Google/Megvii):** 早期針對移動設備的輕量級視覺模型架構設計，至今仍是設計小型模型的重要參考。</li>
+            </ul>
+
+            <h2 class="text-2xl font-bold text-gray-800 mt-8 mb-4 fade-in-item" style="animation-delay: 0.7s;">企業實戰應用</h2>
+            <ul class="list-disc ml-6 space-y-2 text-gray-700 fade-in-item" style="animation-delay: 0.8s;">
+                <li>**手機晶片集成 (Apple/Qualcomm):** 蘋果 M 系列晶片內的 **Neural Engine** 專門為量化後的模型設計，加速手機上的即時影像處理和自然語言處理。</li>
+                <li>**工業製造 (即時檢測)：** 在工廠產線的攝影機上部署小型、量化後的視覺模型，實現毫秒級的產品瑕疵檢測，而無需依賴雲端伺服器。</li>
+                <li>**Meta Llama 縮小化：** Meta 發布的輕量級 Llama 模型版本，使開發者能夠在資源有限的邊緣設備上部署複雜的語言功能。</li>
+            </ul>
+
+            <!-- 圖文表示 - 邊緣 AI 架構 -->
+            <div class="fade-in-item mt-12 p-8 bg-gray-100 border border-indigo-200 rounded-xl shadow-xl transition duration-500 mb-8" style="animation-delay: 1.0s;">
+                <p class="text-center font-bold text-2xl mb-6 text-indigo-700">圖 V-1：邊緣 AI 運算架構</p>
+                <div class="flex justify-between items-center text-center">
+                    <!-- Sensor -->
+                    <div class="flex flex-col items-center group transform hover:scale-105 transition duration-300">
+                        <svg class="w-12 h-12 text-red-500 animate-pulse" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+                        <p class="mt-2 text-sm font-semibold">數據源 (Sensor/Camera)</p>
+                    </div>
+                    <!-- Arrow 1 -->
+                    <div class="flex-grow mx-2 relative">
+                        <hr class="border-t-4 border-dashed border-gray-400">
+                        <span class="absolute top-1/2 right-0 transform -translate-y-1/2 text-xl text-gray-500 -mt-2">▶</span>
+                        <span class="absolute top-[-20px] left-1/4 text-xs font-mono text-indigo-600 bg-gray-100 px-1 font-bold">高頻原始數據</span>
+                    </div>
+
+                    <!-- Edge Device -->
+                    <div class="flex flex-col items-center group transform hover:rotate-2 transition duration-300">
+                        <svg class="w-16 h-16 text-indigo-500 shadow-lg p-1 rounded-lg" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17 19h-10c-1.1 0-1.99.9-1.99 2H20c0-1.1-.9-2-2-2zm2-8h-1V3H6v8H5c-1.66 0-3 1.34-3 3v5h20v-5c0-1.66-1.34-3-3-3zM8 5h8v6H8V5z"></path></svg>
+                        <p class="mt-2 text-sm font-bold text-indigo-700">邊緣設備 (Edge Device)</p>
+                        <span class="text-xs text-red-500 font-extrabold">本地推理 / 低延遲</span>
+                    </div>
+
+                    <!-- Arrow 2 -->
+                    <div class="flex-grow mx-2 relative">
+                        <hr class="border-t-4 border-dashed border-gray-400">
+                        <span class="absolute top-1/2 right-0 transform -translate-y-1/2 text-xl text-gray-500 -mt-2">▶</span>
+                        <span class="absolute top-[-20px] left-1/4 text-xs font-mono text-gray-600 bg-gray-100 px-1 font-bold">少量彙總數據</span>
+                    </div>
+
+                    <!-- Cloud -->
+                    <div class="flex flex-col items-center group transform hover:scale-105 transition duration-300">
+                        <svg class="w-12 h-12 text-blue-500 shadow-md p-1 rounded-full" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4c-3.72 0-6.83 2.83-7.29 6.5C2.5 11.23 2 12.59 2 14c0 2.76 2.24 5 5 5h12c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"></path></svg>
+                        <p class="mt-2 text-sm font-semibold">雲端 (Cloud) / 訓練</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 表格 (保持原有結構但美化) -->
+            <div class="fade-in-item mt-10 p-6 bg-indigo-50 rounded-lg shadow-inner border-t-4 border-indigo-400" style="animation-delay: 1.2s;">
+                <p class="text-center font-bold text-xl mb-4 text-indigo-700">表 V-2：模型輕量化方法比較</p>
+                <table class="min-w-full divide-y divide-indigo-300 rounded-lg overflow-hidden">
+                    <thead class="bg-indigo-300">
+                        <tr>
+                            <th class="px-3 py-3 text-left text-xs font-bold text-gray-800 uppercase tracking-wider">方法</th>
+                            <th class="px-3 py-3 text-left text-xs font-bold text-gray-800 uppercase tracking-wider">原理</th>
+                            <th class="px-3 py-3 text-left text-xs font-bold text-gray-800 uppercase tracking-wider">模型大小縮減</th>
+                            <th class="px-3 py-3 text-left text-xs font-bold text-gray-800 uppercase tracking-wider">潛在精度損失</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200 text-sm">
+                        <tr class="hover:bg-indigo-100 transition duration-150">
+                            <td class="px-3 py-3 whitespace-nowrap font-semibold">量化 (Quantization)</td>
+                            <td class="px-3 py-3">降低權重位元深度 (e.g., FP32 &rarr; INT4)</td>
+                            <td class="px-3 py-3">最高 8 倍</td>
+                            <td class="px-3 py-3 text-yellow-600">低至中</td>
+                        </tr>
+                        <tr class="hover:bg-indigo-100 transition duration-150">
+                            <td class="px-3 py-3 whitespace-nowrap font-semibold">知識蒸餾 (Distillation)</td>
+                            <td class="px-3 py-3">小型模型模仿大型模型輸出</td>
+                            <td class="px-3 py-3">2 至 5 倍</td>
+                            <td class="px-3 py-3 text-green-600">極低</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Page 6: 綜合分析、結論與參考資料 -->
+    <section id="page6" class="report-page items-start pt-24 section-anchor bg-gray-200">
+        <div class="max-w-4xl w-full mx-auto p-8 bg-white rounded-xl shadow-2xl fade-in-item">
+            <h1 class="text-4xl font-extrabold text-indigo-700 mb-8 border-b-4 border-indigo-400 pb-2 transition duration-300 hover:text-indigo-900">VI. 綜合分析與結論</h1>
+
+            <h2 class="text-2xl font-bold text-gray-800 mt-6 mb-4 fade-in-item" style="animation-delay: 0.1s;">綜合分析：三大技術的協同作用</h2>
+            <p class="text-lg leading-relaxed mb-6 fade-in-item" style="animation-delay: 0.2s;">
+                這三項新技術並非獨立發展，而是相互協同。未來趨勢將是：**多模態 AI** 負責**理解複雜世界**，**自主 AI 代理**負責**規劃與執行任務**，而**邊緣 AI 與輕量化**則提供**高效能且高隱私的部署基礎**。這種「感知-決策-部署」的生態鏈，將推動 AI 進入一個全新時代。
+            </p>
+
+            <h2 class="text-2xl font-bold text-gray-800 mt-8 mb-4 fade-in-item" style="animation-delay: 0.4s;">結論與未來展望</h2>
+            <ul class="list-disc ml-6 space-y-2 text-gray-700 fade-in-item" style="animation-delay: 0.5s;">
+                <li>**通用性提升：** 多模態技術使 AI 能夠處理真實世界中的多樣化數據，大大提高其通用性。</li>
+                <li>**自主性提升：** Agent 技術使 AI 能夠從反應式工具轉變為主動式解決方案，尤其在軟體與數據密集型任務中。</li>
+                <li>**普惠化加速：** 輕量化技術使先進 AI 能夠擺脫大型雲端伺服器的限制，普及到個人設備和工業邊緣，大幅降低了使用門檻。</li>
+            </ul>
+
+            <h1 class="text-4xl font-extrabold text-indigo-700 mb-8 border-b-4 border-indigo-400 pb-2 mt-16 transition duration-300 hover:text-indigo-900">VII. 參考資料來源 (References)</h1>
+
+            <div class="space-y-4 text-sm md:text-base text-gray-700 fade-in-item" style="animation-delay: 0.7s;">
+                <!-- 學術論文 (需引用頂會論文以展現學術嚴謹性) -->
+                <p class="font-semibold text-indigo-600 text-lg">學術論文與研究報告：</p>
+                <ol class="list-decimal ml-6 space-y-2">
+                    <li>Yao, S., et al. (2023). **ReAct: Synergizing Reasoning and Acting in Language Models**. *International Conference on Learning Representations (ICLR)*. (自主 AI 代理核心框架)</li>
+                    <li>Shinn, N., et al. (2023). **Reflexion: An Autonomous Agent with Dynamic Reflection and Self-Correction**. *arXiv preprint*. (自主 AI 代理自我修正機制)</li>
+                    <li>OpenAI. (2023). **GPT-4V Technical Report**. *OpenAI Research*. (多模態 AI 應用先驅)</li>
+                    <li>Dettmers, T., et al. (2023). **QLoRA: Efficient Finetuning of Quantized LLMs**. *NeurIPS*. (模型輕量化與量化技術)</li>
+                </ol>
+
+                <!-- 企業應用與技術發布 -->
+                <p class="font-semibold text-indigo-600 mt-6 text-lg">企業技術發布與產業分析：</p>
+                <ol class="list-decimal ml-6 space-y-2" start="5">
+                    <li>Cognition Labs. (2024). **Introducing Devin, the first AI Software Engineer**. *Cognition Blog*. (自主 AI 代理實戰案例)</li>
+                    <li>Google DeepMind. (2023). **Gemini: A family of highly capable multimodal models**. *Google AI Blog*. (原生多模態模型技術)</li>
+                    <li>EY (安永). (2024). **2024年科技業前十大機會報告**. *EY Research*. (Gen AI 企業轉型策略)</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- 頁腳 (用於模擬報告結束) -->
+    <footer class="bg-gray-900 text-white text-center p-4">
+        <p>© Simon Wong | 人工智慧概念與應用期中報告 2025 | 2025 AI 新技術深度報告</p>
+    </footer>
+
+</body>
+</html>
