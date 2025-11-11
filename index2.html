@@ -405,6 +405,7 @@
     code .number { color: #b5cea8; } /* 數字 */
     code .class { color: #4ec9b0; } /* 類別 */
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 </head>
 <body>
 
@@ -421,6 +422,7 @@
     <a href="#evaluation">評估</a>
     <a href="#team">分工與時程</a>
     <a href="#conclusion">結論</a>
+    <a href="#visual_transmission">視覺傳輸串接方案</a>
     <a href="#solution">解決方案</a>
   </nav>
 
@@ -708,6 +710,69 @@
         <h4>未來擴展性</h4>
         <p>未來可整合更多功能，如盲點偵測、AR 安全帽顯示、甚至是結合 V2X 車聯網技術，發展更全面的智慧輔助系統。</p>
       </div>
+    </div>
+  </section>
+
+  <section id="visual_transmission">
+    <h2>視覺傳輸串接方案</h2>
+    <h3>使用 Raspberry Pi 5 搭配 ROS (Robot Operating System)、IMU 和 2MP USB 鏡頭組合</h3>
+    <div class="card-container">
+      <a href="https://www.raspberrypi.com/products/raspberry-pi-5/" target="_blank" rel="noopener noreferrer" class="info-card">
+        <div class="icon">⚡️</div>
+        <h4>性能與運算優勢 (Raspberry Pi 5)</h4>
+        <ul style="text-align: left; padding-left: 20px;">
+          <li><b>AI 運算能力:</b> CPU/GPU 性能顯著提升，能高效運行 YOLOv8 等複雜模型。</li>
+          <li><b>多媒體處理:</b> 可處理雙 2MP 鏡頭串流，並進行 H.264/H.265 硬體編碼。</li>
+          <li><b>高速 I/O:</b> 具備 USB 3.0 與 PCIe 2.0，確保數據穩定，並可擴充 AI 加速卡 (NPU)。</li>
+        </ul>
+      </a>
+      <div class="info-card">
+        <div class="icon">🤖</div>
+        <h4>軟體架構優勢 (ROS)</h4>
+        <ul style="text-align: left; padding-left: 20px;">
+          <li><b>模組化設計:</b> 將影像、IMU、警示等功能設計為獨立節點 (Node)，易於開發與維護。</li>
+          <li><b>感測器融合:</b> 成熟的工具包可輕鬆同步與融合視覺和 IMU 數據，提升 ADAS 穩定性。</li>
+          <li><b>豐富生態系:</b> 可利用 cv_bridge, tf, Rviz 等現成工具加速開發。</li>
+        </ul>
+      </div>
+      <a href="https://www.st.com/en/mems-and-sensors/lsm6dsm.html" target="_blank" rel="noopener noreferrer" class="info-card">
+        <div class="icon">🧭</div>
+        <h4>系統功能優勢 (IMU 與整合)</h4>
+        <ul style="text-align: left; padding-left: 20px;">
+          <li><b>IMU 數據整合:</b> 精準偵測加速度變化以觸發碰撞鎖檔，並提供姿態估計以提高追蹤準確性。</li>
+          <li><b>靈活鏡頭選擇:</b> 採用 UVC USB 鏡頭，具備即插即用特性，免去複雜的驅動開發。</li>
+        </ul>
+      </a>
+      <div class="info-card">
+        <div class="icon">🔌</div>
+        <h4>供電方案</h4>
+        <p>採用 12V DC to 5V/5A 降壓模組，為 Raspberry Pi 5 和周邊設備提供穩定電力。</p>
+        <ul class="product-links">
+            <li><a href="https://robotkingdom.com.tw/product/dc-dc-converter-in-12v24v-out-5v5a/" target="_blank" rel="noopener noreferrer">參考方案 1</a></li>
+            <li><a href="https://www.amazon.com/-/zh_TW/Klnuoxj-%E9%99%8D%E5%A3%93%E8%BD%89%E6%8F%9B%E5%99%A8-Type-C-%E9%98%B2%E6%B0%B4%E9%99%8D%E5%A3%93%E6%A8%A1%E7%B5%84%E9%9B%BB%E6%BA%90%E8%BD%89%E6%8E%A5%E5%99%A8-Raspberry/dp/B0CRVVWL4Y?th=1" target="_blank" rel="noopener noreferrer">參考方案 2 (Amazon)</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mermaid" style="background-color: #f9f9f9; border-radius: 15px; padding: 20px; margin-top: 40px; max-width: 800px; margin-left: auto; margin-right: auto;">
+graph TD
+    subgraph 電源輸入與調節
+        A[12V 機車電池] -->|1. +12V 輸出| B(保險絲 5A-10A);
+        B -->|2. 輸入 VIN+| C{DC-DC 降壓轉換器 12V→5V};
+        A -->|GND 負極| C;
+    end
+
+    subgraph 系統核心
+        C -->|3. 穩定 5.1V VOUT+| D[Raspberry Pi 5 主機板 (5V 輸入)];
+        C -->|GND| D;
+    end
+
+    subgraph 週邊設備連接
+        D -->|USB 3.0 數據 (5V 供電)| E1[USB 鏡頭 1];
+        D -->|USB 3.0 數據 (5V 供電)| E2[USB 鏡頭 2];
+        
+        D -->|GPIO VCC 供電 (3.3V/5V)| F(IMU 感測器);
+        D -->|GPIO I2C/SPI 數據線| F;
+    end
     </div>
   </section>
 
