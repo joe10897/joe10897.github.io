@@ -423,6 +423,7 @@
     <a href="#team">分工與時程</a>
     <a href="#conclusion">結論</a>
     <a href="#visual_transmission">視覺傳輸串接方案</a>
+    <a href="#distributed_computing">分散式運算</a>
     <a href="#solution">解決方案</a>
   </nav>
 
@@ -773,6 +774,109 @@ graph TD
         D -->|GPIO VCC 供電 (3.3V/5V)| F(IMU 感測器);
         D -->|GPIO I2C/SPI 數據線| F;
     end
+    </div>
+  </section>
+
+  <section id="distributed_computing">
+    <h2>硬體架構二：分散式運算方案</h2>
+    <h3>前後廣角鏡頭 -> Raspberry Pi 5 (YOLOv8n) -> Raspberry Pi Zero 2W -> AR眼鏡/HUD</h3>
+    <div class="mermaid" style="background-color: #f9f9f9; border-radius: 15px; padding: 20px; margin-top: 40px; max-width: 1000px; margin-left: auto; margin-right: auto;">
+      graph TD
+          subgraph 輸入層 (Input Layer)
+              A[前置 2MP 廣角鏡頭] --> C{Raspberry Pi 5};
+              B[後置 2MP 廣角鏡頭] --> C;
+          end
+
+          subgraph 處理層 (Processing Layer)
+              C -- "1. 影像串流" --> C;
+              C -- "2. 運行 YOLOv8n 進行物件偵測" --> D[數據壓縮與格式化];
+          end
+
+          subgraph 傳輸層 (Transmission Layer)
+              D -- "3. 透過 Wi-Fi/USB 傳輸" --> E{Raspberry Pi Zero 2W};
+          end
+
+          subgraph 顯示層 (Display Layer)
+              E -- "4. 處理數據並生成顯示畫面" --> F[Rokid AR 眼鏡];
+              E -- " " --> G[抬頭顯示器 (HUD)];
+          end
+
+          style A fill:#e6f7ff,stroke:#91d5ff,stroke-width:2px
+          style B fill:#e6f7ff,stroke:#91d5ff,stroke-width:2px
+          style C fill:#fffbe6,stroke:#ffd666,stroke-width:2px
+          style E fill:#f6ffed,stroke:#b7eb8f,stroke-width:2px
+          style F fill:#f9f0ff,stroke:#d3adf7,stroke-width:2px
+          style G fill:#f9f0ff,stroke:#d3adf7,stroke-width:2px
+    </div>
+    <div class="card-container">
+        <div class="info-card">
+            <div class="icon">📸</div>
+            <h4>雙向即時影像</h4>
+            <p>使用前後兩個 2MP 廣角 USB 鏡頭，同時捕捉前方與後方的道路影像，提供全面的環境數據。</p>
+        </div>
+        <div class="info-card">
+            <div class="icon">🧠</div>
+            <h4>主運算核心 (Pi 5)</h4>
+            <p>Raspberry Pi 5 作為主要的運算單元，專門負責執行資源密集型的 YOLOv8n 物件偵測模型，以達到最高的偵測效率與準確性。</p>
+        </div>
+        <div class="info-card">
+            <div class="icon">📡</div>
+            <h4>輕量級顯示驅動 (Pi Zero 2W)</h4>
+            <p>Raspberry Pi Zero 2W 接收從 Pi 5 傳來的精簡數據，專職負責將警示資訊渲染並輸出至顯示設備，實現了計算與顯示的分離。</p>
+        </div>
+        <div class="info-card">
+            <div class="icon">👓</div>
+            <h4>沉浸式顯示</h4>
+            <p>最終的警示與行車資訊會顯示在 Rokid AR 眼鏡或客製化的抬頭顯示器上，讓騎士無需低頭就能獲取關鍵安全資訊。</p>
+        </div>
+    </div>
+    <div class="architecture-container">
+      <div class="arch-card">
+        <div class="arch-icon">🤖</div>
+        <h4>運算主機: RPi 5</h4>
+        <p>負責 YOLOv8n & ADAS 運算。需其強大處理能力。</p>
+        <p style="margin-top:10px; font-size:0.8rem; color: #aaa;"><b>IMU (MPU-6050)</b> 需置於此端，供 ADAS 姿態修正。</p>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-card">
+        <div class="arch-icon">📡</div>
+        <h4>無線通訊</h4>
+        <p>使用 ROS 2/TCP 或 MAVLink 協定，僅傳輸物件座標、ID、警示等純數據。</p>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-card">
+        <div class="arch-icon">💻</div>
+        <h4>頭盔顯示驅動: RPi Zero 2W</h4>
+        <p>接收數據並渲染 HUD 疊加層。體積小、功耗低。</p>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-card-group-horizontal">
+        <div class="arch-card-sub" style="min-height: 160px; width: 200px;">
+          <div class="arch-icon">👓</div>
+          <h4>Rokid Glasses</h4>
+          <p>直接將渲染後的畫面傳送至 AR 眼鏡。</p>
+          <div style="margin-top: 10px;">
+            <a href="https://www.youtube.com/watch?v=rEmUmsKqZVc" target="_blank" rel="noopener noreferrer" style="color: var(--accent-color); text-decoration: none; font-weight: bold;">參考影片 1</a>
+            <span style="margin: 0 5px;">|</span>
+            <a href="https://www.youtube.com/watch?v=7oGdRbpAiYE" target="_blank" rel="noopener noreferrer" style="color: var(--accent-color); text-decoration: none; font-weight: bold;">參考影片 2</a>
+          </div>
+        </div>
+        <div class="arch-card-sub" style="min-height: 160px; width: 200px; text-align: left; padding: 15px;">
+          <div style="text-align: center;">
+            <div class="arch-icon">📺</div>
+            <h4>抬頭顯示器 (HUD)</h4>
+          </div>
+          <p style="font-size: 0.85rem; line-height: 1.4; margin-top: 5px;"><b>介面:</b> Mini-HDMI (首選)。連接 Pi Zero 2W 與 OL23A 模組，確保低 CPU 負載。</p>
+          <p style="font-size: 0.85rem; line-height: 1.4; margin-top: 5px;"><b>優化:</b> 需強制 Pi Zero 2W 使用極低分辨率，以降低渲染負擔。</p>
+          <div style="margin-top: 10px; text-align: center;">
+            <a href="https://www.bilibili.com/video/BV1g24y1T7u6/?spm_id_from=333.337.search-card.all.click" target="_blank" rel="noopener noreferrer" style="color: var(--accent-color); text-decoration: none; font-weight: bold;">參考影片 1</a>
+            <span style="margin: 0 5px;">|</span>
+            <a href="https://www.bilibili.com/video/BV1b4421Z7vX/?spm_id_from=333.337.search-card.all.click" target="_blank" rel="noopener noreferrer" style="color: var(--accent-color); text-decoration: none; font-weight: bold;">參考影片 2</a>
+            <br>
+            <a href="https://www.bilibili.com/video/BV1df4y1c73j/?spm_id_from=333.788.recommend_more_video.13&trackid=web_related_0.router-related-2206419-dk9pw.1763142496437.8" target="_blank" rel="noopener noreferrer" style="color: var(--accent-color); text-decoration: none; font-weight: bold;">參考影片 3</a>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
