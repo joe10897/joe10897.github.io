@@ -404,6 +404,15 @@
     code .string { color: #ce9178; } /* 字串 */
     code .number { color: #b5cea8; } /* 數字 */
     code .class { color: #4ec9b0; } /* 類別 */
+    .mermaid-diagram {
+      background-color: #f9f9f9;
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 40px;
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 </head>
@@ -754,7 +763,7 @@
         </ul>
       </div>
     </div>
-    <div class="mermaid" style="background-color: #f9f9f9; border-radius: 15px; padding: 20px; margin-top: 40px; max-width: 800px; margin-left: auto; margin-right: auto;">
+    <div class="mermaid mermaid-diagram" style="max-width: 800px;">
 graph TD
     subgraph "電源輸入與調節"
         A["12V 機車電池"] -->|"1. +12V 輸出"| B("保險絲 5A-10A");
@@ -780,7 +789,7 @@ graph TD
   <section id="distributed_computing">
     <h2>硬體架構二：分散式運算方案</h2>
     <h3>前後廣角鏡頭 -> Raspberry Pi 5 (YOLOv8n) -> Raspberry Pi Zero 2W -> AR眼鏡/HUD</h3>
-          <div class="mermaid" style="background-color: #f9f9f9; border-radius: 15px; padding: 20px; margin-top: 40px; max-width: 1000px; margin-left: auto; margin-right: auto;">
+          <div class="mermaid mermaid-diagram">
           graph TD
               subgraph "輸入層 (Input Layer)"
                   A["前置 2MP 廣角鏡頭"] --> C{"Raspberry Pi 5"};
@@ -876,6 +885,8 @@ graph TD
             <a href="https://www.bilibili.com/video/BV1df4y1c73j/?spm_id_from=333.788.recommend_more_video.13&trackid=web_related_0.router-related-2206419-dk9pw.1763142496437.8" target="_blank" rel="noopener noreferrer" style="color: var(--accent-color); text-decoration: none; font-weight: bold;">影片 3</a>
             <br>
             <a href="https://www.sz-sonicom.com/productinfo/967523.html?templateId=1133605" target="_blank" rel="noopener noreferrer" style="color: var(--accent-color); text-decoration: none; font-weight: bold;">參考方案</a>
+            <span style="margin: 0 5px;">|</span>
+            <a href="https://www.raystar-optronics.com/cht/oled-graphic-display-module/micro-oled-display.html" target="_blank" rel="noopener noreferrer" style="color: var(--accent-color); text-decoration: none; font-weight: bold;">Micro OLED 方案</a>
           </div>
         </div>
       </div>
