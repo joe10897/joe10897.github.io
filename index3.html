@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1141_客戶開發與管理 - 期中報告</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --line-green: #06C755;
+            --dark-text: #333333;
+            --light-text: #666666;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --accent-bg: #e8f8ee;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        /* Header Section */
+        header {
+            background: linear-gradient(135deg, #06C755 0%, #00b900 100%);
+            color: white;
+            padding: 3rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .student-info {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            backdrop-filter: blur(5px);
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .section-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            border-top: 5px solid var(--line-green);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--line-green);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title span {
+            margin-right: 10px;
+            font-size: 1.8rem;
+        }
+
+        /* Q&A Styling */
+        .qa-item {
+            margin-bottom: 1rem;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .question {
+            background-color: #fff;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+
+        .question:hover {
+            background-color: #fafafa;
+        }
+
+        .question::after {
+            content: '+';
+            font-size: 1.5rem;
+            color: var(--line-green);
+            font-weight: 300;
+        }
+
+        .qa-item.active .question {
+            background-color: var(--accent-bg);
+            color: var(--line-green);
+        }
+
+        .qa-item.active .question::after {
+            content: '-';
+        }
+
+        .answer {
+            display: none;
+            padding: 1.5rem;
+            background-color: #fff;
+            color: var(--light-text);
+            border-top: 1px solid #eee;
+        }
+
+        .answer ul, .answer ol {
+            padding-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .answer li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.6rem; }
+            .section-card { padding: 1.5rem; }
+            .question { font-size: 0.95rem; padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>1141_客戶開發與管理</h1>
+    <div class="subtitle">期中報告：致理未來超市 LINE 官方帳號分析</div>
+    <div class="student-info">
+        開課教師：林曉雯 &nbsp;|&nbsp; 學生：資三B 11210278黃澤然
+    </div>
+</header>
+
+<div class="container">
+
+    <!-- Section 1 -->
+    <div class="section-card">
+        <div class="section-title">
+            <span>🛍️</span> 多對多 - 好友加入後的歡迎訊息
+        </div>
+        
+        <div class="qa-item">
+            <div class="question">1. 加入好友的歡迎訊息中，最多可以使用幾則訊息？</div>
+            <div class="answer">根據 LINE 官方帳號規格，一則歡迎訊息（Welcome Message）最多可以包含 <strong>5 個訊息泡泡（Message Bubbles）</strong>。</div>
+        </div>
+
+        <div class="qa-item">
+            <div class="question">2. 未來超市的設計是幾則？</div>
+            <div class="answer">根據分析，未來超市目前使用了 <strong>2 則</strong> 訊息泡泡：
+                <ul>
+                    <li>第一則：文字訊息</li>
+                    <li>第二則：多頁訊息 (Carousel Message)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="qa-item">
+            <div class="question">3. 這幾則中，分別使用那些形式？</div>
+            <div class="answer">
+                <ul>
+                    <li><strong>文字訊息 (Text)：</strong> 用於親切的開場問候（例如：「您可以叫我小未來」）及行動呼籲。</li>
+                    <li><strong>多頁訊息 (Carousel)：</strong> 用於視覺化展示超市的商品分類（如飲品、熱食），讓用戶可以左右滑動瀏覽。</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="qa-item">
+            <div class="question">4. 你覺得為何要這樣設計？</div>
+            <div class="answer">
+                <ul>
+                    <li><strong>建立親切感：</strong> 透過擬人化稱呼拉近距離。</li>
+                    <li><strong>視覺化導覽：</strong> 新好友通常不清楚超市賣什麼，使用多頁訊息能像「櫥窗」般快速展示多樣商品。</li>
+                    <li><strong>提高互動率：</strong> 文字中明確引導「點擊活動按鈕」，給予新用戶明確的第一步指令。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 2 -->
+    <div class="section-card">
+        <div class="section-title">
+            <span>💬</span> 多頁訊息 (Carousel Message)
+        </div>
+
+        <div class="qa-item">
+            <div class="question">1. 在歡迎訊息中，會使用多頁訊息的設計原因是？</div>
+            <div class="answer">
+                <ul>
+                    <li><strong>資訊承載量大：</strong> 能在不佔用垂直版面的情況下，橫向展示多張卡片（如飲品、熱食、生鮮）。</li>
+                    <li><strong>結構清晰：</strong> 每張卡片都有獨立的圖片、標題和按鈕，方便用戶快速掃描。</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="qa-item">
+            <div class="question">2. 在歡迎訊息中，超市多頁訊息選擇頁面類型是哪一個？</div>
+            <div class="answer">選擇的是 <strong>「商品服務 (Product)」</strong> 類型。因為卡片以圖片為主體，並帶有標籤（如「飲料」），適合展示具體商品項目。</div>
+        </div>
+
+        <div class="qa-item">
+            <div class="question">3. 每個頁面的動作類型選擇「文字」的原因是？</div>
+            <div class="answer">
+                為了<strong>觸發自動回應</strong>。選擇「文字」動作，當用戶點擊時，系統會代發關鍵字（如「#查看飲品」），直接在聊天室內觸發自動回覆的菜單或圖片，而不需要跳轉出 APP，體驗更流暢。
+            </div>
+        </div>
+
+        <div class="qa-item">
+            <div class="question">4. 請舉未來超市任一個文字動作類型觸發的反應實例。</div>
+            <div class="answer">
+                <strong>實例：</strong><br>
+                用戶點擊「飲品」按鈕 -> 發送文字「未來超市-飲品介紹」 -> 系統自動回傳一張「本月飲品價目表」圖片或優惠券。
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 3 -->
+    <div class="section-card">
+        <div class="section-title">
+            <span>🖼️</span> 圖文選單 (Rich Menu)
+        </div>
+
+        <div class="qa-item">
+            <div class="question">1. 超市採用的圖文選單是幾格版型？</div>
+            <div class="answer">採用 <strong>大型版型（Large）</strong>，推測為標準的 <strong>6 格版型</strong>，以容納集點卡、菜單、活動、預約等多項功能。</div>
+        </div>
+
+        <div class="qa-item">
+            <div class="question">2. 圖文選單觸發時機是針對新客(新加入)？是舊客？</div>
+            <div class="answer">針對 <strong>所有顧客（新客與舊客）</strong>。它是常駐在聊天室底部的導航列，新客用來認識服務，舊客用來查找功能。</div>
+        </div>
+
+        <div class="qa-item">
+            <div class="question">3. 超市哪一個選單會觸動自動回應訊息功能？</div>
+            <div class="answer">最可能是 <strong>「菜單」</strong> 或 <strong>「活動」</strong>。點擊後發送關鍵字，觸發系統回傳最新的 DM 或活動詳情。</div>
+        </div>
+
+        <div class="qa-item">
+            <div class="question">4. 你覺得圖文選單設計有沒有可以改善的地方？</div>
+            <div class="answer">
+                <strong>建議改善：實施「分眾圖文選單」。</strong><br>
+                目前所有用戶看到的選單都一樣。建議針對「未註冊者」顯示「首購優惠/綁定會員」；針對「已註冊會員」顯示「會員條碼/點數查詢」，讓版面更有效率。
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 4 -->
+    <div class="section-card">
+        <div class="section-title">
+            <span>⚙️</span> 自動回應訊息 (Auto-Reply)
+        </div>
+
+        <div class="qa-item">
+            <div class="question">1. 自動回應訊息最多可以幾則訊息串？</div>
+            <div class="answer">一組自動回應最多可包含 <strong>5 則</strong> 訊息泡泡。</div>
+        </div>
+
+        <div class="qa-item">
+            <div class="question">2. 自動回應訊息算在計費則數中嗎？</div>
+            <div class="answer"><strong>不算。</strong>自動回應（包含關鍵字回覆）屬於被動回覆，是免費的功能，不佔用月費方案的額度。</div>
+        </div>
+
+        <div class="qa-item">
+            <div class="question">3. 請舉出 3 個目前超市有設定自動回應訊息的關鍵字。</div>
+            <div class="answer">
+                <ol>
+                    <li><strong>營業時間：</strong>回覆各分店開門與打烊時間。</li>
+                    <li><strong>停車：</strong>回覆賣場停車場位置與折抵標準。</li>
+                    <li><strong>外送：</strong>回覆外送服務範圍或平台連結。</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="qa-item">
+            <div class="question">4. 有沒有能設計出回文串引發更多互動的設計？</div>
+            <div class="answer">
+                可以設計 <strong>「心理測驗式互動」</strong>。例如用戶輸入「想吃什麼」，機器人回問「今天心情如何？」，用戶點選「開心」後，機器人精準推薦「洋芋片與可樂」並附上優惠券。
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 5 -->
+    <div class="section-card">
+        <div class="section-title">
+            <span>📢</span> 群發訊息與分眾
+        </div>
+
+        <div class="qa-item">
+            <div class="question">1. 群發訊息最多可以幾則訊息串？</div>
+            <div class="answer">一次群發最多包含 <strong>3 則</strong> 訊息泡泡。</div>
+        </div>
+
+        <div class="qa-item">
+            <div class="question">2. 假如你的群發訊息串是 2 個，請問這樣的計費算幾則？</div>
+            <div class="answer">算 <strong>1 則</strong> 計費訊息（針對每位收訊者）。只要在一次發送動作內（最多3個泡泡），對一位好友發送都只算扣除 1 則額度。</div>
+        </div>
+
+        <div class="qa-item">
+            <div class="question">3. 還可以怎麼設定更多受眾類型？</div>
+            <div class="answer">
+                <ul>
+                    <li><strong>點擊再行銷 (Click Retargeting)：</strong>針對點擊過特定商品（如牛肉）圖片的人貼標籤，下次只對這群人推播相關優惠。</li>
+                    <li><strong>加入管道受眾：</strong>區分是從實體店面 QR Code 加入的（在地客），還是網路廣告加入的（潛在客）。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 6 (New Added) -->
+    <div class="section-card">
+        <div class="section-title">
+            <span>🎉</span> 活動策略設計 - 惜食週案例
+        </div>
+
+        <div class="qa-item">
+            <div class="question">1. 以惜食週為例，如何設計群發訊息以達成：曝光、分類貼標、轉換報名？</div>
+            <div class="answer">
+                <strong>設計策略：使用「圖文訊息 (Rich Message)」搭配「點擊再行銷」。</strong>
+                <ul>
+                    <li><strong>視覺 (曝光)：</strong>設計一張吸睛的海報圖片，強調惜食週的優惠與環保價值。</li>
+                    <li><strong>互動 (貼標)：</strong>圖片設為兩個區塊：
+                        <ul>
+                            <li>點擊「我要搶購」者 &rarr; 自動貼上「潛在購買者」標籤。</li>
+                            <li>點擊「活動理念」者 &rarr; 自動貼上「理念支持者」標籤。</li>
+                        </ul>
+                    </li>
+                    <li><strong>轉換 (報名)：</strong>訊息下方設定明顯的「立即報名」按鈕，連結至表單。</li>
+                </ul>
+                <p><strong>設計原因：</strong> 單一訊息即可完成「吸引目光」與「分眾」，且用戶在無形中被分類，利於後續精準行銷。</p>
+            </div>
+        </div>
+
+        <div class="qa-item">
+            <div class="question">2. 除了群發，針對新好友或不在清單的人，該設計哪個管道曝光？</div>
+            <div class="answer">
+                <strong>建議管道：</strong>
+                <ul>
+                    <li><strong>圖文選單 (Rich Menu)：</strong>將其中一格改為顯眼的「惜食週活動」按鈕。這是最有效的常駐入口，無論新舊好友打開聊天室都一定看得到。</li>
+                    <li><strong>LINE VOOM (貼文串)：</strong>發布公開貼文並舉辦分享活動。貼文可被分享擴散，能觸及到非好友圈的潛在客群。</li>
+                    <li><strong>歡迎訊息 (Welcome Message)：</strong>活動期間暫時更新歡迎詞，確保每一位新加入的好友第一時間得知活動。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <p>&copy; 2025 1141_客戶開發與管理 | 黃澤然_期中報告</p>
+</footer>
+
+<script>
+    // Simple JavaScript for Accordion functionality
+    document.querySelectorAll('.question').forEach(item => {
+        item.addEventListener('click', event => {
+            const parent = item.parentElement;
+            const answer = item.nextElementSibling;
+            
+            // Toggle current item
+            if (parent.classList.contains('active')) {
+                parent.classList.remove('active');
+                answer.style.display = 'none';
+            } else {
+                parent.classList.add('active');
+                answer.style.display = 'block';
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
