@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任務罐 APP v5.9</title>
+    
+    <!-- 載入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            900: '#881337',
+                        },
+                        ink: '#1d1d1f', // Apple 經典深灰
+                    },
+                    boxShadow: {
+                        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- 載入 React 和 ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    
+    <!-- 載入 Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- 載入 Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* 全局字體設定，模仿 iOS */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #1d1d1f;
+            margin: 0;
+            overflow: hidden; /* 防止背景溢出 */
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* --- 動態光效背景 (Aurora Background) --- */
+        .ambient-light {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            z-index: -1;
+            background: #f5f5f7; /* iOS 淺灰底 */
+        }
+        
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: move 20s infinite alternate;
+            border-radius: 50%;
+        }
+        
+        .blob-1 {
+            top: -10%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: #ffcfd2; /* 柔和紅 */
+            animation-duration: 25s;
+        }
+        
+        .blob-2 {
+            bottom: -10%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: #c7d2fe; /* 柔和藍 */
+            animation-duration: 30s;
+            animation-delay: -5s;
+        }
+        
+        .blob-3 {
+            top: 40%;
+            left: 40%;
+            width: 400px;
+            height: 400px;
+            background: #fde68a; /* 柔和黃 */
+            animation-duration: 22s;
+            animation-delay: -10s;
+        }
+
+        @keyframes move {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(50px, 50px) scale(1.1); }
+        }
+
+        /* --- Apple 風格玻璃擬態 (Glassmorphism) --- */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.5); /* 50% 透光 */
+            backdrop-filter: blur(25px);          /* 強力模糊 */
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.4); /* 微弱白邊框 */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05); /* 柔和陰影 */
+        }
+
+        /* --- 其他動畫與特效 --- */
+        @keyframes float-in {
+            0% { opacity: 0; transform: translateY(15px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-float-in { animation: float-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        
+        /* 液體波浪 */
+        @keyframes wave {
+            0% { background-position-x: 0; }
+            100% { background-position-x: 100px; }
+        }
+        .liquid-wave {
+            background-size: 200% 100%;
+            animation: wave 8s linear infinite;
+        }
+        
+        /* 黃金發光 */
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(251, 191, 36, 0.4); border-color: #f59e0b; }
+            50% { box-shadow: 0 0 30px rgba(251, 191, 36, 0.7); border-color: #fbbf24; }
+        }
+        .jar-complete {
+            animation: glow 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="antialiased h-screen flex flex-col">
+
+    <!-- 動態背景層 -->
+    <div class="ambient-light">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div id="root" class="flex-1 flex flex-col h-full z-10 relative"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useCallback } = React;
+
+        // --- 致理科技大學 Logo (新連結) ---
+        const APP_ICON_URL = "https://upload.wikimedia.org/wikipedia/zh/7/73/Chihlee_University_of_Technology_round_logo.png";
+
+        // --- ICONS (SVG) ---
+        const Icons = {
+            Google: () => <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>,
+            Menu: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>,
+            Wrench: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>,
+            Plus: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>,
+            ChevronLeft: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>,
+            ChevronRight: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>,
+            Send: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>,
+            History: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v5h5"></path><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"></path><path d="M12 6v6l4 2"></path></svg>,
+            Users: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>,
+            Home: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>,
+            MessageCircle: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>,
+            Bot: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4"></path><line x1="8" y1="16" x2="8" y2="16"></line><line x1="16" y1="16" x2="16" y2="16"></line></svg>,
+            Trophy: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>,
+            JarEmpty: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 2h4"/><path d="M6 5h12"/><path d="M6 5v14a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V5"/></svg>,
+            Check: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>,
+            Cloud: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>,
+            CloudCheck: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 21a6 6 0 0 1-6-6c0-3.3 2.7-6 6-6 .5 0 1 .1 1.5.2"/><path d="M19 12v.2"/><path d="M16.5 6A6 6 0 0 1 22 11v1a6 6 0 0 1-5 6h-2"/><path d="m9 11 3 3L22 4"/></svg>,
+            CloudOff: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22.61 16.95A5 5 0 0 0 18 10h-1.26a8 8 0 0 0-7.05-6M5 5a8 8 0 0 0 4 15h9a5 5 0 0 0 1.7-.3"/><line x1="1" y1="1" x2="23" y2="23"/></svg>,
+            Link: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>,
+            AlertTriangle: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>,
+            RefreshCw: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>,
+            Loader: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>,
+            Edit: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>,
+            Save: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>,
+            X: ({className}) => <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        };
+
+        const generateId = () => Math.random().toString(36).substr(2, 9);
+
+        // --- COMPONENTS ---
+
+        const NPCWizard = ({ isOpen, onClose, steps, onComplete, title }) => {
+            const [currentStep, setCurrentStep] = useState(0);
+            const [answers, setAnswers] = useState({});
+            
+            if (!isOpen) return null;
+            const step = steps[currentStep];
+
+            const handleNext = () => {
+                if (currentStep < steps.length - 1) {
+                    setCurrentStep(currentStep + 1);
+                } else {
+                    onComplete(answers);
+                    setAnswers({});
+                    setCurrentStep(0);
+                    onClose();
+                }
+            };
+            const handleChange = (val) => setAnswers({...answers, [step.key]: val});
+
+            return (
+                <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-float-in">
+                    <div className="glass-panel rounded-2xl w-full max-w-md shadow-xl overflow-hidden border-t border-white/50">
+                        <div className="bg-brand-500/90 backdrop-blur-md p-4 flex items-center border-b border-white/10">
+                            <div className="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center text-2xl mr-3 shadow-sm">🤖</div>
+                            <h3 className="text-white font-bold text-lg tracking-wide">{title}</h3>
+                        </div>
+                        <div className="p-6">
+                            <div className="mb-6 bg-white/40 p-4 rounded-xl rounded-tl-none border border-white/30 text-ink shadow-sm">
+                                <p className="font-medium text-lg">{step.question}</p>
+                            </div>
+                            {step.type === 'text' && (
+                                <input type="text" className="w-full border-2 border-white/50 rounded-xl p-3 outline-none focus:border-brand-500 bg-white/60 backdrop-blur-sm transition-colors text-lg" placeholder="請輸入..." value={answers[step.key] || ''} onChange={(e) => handleChange(e.target.value)} autoFocus />
+                            )}
+                            {step.type === 'select' && (
+                                <select className="w-full border-2 border-white/50 rounded-xl p-3 outline-none bg-white/60 backdrop-blur-sm focus:border-brand-500 transition-colors text-lg" value={answers[step.key] || step.options[0]} onChange={(e) => handleChange(e.target.value)}>
+                                    {step.options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                                </select>
+                            )}
+                            <div className="mt-8 flex justify-end">
+                                <button onClick={handleNext} disabled={!answers[step.key] && step.type !== 'select'} className="bg-brand-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-brand-500 disabled:opacity-50 transition-all shadow-md active:scale-95">
+                                    {currentStep === steps.length - 1 ? "完成" : "下一步"}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- SUB-VIEWS ---
+
+        const HistoryTab = ({ cabinets }) => {
+            const allCompletedTasks = cabinets.flatMap(c => 
+                c.jars.flatMap(j => 
+                    j.tasks.filter(t => t.completed).map(t => ({...t, cabinetName: c.name, jarName: j.name}))
+                )
+            );
+            return (
+                <div className="flex-1 overflow-y-auto p-4 space-y-4 animate-float-in">
+                    <h2 className="font-bold text-2xl text-ink mb-4 tracking-tight px-2">歷史紀錄</h2>
+                    {allCompletedTasks.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center h-64 text-slate-400">
+                            <Icons.History className="w-16 h-16 mb-4 opacity-20" />
+                            <p className="font-medium">還沒有完成任何任務</p>
+                        </div>
+                    ) : (
+                        <div className="space-y-3">
+                            {allCompletedTasks.map((t, i) => (
+                                <div key={i} className="glass-panel p-4 rounded-2xl flex items-center gap-4 transition-transform hover:scale-[1.01]">
+                                    <div className="w-10 h-10 rounded-full bg-green-100/80 flex items-center justify-center text-green-600 shadow-sm"><Icons.Check className="w-5 h-5" /></div>
+                                    <div className="flex-1">
+                                        <h3 className="font-bold text-slate-700 line-through decoration-slate-300 text-lg">{t.name}</h3>
+                                        <div className="flex items-center gap-2 text-xs text-slate-500 mt-1 font-medium"><span className="bg-white/50 px-2 py-0.5 rounded">{t.cabinetName}</span><span>•</span><span>{t.jarName}</span></div>
+                                    </div>
+                                    <span className="text-xs font-black text-green-600 bg-green-50/50 border border-green-100 px-2 py-1 rounded-lg">DONE</span>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const SharedTab = () => {
+            const mockShared = [
+                { id: 1, owner: '楊詠媜', title: '多益金色證書', progress: 75, reward: 'PS5 遊戲機', avatar: '👩' },
+                { id: 2, owner: '王靖雯', title: '每日健身計畫', progress: 30, reward: '新慢跑鞋', avatar: '👧' },
+                { id: 3, owner: '陳于庭', title: '存錢買車', progress: 55, reward: '日本旅遊', avatar: '🧑' },
+                { id: 4, owner: '黃澤然', title: '學會吉他', progress: 90, reward: '新吉他', avatar: '🎸' },
+            ];
+            return (
+                <div className="flex-1 overflow-y-auto p-4 space-y-4 animate-float-in">
+                    <h2 className="font-bold text-2xl text-ink mb-4 tracking-tight px-2">好友的任務櫃</h2>
+                    <div className="grid gap-4">
+                        {mockShared.map(s => (
+                            <div key={s.id} className="glass-panel p-5 rounded-2xl relative overflow-hidden group hover:bg-white/60 transition-all">
+                                <div className="flex justify-between items-start mb-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 bg-brand-100/50 rounded-full flex items-center justify-center text-xl shadow-inner border border-white">{s.avatar}</div>
+                                        <div><p className="text-xs text-slate-500 font-medium">{s.owner} 的目標</p><h3 className="font-bold text-lg text-ink">{s.title}</h3></div>
+                                    </div>
+                                    <div className="text-xs text-amber-700 bg-amber-50/80 px-2 py-1 rounded-lg border border-amber-100 flex items-center gap-1 font-bold backdrop-blur-sm"><Icons.Trophy className="w-3 h-3" /> {s.reward}</div>
+                                </div>
+                                <div className="flex items-center gap-3 mb-1">
+                                    <div className="flex-1 h-3 bg-white/50 rounded-full overflow-hidden shadow-inner border border-white/50"><div className="h-full bg-brand-500 rounded-full transition-all duration-1000 relative overflow-hidden" style={{width: `${s.progress}%`}}><div className="absolute inset-0 bg-white/20"></div></div></div>
+                                    <span className="text-sm font-black text-brand-600">{s.progress}%</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        const ChatTab = () => {
+            const mockChats = [
+                { id: 1, name: '林韋丞', msg: '你昨天那個任務太難了吧！我解超久', time: '10:30', avatar: '👦', unread: 2 },
+                { id: 2, name: '林佳嫻', msg: '加油！我們一起集滿這個罐子', time: '09:15', avatar: '👧', unread: 0 },
+                { id: 3, name: '翁怡蓉', msg: '週末要不要一起去圖書館？', time: '昨天', avatar: '👩', unread: 0 },
+            ];
+            return (
+                <div className="flex-1 overflow-y-auto p-4 animate-float-in">
+                    <h2 className="font-bold text-2xl text-ink mb-4 tracking-tight px-2">訊息列表</h2>
+                    <div className="space-y-3">
+                        {mockChats.map(c => (
+                            <div key={c.id} className="glass-panel p-4 rounded-2xl flex items-center gap-4 hover:bg-white/70 cursor-pointer transition-colors">
+                                <div className="relative">
+                                    <div className="w-12 h-12 bg-white/50 rounded-full flex items-center justify-center text-2xl shadow-inner border border-white/30">{c.avatar}</div>
+                                    {c.unread > 0 && <div className="absolute -top-1 -right-1 w-5 h-5 bg-brand-500 text-white text-xs font-bold flex items-center justify-center rounded-full border-2 border-white shadow-sm">{c.unread}</div>}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex justify-between items-center mb-1"><h3 className="font-bold text-lg text-ink">{c.name}</h3><span className="text-xs text-slate-400 font-medium">{c.time}</span></div>
+                                    <p className="text-sm text-slate-500 truncate font-medium">{c.msg}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        const AIChatTab = () => {
+            const [msgs, setMsgs] = useState([{role: 'ai', text: '嗨！我是你的 AI 任務教練。今天有什麼計畫嗎？'}]);
+            const [input, setInput] = useState('');
+            const endRef = useRef(null);
+            useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs]);
+            const send = () => {
+                if(!input.trim()) return;
+                setMsgs(prev => [...prev, {role: 'user', text: input}]);
+                setInput('');
+                setTimeout(() => {
+                    setMsgs(prev => [...prev, {role: 'ai', text: "這個目標聽起來很棒！將它分解成小步驟會更容易完成喔。"}]);
+                }, 1000);
+            };
+            return (
+                <div className="flex-1 flex flex-col h-full overflow-hidden animate-float-in">
+                    <div className="glass-panel p-4 shadow-sm z-10 mx-4 mt-4 rounded-2xl flex items-center justify-between"><h2 className="font-bold text-lg flex items-center gap-2 text-ink"><div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></div>AI 任務教練</h2></div>
+                    <div className="flex-1 overflow-y-auto p-4 space-y-6">
+                        {msgs.map((m, i) => (<div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}><div className={`flex items-end gap-2 max-w-[85%]`}>{m.role === 'ai' && <div className="w-8 h-8 bg-white/80 border border-white/50 rounded-full flex items-center justify-center text-sm flex-shrink-0 shadow-sm">🤖</div>}<div className={`p-4 rounded-2xl text-sm leading-relaxed shadow-sm font-medium backdrop-blur-md ${m.role === 'user' ? 'bg-brand-600/90 text-white rounded-br-none' : 'bg-white/70 text-slate-700 border border-white/50 rounded-bl-none'}`}>{m.text}</div></div></div>))}
+                        <div ref={endRef}></div>
+                    </div>
+                    <div className="p-4 flex gap-3"><input className="glass-panel flex-1 border-white/50 rounded-full px-5 py-3 text-sm focus:outline-none focus:border-brand-500 focus:ring-0 transition-colors bg-white/40 placeholder-slate-400" placeholder="輸入訊息..." value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && send()} /><button onClick={send} className="bg-brand-600 text-white p-3 rounded-full w-12 h-12 flex items-center justify-center hover:bg-brand-500 transition-all shadow-lg active:scale-95"><Icons.Send className="w-5 h-5" /></button></div>
+                </div>
+            );
+        };
+
+        // --- MAIN APP ---
+        function App() {
+            const [view, setView] = useState('login');
+            const [cabinets, setCabinets] = useState([]);
+            const [currentCabinetIdx, setCurrentCabinetIdx] = useState(0);
+            const [activeJarId, setActiveJarId] = useState(null);
+            
+            // Cloud Sync Config
+            const [userId, setUserId] = useState(() => localStorage.getItem('task_user_id') || '');
+            const [dbUrl, setDbUrl] = useState(() => localStorage.getItem('task_db_url') || 'https://script.google.com/macros/s/AKfycbzGCeuJiAXRf5Z8ZWDiYM2pAkQq9E9z_C0yLMrmBU_hVYsJ7yqX2m4HXihigRJDWkXA/exec');
+            const [syncStatus, setSyncStatus] = useState('idle');
+            const [syncErrorMsg, setSyncErrorMsg] = useState('');
+            const [loginLoading, setLoginLoading] = useState(false);
+
+            // Edit States
+            const [isEditingCabinet, setIsEditingCabinet] = useState(false);
+            const [editCabinetData, setEditCabinetData] = useState({ name: '', reward: '' });
+            const [isEditingJarName, setIsEditingJarName] = useState(false);
+            const [editJarName, setEditJarName] = useState('');
+            const [editTaskId, setEditTaskId] = useState(null); // ID of task being edited
+            
+            // UI State
+            const [showCabinetWizard, setShowCabinetWizard] = useState(false);
+            const [showJarWizard, setShowJarWizard] = useState(false);
+            const [showAddTaskModal, setShowAddTaskModal] = useState(false);
+            const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+            const [bottomTab, setBottomTab] = useState('home');
+
+            useEffect(() => { localStorage.setItem('task_user_id', userId); }, [userId]);
+            useEffect(() => { localStorage.setItem('task_db_url', dbUrl); }, [dbUrl]);
+
+            const isValidScriptUrl = (url) => {
+                if (!url) return false;
+                return url.includes('script.google.com') && url.startsWith('http');
+            };
+
+            const debouncedSync = useCallback(() => {
+                if (!dbUrl || !userId || cabinets.length === 0) return;
+                if (!isValidScriptUrl(dbUrl)) { setSyncStatus('error'); return; }
+                setSyncStatus('syncing');
+                fetch(dbUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ userId, data: cabinets })
+                })
+                .then(() => { setSyncStatus('success'); setTimeout(() => setSyncStatus('idle'), 2000); })
+                .catch((e) => { console.warn("Sync failed:", e); setSyncStatus('error'); });
+            }, [cabinets, dbUrl, userId]);
+
+            useEffect(() => {
+                const timer = setTimeout(debouncedSync, 2000);
+                return () => clearTimeout(timer);
+            }, [debouncedSync]);
+
+            const loadFromCloud = async () => {
+                if (!dbUrl || !userId) return;
+                if (!isValidScriptUrl(dbUrl)) { setSyncErrorMsg("網址無效"); return; }
+                setSyncStatus('syncing');
+                try {
+                    const response = await fetch(`${dbUrl}?userId=${userId}`);
+                    if (!response.ok) throw new Error("Network error");
+                    const result = await response.json();
+                    if (result.result === 'success' && result.data) {
+                        setCabinets(result.data);
+                        setSyncStatus('success');
+                    } else { setSyncStatus('idle'); }
+                } catch (e) { setSyncStatus('error'); setSyncErrorMsg("連線失敗"); }
+            };
+
+            const handleLogin = async () => {
+                setLoginLoading(true); setSyncErrorMsg('');
+                if (dbUrl && userId && isValidScriptUrl(dbUrl)) {
+                    try {
+                        const response = await fetch(`${dbUrl}?userId=${userId}`);
+                        const result = await response.json();
+                        if (result.result === 'success') {
+                            if (result.data) {
+                                setCabinets(result.data);
+                                setView('dashboard');
+                            } else {
+                                const initData = [{ id: generateId(), name: "我的第一個目標", reward: "一杯奶茶", jars: [] }];
+                                setCabinets(initData);
+                                await fetch(dbUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ userId, data: initData }) });
+                                setView('dashboard');
+                            }
+                        } else { throw new Error(result.error); }
+                    } catch (e) {
+                        setSyncErrorMsg("連線失敗，進入離線模式。");
+                        setView(localStorage.getItem('has_onboarded') ? 'dashboard' : 'onboarding');
+                    }
+                } else {
+                    setView(localStorage.getItem('has_onboarded') ? 'dashboard' : 'onboarding');
+                }
+                setLoginLoading(false);
+            };
+
+            const handleTabChange = (tab) => { setBottomTab(tab); setActiveJarId(null); };
+            const handleOnboardingComplete = () => {
+                localStorage.setItem('has_onboarded', 'true');
+                const initData = [{ id: generateId(), name: "我的第一個目標", reward: "一杯奶茶", jars: [] }];
+                setCabinets(initData);
+                if(dbUrl && userId) fetch(dbUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ userId, data: initData }) });
+                setView('dashboard');
+            };
+
+            // CRUD Handlers
+            const handleCreateCabinet = (data) => {
+                setCabinets([...cabinets, { id: generateId(), name: data.name, reward: data.reward, deadline: data.deadline, jars: [] }]);
+                setCurrentCabinetIdx(cabinets.length);
+            };
+            const handleUpdateCabinet = () => {
+                const updated = [...cabinets];
+                updated[currentCabinetIdx].name = editCabinetData.name;
+                updated[currentCabinetIdx].reward = editCabinetData.reward;
+                setCabinets(updated);
+                setIsEditingCabinet(false);
+            };
+            const handleCreateJar = (data) => {
+                const updated = [...cabinets];
+                updated[currentCabinetIdx].jars.push({ id: generateId(), name: data.name, type: data.type, mode: data.mode, tasks: [] });
+                setCabinets(updated);
+            };
+            const handleUpdateJarName = () => {
+                const updated = [...cabinets];
+                const jar = updated[currentCabinetIdx].jars.find(j => j.id === activeJarId);
+                if(jar) jar.name = editJarName;
+                setCabinets(updated);
+                setIsEditingJarName(false);
+            };
+            const handleAddTask = (data) => {
+                const updated = [...cabinets];
+                const jar = updated[currentCabinetIdx].jars.find(j => j.id === activeJarId);
+                if (jar) { jar.tasks.push({ id: generateId(), ...data, completed: false }); setCabinets(updated); }
+                setShowAddTaskModal(false);
+            };
+            const handleUpdateTask = (taskId, newData) => {
+                const updated = [...cabinets];
+                const jar = updated[currentCabinetIdx].jars.find(j => j.id === activeJarId);
+                const taskIndex = jar.tasks.findIndex(t => t.id === taskId);
+                if (taskIndex !== -1) {
+                    jar.tasks[taskIndex] = { ...jar.tasks[taskIndex], ...newData };
+                    setCabinets(updated);
+                }
+                setEditTaskId(null);
+            };
+            const toggleTaskComplete = (taskId) => {
+                const updated = [...cabinets];
+                const jar = updated[currentCabinetIdx].jars.find(j => j.id === activeJarId);
+                const task = jar.tasks.find(t => t.id === taskId);
+                if (task) {
+                    task.completed = !task.completed;
+                    if (jar.tasks.every(t => t.completed)) confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                }
+                setCabinets(updated);
+            };
+
+            // --- Sub-Components ---
+            const HomeTab = () => {
+                const activeCabinet = cabinets[currentCabinetIdx];
+                
+                const startEditingCabinet = () => {
+                    setEditCabinetData({ name: activeCabinet.name, reward: activeCabinet.reward });
+                    setIsEditingCabinet(true);
+                };
+
+                return (
+                    <div className="flex-1 overflow-hidden relative flex flex-col animate-float-in">
+                        {/* Cabinet Header */}
+                        <div className="glass-panel m-4 p-6 rounded-3xl text-center relative z-10 transition-all duration-500">
+                            {cabinets.length > 0 ? (
+                                <>
+                                    <div className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-3 flex justify-center items-center gap-2">
+                                        最終目標
+                                        {!isEditingCabinet && (
+                                            <button onClick={startEditingCabinet} className="text-slate-300 hover:text-brand-500 transition-colors p-1">
+                                                <Icons.Edit className="w-3.5 h-3.5" />
+                                            </button>
+                                        )}
+                                    </div>
+                                    
+                                    {isEditingCabinet ? (
+                                        <div className="space-y-4 mt-2 px-4 animate-float-in">
+                                            <input 
+                                                className="w-full text-center border-b-2 border-brand-200 bg-transparent focus:outline-none focus:border-brand-500 text-3xl font-black text-ink pb-1"
+                                                value={editCabinetData.name}
+                                                onChange={e => setEditCabinetData({...editCabinetData, name: e.target.value})}
+                                            />
+                                            <div className="flex items-center justify-center gap-2">
+                                                <Icons.Trophy className="w-4 h-4 text-yellow-500" />
+                                                <input 
+                                                    className="w-2/3 text-center border-b border-slate-300 bg-transparent focus:outline-none text-sm text-slate-600 font-medium pb-1"
+                                                    value={editCabinetData.reward}
+                                                    onChange={e => setEditCabinetData({...editCabinetData, reward: e.target.value})}
+                                                />
+                                            </div>
+                                            <div className="flex justify-center gap-3 mt-4">
+                                                <button onClick={handleUpdateCabinet} className="bg-brand-500 text-white p-2 rounded-full shadow-md hover:bg-brand-600 transition-colors"><Icons.Save className="w-4 h-4" /></button>
+                                                <button onClick={() => setIsEditingCabinet(false)} className="bg-white/50 text-slate-500 p-2 rounded-full hover:bg-white transition-colors"><Icons.X className="w-4 h-4" /></button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <h2 className="text-3xl font-black text-ink tracking-tight mb-3 drop-shadow-sm">{activeCabinet.name}</h2>
+                                            <div className="inline-flex items-center bg-white/50 border border-white/60 text-brand-900 text-xs font-bold px-4 py-1.5 rounded-full shadow-sm backdrop-blur-md">
+                                                <Icons.Trophy className="w-3.5 h-3.5 mr-1.5 text-yellow-500" />
+                                                {activeCabinet.reward}
+                                            </div>
+                                        </>
+                                    )}
+
+                                    <button onClick={() => setCurrentCabinetIdx(Math.max(0, currentCabinetIdx - 1))} disabled={currentCabinetIdx === 0} className="absolute left-2 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/40 hover:bg-white/80 backdrop-blur-md shadow-sm hover:scale-110 disabled:opacity-30 disabled:scale-100 transition-all text-slate-600"><Icons.ChevronLeft className="w-5 h-5" /></button>
+                                    <button onClick={() => setCurrentCabinetIdx(Math.min(cabinets.length - 1, currentCabinetIdx + 1))} disabled={currentCabinetIdx === cabinets.length - 1} className="absolute right-2 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/40 hover:bg-white/80 backdrop-blur-md shadow-sm hover:scale-110 disabled:opacity-30 disabled:scale-100 transition-all text-slate-600"><Icons.ChevronRight className="w-5 h-5" /></button>
+                                </>
+                            ) : <div className="text-slate-400 py-4 font-medium">點擊右下角 + 新增您的第一個目標</div>}
+                        </div>
+                        
+                        {/* Shelf */}
+                        <div className="flex-1 flex items-center justify-center p-4 overflow-x-auto no-scrollbar relative">
+                            {cabinets.length > 0 && (
+                                <div className="flex gap-8 items-end px-12 min-w-full justify-center z-10 pb-8">
+                                    {activeCabinet.jars.map((jar) => {
+                                        const total = jar.tasks.length;
+                                        const completed = jar.tasks.filter(t => t.completed).length;
+                                        const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
+                                        const isFull = percent === 100 && total > 0;
+                                        return (
+                                            <div key={jar.id} onClick={() => setActiveJarId(jar.id)} className="group relative cursor-pointer transition-all duration-300 hover:-translate-y-4 flex flex-col items-center">
+                                                <div className={`w-28 h-36 rounded-t-xl rounded-b-3xl border-4 relative overflow-hidden flex flex-col items-center justify-end p-2 shadow-xl transition-all duration-500 
+                                                    ${isFull ? 'bg-amber-50/80 border-yellow-400 jar-complete shadow-[0_0_30px_rgba(251,191,36,0.4)]' : 'glass-panel border-white/60'}`}>
+                                                    
+                                                    <div className={`absolute bottom-0 left-0 w-full transition-all duration-1000 liquid-wave 
+                                                        ${isFull ? 'bg-gradient-to-t from-yellow-400 via-amber-300 to-amber-200' : 'bg-brand-500 opacity-80'}`} 
+                                                        style={{ height: `${percent}%` }}></div>
+                                                    
+                                                    {isFull && <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 bg-white rounded-full p-2.5 shadow-lg animate-bounce"><Icons.Trophy className="w-6 h-6 text-yellow-500" /></div>}
+                                                    
+                                                    <span className="relative z-10 font-bold text-ink text-sm text-center truncate w-full px-1 drop-shadow-sm">{jar.name}</span>
+                                                    <span className="relative z-10 text-[10px] text-slate-600 font-medium bg-white/50 px-2 rounded-full mt-1 backdrop-blur-md shadow-sm">{jar.type}</span>
+                                                </div>
+                                                {/* Lid */}
+                                                <div className={`absolute -top-4 w-32 h-5 rounded-md shadow-md transition-colors border-b border-black/10 backdrop-blur-sm
+                                                    ${isFull ? 'bg-gradient-to-r from-yellow-400 to-amber-500' : 'bg-white/60'}`}></div>
+                                                
+                                                <div className={`mt-3 text-xs font-black px-3 py-1 rounded-full shadow-sm transition-all backdrop-blur-md
+                                                    ${isFull ? 'bg-yellow-100/90 text-yellow-800' : 'bg-white/60 text-slate-600'}`}>
+                                                    {percent}%
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                    <button onClick={() => setShowJarWizard(true)} className="w-28 h-36 border-4 border-dashed border-white/50 rounded-3xl flex flex-col items-center justify-center text-slate-400 hover:bg-white/40 hover:text-brand-500 hover:border-brand-300 transition-all mb-8 group backdrop-blur-sm">
+                                        <div className="bg-white/50 p-3 rounded-full mb-2 group-hover:bg-brand-50 transition-colors"><Icons.Plus className="w-6 h-6" /></div>
+                                        <span className="text-xs font-bold">新罐子</span>
+                                    </button>
+                                </div>
+                            )}
+                            {/* Shelf Glass Texture */}
+                            <div className="absolute bottom-20 left-4 right-4 h-4 glass-panel rounded-full transform skew-x-6"></div>
+                        </div>
+                        <div className="absolute bottom-4 right-4 z-20"><button onClick={() => setShowCabinetWizard(true)} className="bg-brand-600 hover:bg-brand-500 text-white p-4 rounded-full shadow-lg flex items-center gap-2 pr-6 transition-all hover:scale-105 active:scale-95"><Icons.Plus className="w-6 h-6" /><span className="text-base font-bold">新目標</span></button></div>
+                    </div>
+                );
+            };
+
+            // Login View (With Logo Fallback)
+            if (view === 'login') return (
+                <div className="flex flex-col items-center justify-center min-h-screen p-6 relative">
+                    <div className="glass-panel rounded-3xl p-10 w-full max-w-sm shadow-2xl text-center space-y-8 animate-float-in relative z-10">
+                        <div className="w-40 h-40 mx-auto flex items-center justify-center relative">
+                            {/* Logo with Fallback */}
+                            <img 
+                                src={APP_ICON_URL} 
+                                alt="致理 Logo" 
+                                className="w-full h-full object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500"
+                                onError={(e) => {
+                                    e.target.style.display = 'none';
+                                    document.getElementById('logo-fallback').style.display = 'flex';
+                                }}
+                            />
+                            <div id="logo-fallback" className="hidden absolute inset-0 w-full h-full bg-white/80 rounded-full border-4 border-brand-500 flex items-center justify-center shadow-inner backdrop-blur-md">
+                                <span className="text-brand-600 font-black text-4xl tracking-tighter">CLUT</span>
+                            </div>
+                        </div>
+                        
+                        <div className="space-y-2">
+                            <h1 className="text-4xl font-black text-ink tracking-tight">任務罐</h1>
+                            <p className="text-slate-500 font-medium tracking-wide text-sm uppercase">Chihlee Task Jar v5.9</p>
+                        </div>
+                        
+                        <div className="space-y-4 text-left">
+                            <div><label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">使用者名稱 (ID)</label><input className="w-full border-2 border-white/50 rounded-xl p-3 text-sm mt-1 focus:outline-none focus:border-brand-500 focus:ring-0 transition-colors bg-white/50 backdrop-blur-sm" placeholder="例如：student123" value={userId} onChange={e => setUserId(e.target.value)} /></div>
+                            <div><label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-1 ml-1"><Icons.Link className="w-3 h-3"/> 資料庫網址</label><input className="w-full border-2 border-white/50 rounded-xl p-3 text-sm mt-1 focus:outline-none focus:border-brand-500 focus:ring-0 transition-colors bg-white/50 backdrop-blur-sm" value={dbUrl} onChange={e => setDbUrl(e.target.value)} /></div>
+                            {syncErrorMsg && <div className="text-xs text-amber-600 bg-amber-50/80 p-3 rounded-xl flex items-center gap-2 border border-amber-100 font-medium backdrop-blur-sm"><Icons.AlertTriangle className="w-4 h-4 flex-shrink-0" /> {syncErrorMsg}</div>}
+                        </div>
+                        <button onClick={handleLogin} disabled={!userId || loginLoading} className="w-full bg-gradient-to-r from-brand-600 to-brand-500 text-white font-bold py-4 rounded-xl hover:shadow-lg hover:translate-y-[-2px] disabled:opacity-50 disabled:hover:translate-y-0 transition-all shadow-md flex justify-center items-center gap-2 text-lg tracking-wide">{loginLoading && <Icons.Loader className="w-5 h-5 animate-spin"/>}{loginLoading ? "連線中..." : "開始旅程"}</button>
+                    </div>
+                    
+                    <p className="absolute bottom-6 text-slate-400 text-xs font-medium mix-blend-multiply">Designed for Chihlee University of Technology copyright © 2025 Simon Wong</p>
+                </div>
+            );
+
+            // Onboarding
+            if (view === 'onboarding') return (
+                <div className="flex flex-col h-screen"><header className="glass-panel p-4 shadow-sm text-center font-bold text-lg text-brand-600 tracking-widest uppercase z-10 m-4 rounded-2xl">WELCOME</header><div className="flex-1 p-4 space-y-4"><div className="flex items-start"><div className="w-10 h-10 bg-brand-500 rounded-full flex items-center justify-center mr-3 text-2xl shadow-md text-white">🤖</div><div className="glass-panel p-5 rounded-2xl rounded-tl-none shadow-sm max-w-[80%] text-slate-700 font-medium leading-relaxed bg-white/60">嗨！歡迎來到致理任務罐。我是你的助手，我們一起來設定你的第一個目標吧！</div></div></div><div className="p-4"><button onClick={handleOnboardingComplete} className="w-full bg-brand-600 text-white py-4 rounded-xl font-bold shadow-lg hover:bg-brand-500 transition-colors">建立我的檔案</button></div></div>
+            );
+
+            // Jar Detail View
+            if (activeJarId) {
+                const currentJar = cabinets[currentCabinetIdx].jars.find(j => j.id === activeJarId);
+                
+                const startEditingJar = () => { setEditJarName(currentJar.name); setIsEditingJarName(true); };
+                
+                const startEditingTask = (task) => {
+                    setEditTaskId(task.id);
+                };
+
+                return (
+                    <div className="fixed inset-0 z-40 bg-slate-100/60 backdrop-blur-xl flex flex-col animate-float-in">
+                        <div className="bg-white/40 p-4 shadow-sm flex items-center justify-between border-b border-white/20 backdrop-blur-md">
+                            <button onClick={() => setActiveJarId(null)} className="text-slate-500 hover:text-brand-600 p-2 -ml-2 transition-colors"><Icons.ChevronLeft className="w-7 h-7" /></button>
+                            
+                            {isEditingJarName ? (
+                                <div className="flex items-center gap-2">
+                                    <input 
+                                        className="border-b-2 border-brand-500 text-center font-bold text-xl outline-none w-40 bg-transparent text-ink"
+                                        value={editJarName}
+                                        onChange={e => setEditJarName(e.target.value)}
+                                        autoFocus
+                                    />
+                                    <button onClick={handleUpdateJarName} className="bg-green-100 text-green-600 p-1.5 rounded-full hover:bg-green-200"><Icons.Save className="w-5 h-5" /></button>
+                                </div>
+                            ) : (
+                                <div className="text-center flex items-center justify-center gap-2 group">
+                                    <div>
+                                        <h2 className="font-bold text-xl text-ink tracking-tight">{currentJar?.name}</h2>
+                                        <span className="text-[10px] font-bold text-brand-600 px-2 py-0.5 bg-brand-50/50 rounded-full uppercase tracking-wider">{currentJar?.mode}</span>
+                                    </div>
+                                    <button onClick={startEditingJar} className="text-slate-300 hover:text-brand-500 opacity-0 group-hover:opacity-100 transition-all"><Icons.Edit className="w-4 h-4" /></button>
+                                </div>
+                            )}
+                            
+                            <div className="w-8"></div>
+                        </div>
+                        
+                        <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                            {currentJar?.tasks.length === 0 ? <div className="h-full flex flex-col items-center justify-center text-slate-400 gap-4"><div className="w-24 h-24 bg-white/50 rounded-full flex items-center justify-center backdrop-blur-sm"><Icons.JarEmpty className="w-12 h-12 opacity-30" /></div><p className="font-medium">這裡空空如也</p><p className="text-sm bg-white/50 px-3 py-1 rounded-full shadow-sm backdrop-blur-sm">點擊右下角 + 開始放入任務</p></div> : 
+                            currentJar?.tasks.map(t => (
+                                <div key={t.id} className={`p-5 rounded-2xl border flex items-center gap-4 transition-all duration-300 group
+                                    ${t.completed ? 'bg-slate-50/50 border-transparent opacity-60' : 'glass-panel border-white/60 hover:scale-[1.02]'}`}>
+                                    
+                                    {editTaskId === t.id ? (
+                                        <div className="flex-1 flex flex-col gap-3 animate-float-in">
+                                            <input className="border-2 border-brand-200 rounded-lg p-2 text-sm focus:outline-none focus:border-brand-500 font-bold text-ink bg-white/80" defaultValue={t.name} id={`edit-name-${t.id}`} autoFocus />
+                                            {currentJar.mode === '複雜罐' && (
+                                                <div className="flex gap-2">
+                                                    <input type="time" className="border-2 border-slate-200 rounded-lg p-2 text-xs bg-white/50" defaultValue={t.time} id={`edit-time-${t.id}`} />
+                                                    <input className="border-2 border-slate-200 rounded-lg p-2 text-xs flex-1 bg-white/50" defaultValue={t.desc} placeholder="備註" id={`edit-desc-${t.id}`} />
+                                                </div>
+                                            )}
+                                            <div className="flex justify-end gap-3 mt-1">
+                                                <button onClick={() => setEditTaskId(null)} className="text-xs bg-slate-200 text-slate-600 px-3 py-1.5 rounded-lg font-bold">取消</button>
+                                                <button onClick={() => {
+                                                    const name = document.getElementById(`edit-name-${t.id}`).value;
+                                                    const time = document.getElementById(`edit-time-${t.id}`)?.value;
+                                                    const desc = document.getElementById(`edit-desc-${t.id}`)?.value;
+                                                    handleUpdateTask(t.id, {name, time, desc});
+                                                }} className="text-xs bg-brand-500 text-white px-3 py-1.5 rounded-lg font-bold hover:bg-brand-600 shadow-sm">儲存修改</button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <div onClick={() => toggleTaskComplete(t.id)} className={`w-7 h-7 rounded-full border-2 flex items-center justify-center cursor-pointer transition-colors flex-shrink-0
+                                                ${t.completed ? 'bg-green-500 border-green-500' : 'border-slate-400 hover:border-brand-400 bg-white/50'}`}>
+                                                {t.completed && <Icons.Plus className="w-4 h-4 text-white rotate-45" />}
+                                            </div>
+                                            <div onClick={() => toggleTaskComplete(t.id)} className="flex-1 cursor-pointer">
+                                                <h3 className={`font-bold text-base transition-colors ${t.completed ? 'text-slate-400 line-through decoration-2' : 'text-ink'}`}>{t.name}</h3>
+                                                {(t.time || t.desc) && (
+                                                    <div className="flex flex-wrap gap-2 mt-1">
+                                                        {t.time && <span className="text-[10px] bg-blue-50/80 text-blue-600 px-2 py-0.5 rounded font-bold">🕒 {t.time}</span>}
+                                                        {t.desc && <span className="text-[10px] text-slate-500">{t.desc}</span>}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <button onClick={() => startEditingTask(t)} className="text-slate-300 hover:text-brand-500 p-2 opacity-0 group-hover:opacity-100 transition-all"><Icons.Edit className="w-4 h-4" /></button>
+                                        </>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                        <button onClick={() => setShowAddTaskModal(true)} className="absolute bottom-8 right-6 w-16 h-16 bg-brand-600 text-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all hover:bg-brand-500"><Icons.Plus className="w-8 h-8" /></button>
+                        
+                        {/* 保持不變的 Add Modal */}
+                        {showAddTaskModal && (
+                            <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-4 animate-float-in" onClick={() => setShowAddTaskModal(false)}>
+                                <div className="glass-panel w-full max-w-md rounded-2xl p-6 shadow-2xl bg-white/90" onClick={e => e.stopPropagation()}>
+                                    <h3 className="font-bold text-xl mb-6 text-ink">放入新任務</h3>
+                                    <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.target); handleAddTask({ name: fd.get('name'), time: fd.get('time') }); }}>
+                                        <div className="space-y-5">
+                                            <div><label className="block text-xs font-bold text-slate-400 uppercase mb-1">任務名稱</label><input name="name" required className="w-full border-2 border-slate-200 rounded-xl p-3 text-lg font-bold text-ink focus:outline-none focus:border-brand-500 bg-white/50" autoFocus placeholder="例如：讀書 30 分鐘" /></div>
+                                            {currentJar?.mode === '複雜罐' && <div><label className="block text-xs font-bold text-slate-400 uppercase mb-1">時間</label><input name="time" type="time" className="w-full border-2 border-slate-200 rounded-xl p-3 text-ink focus:outline-none focus:border-brand-500 bg-white/50" /></div>}
+                                        </div>
+                                        <button className="w-full bg-brand-600 text-white font-bold py-4 rounded-xl mt-8 hover:bg-brand-500 shadow-lg transition-all active:scale-95">放入罐子</button>
+                                    </form>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                );
+            }
+
+            // Dashboard Layout
+            return (
+                <div className="flex flex-col h-screen relative">
+                    <header className="glass-panel p-4 flex justify-between items-center shadow-sm z-10 m-2 rounded-2xl">
+                        <button onClick={() => setIsSidebarOpen(true)} className="p-2 -ml-2 text-slate-600 hover:bg-white/50 rounded-full transition-colors"><Icons.Menu className="w-6 h-6" /></button>
+                        <div className="flex flex-col items-center">
+                            <h1 className="font-black text-lg text-ink tracking-tight">
+                                {bottomTab === 'home' && '個人任務櫃'}
+                                {bottomTab === 'history' && '歷史紀錄'}
+                                {bottomTab === 'shared' && '共享任務櫃'}
+                                {bottomTab === 'chat' && '好友聊天'}
+                                {bottomTab === 'ai' && 'AI 助手'}
+                            </h1>
+                            {dbUrl && <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">{syncStatus === 'syncing' && <><Icons.Cloud className="w-3 h-3 animate-pulse text-brand-400" /> 同步中...</>}{syncStatus === 'success' && <><Icons.CloudCheck className="w-3 h-3 text-green-500" /> 已同步</>}{syncStatus === 'error' && <><Icons.CloudOff className="w-3 h-3 text-red-500" /> 同步失敗</>}{syncStatus === 'idle' && <><Icons.CloudCheck className="w-3 h-3" /> 就緒</>}</div>}
+                        </div>
+                        <button className="p-2 -mr-2 text-slate-600 hover:bg-white/50 rounded-full transition-colors"><Icons.Wrench className="w-6 h-6" /></button>
+                    </header>
+
+                    {isSidebarOpen && <div className="absolute inset-0 z-50 bg-black/20 backdrop-blur-sm" onClick={() => setIsSidebarOpen(false)}><div className="w-72 h-full glass-panel p-8 shadow-2xl animate-float-in bg-white/90" onClick={e => e.stopPropagation()}><h2 className="text-2xl font-black mb-8 text-brand-600">MENU</h2><ul className="space-y-6 text-slate-600 font-bold text-lg"><li>使用者: <span className="font-normal text-base block text-slate-400">{userId}</span></li><li onClick={debouncedSync} className="cursor-pointer hover:text-brand-600 flex items-center gap-3 transition-colors"><Icons.RefreshCw className="w-5 h-5"/> 強制同步</li><li onClick={() => { localStorage.clear(); location.reload(); }} className="text-red-500 cursor-pointer hover:text-red-600 transition-colors mt-8 pt-8 border-t border-slate-200">登出帳號</li></ul></div></div>}
+
+                    {bottomTab === 'home' && <HomeTab />}
+                    {bottomTab === 'history' && <HistoryTab cabinets={cabinets} />}
+                    {bottomTab === 'shared' && <SharedTab />}
+                    {bottomTab === 'chat' && <ChatTab />}
+                    {bottomTab === 'ai' && <AIChatTab />}
+
+                    <div className="glass-panel m-2 mb-4 px-6 py-2 pb-2 flex justify-between items-center text-xs font-bold text-slate-400 z-10 rounded-2xl">
+                        <button onClick={() => handleTabChange('history')} className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition-colors ${bottomTab === 'history' ? 'text-brand-600 bg-brand-50/50' : 'hover:text-slate-600'}`}><Icons.History className="w-6 h-6" />紀錄</button>
+                        <button onClick={() => handleTabChange('shared')} className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition-colors ${bottomTab === 'shared' ? 'text-brand-600 bg-brand-50/50' : 'hover:text-slate-600'}`}><Icons.Users className="w-6 h-6" />共享</button>
+                        <div className="relative -top-6"><button onClick={() => handleTabChange('home')} className="bg-gradient-to-br from-brand-500 to-brand-600 text-white p-4 rounded-full shadow-lg hover:scale-110 active:scale-95 transition-all border-4 border-white/50"><Icons.Home className="w-7 h-7" /></button></div>
+                        <button onClick={() => handleTabChange('chat')} className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition-colors ${bottomTab === 'chat' ? 'text-brand-600 bg-brand-50/50' : 'hover:text-slate-600'}`}><Icons.MessageCircle className="w-6 h-6" />好友</button>
+                        <button onClick={() => handleTabChange('ai')} className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition-colors ${bottomTab === 'ai' ? 'text-brand-600 bg-brand-50/50' : 'hover:text-slate-600'}`}><Icons.Bot className="w-6 h-6" />AI</button>
+                    </div>
+
+                    <NPCWizard isOpen={showCabinetWizard} onClose={() => setShowCabinetWizard(false)} steps={[{ key: 'name', question: "這個櫃子(最終目標)叫什麼？", type: 'text' }, { key: 'reward', question: "達成後，給自己什麼獎勵？", type: 'text' }]} onComplete={handleCreateCabinet} title="設定新目標" />
+                    <NPCWizard isOpen={showJarWizard} onClose={() => setShowJarWizard(false)} steps={[{ key: 'name', question: "罐子名稱？", type: 'text' }, { key: 'type', question: "類型？", type: 'select', options: ['學習','運動','生活','娛樂'] }, { key: 'mode', question: "模式？", type: 'select', options: ['簡單罐 (僅打勾)','複雜罐 (需時間)'] }]} onComplete={handleCreateJar} title="新增任務罐" />
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
