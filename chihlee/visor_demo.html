@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V.I.S.O.R. 行車助理系統</title>
+    
+    <!-- 1. 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 2. 引入 React 核心 (使用 CDNJS 穩定源) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    
+    <!-- 3. 引入 Recharts 的必要依賴 (順序很重要) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.8.1/prop-types.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-is/18.2.0/umd/react-is.production.min.js"></script>
+
+    <!-- 4. 引入 Recharts (使用 2.12.7 穩定版) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.12.7/Recharts.min.js"></script>
+    
+    <!-- 5. 引入 Babel (編譯 JSX) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+
+    <!-- 6. 引入 Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn { animation: fadeIn 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-black text-white font-sans selection:bg-cyan-500 selection:text-black">
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+        
+        // 安全地取得 Recharts 元件
+        const Recharts = window.Recharts || null;
+        if (!Recharts) {
+            console.error("Recharts 載入失敗，圖表將無法顯示");
+        }
+        // 解構需要的元件，如果載入失敗則為 undefined
+        const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } = Recharts || {};
+
+        // --- 簡易圖示元件 ---
+        const Icon = ({ name, size = 24, className = "" }) => {
+            useEffect(() => {
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            });
+            return <i data-lucide={name} style={{ width: size, height: size }} className={`inline-block ${className}`}></i>;
+        };
+
+        // --- 模擬數據 ---
+        const rideData = [
+            { time: '10:00', speed: 20, gForce: 0.1 },
+            { time: '10:05', speed: 45, gForce: 0.3 },
+            { time: '10:10', speed: 60, gForce: 0.5 },
+            { time: '10:15', speed: 55, gForce: 0.4 },
+            { time: '10:20', speed: 30, gForce: 0.8 },
+            { time: '10:25', speed: 0, gForce: 0.1 },
+            { time: '10:30', speed: 40, gForce: 0.2 },
+        ];
+
+        const eventData = [
+            { id: 1, type: 'danger', title: '後方逼車警示', time: '10:14 AM', loc: '市民大道四段', duration: '0:15' },
+            { id: 2, type: 'warning', title: '異常傾角偵測', time: '10:08 AM', loc: '建國高架', duration: '0:10' },
+            { id: 3, type: 'info', title: '哨兵模式：移動偵測', time: '昨天 18:30', loc: '住家停車場', duration: '0:30' },
+        ];
+
+        // --- 主應用程式 ---
+        const App = () => {
+            const [activeTab, setActiveTab] = useState('home');
+            const [isSentryMode, setIsSentryMode] = useState(false);
+            const [simulatedSpeed, setSimulatedSpeed] = useState(0);
+            const [simulatedTilt, setSimulatedTilt] = useState(0);
+            const [isConnected, setIsConnected] = useState(true);
+
+            // 模擬數據跳動
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setSimulatedSpeed(Math.floor(Math.random() * (65 - 35 + 1) + 35));
+                    setSimulatedTilt(Math.floor(Math.random() * (15 - (-5) + 1) + -5));
+                }, 800);
+                return () => clearInterval(interval);
+            }, []);
+
+            // 確保圖示在渲染後更新
+            useEffect(() => {
+                if (window.lucide) window.lucide.createIcons();
+            }, [activeTab, isSentryMode, isConnected]);
+
+            const renderContent = () => {
+                switch (activeTab) {
+                    case 'home':
+                        return (
+                            <div className="space-y-6 animate-fadeIn">
+                                {/* 狀態卡片 */}
+                                <div className="bg-slate-800 rounded-2xl p-6 shadow-lg border border-slate-700 relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 p-4 opacity-20">
+                                        <Icon name="shield" size={100} className="text-cyan-400" />
+                                    </div>
+                                    <div className="flex justify-between items-start mb-4">
+                                        <div>
+                                            <h2 className="text-slate-400 text-sm font-medium">系統狀態</h2>
+                                            <div className="flex items-center gap-2 mt-1">
+                                                <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></span>
+                                                <span className="text-white font-bold text-lg">{isConnected ? '系統連線中' : '未連線'}</span>
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <div className="flex items-center gap-2 text-slate-400">
+                                                <Icon name="battery" size={16} /> 85%
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-4 mt-6">
+                                        <div className="text-center p-3 bg-slate-700/50 rounded-xl">
+                                            <div className="text-slate-400 text-xs mb-1">即時車速</div>
+                                            <div className="text-4xl font-black text-cyan-400 font-mono">{simulatedSpeed}</div>
+                                            <div className="text-slate-500 text-xs">km/h</div>
+                                        </div>
+                                        <div className="text-center p-3 bg-slate-700/50 rounded-xl">
+                                            <div className="text-slate-400 text-xs mb-1">車身傾角</div>
+                                            <div className="text-4xl font-black text-purple-400 font-mono">{simulatedTilt}°</div>
+                                            <div className="text-slate-500 text-xs">Angle</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* 快速功能區 */}
+                                <div className="grid grid-cols-2 gap-4">
+                                    <button 
+                                        onClick={() => setIsSentryMode(!isSentryMode)}
+                                        className={`p-4 rounded-xl flex flex-col items-center justify-center gap-2 transition-all border ${isSentryMode ? 'bg-cyan-900/30 border-cyan-500/50' : 'bg-slate-800 border-slate-700'}`}
+                                    >
+                                        <Icon name="eye" size={32} className={isSentryMode ? 'text-cyan-400' : 'text-slate-400'} />
+                                        <span className={isSentryMode ? 'text-cyan-100' : 'text-slate-400'}>
+                                            {isSentryMode ? '哨兵：開啟' : '哨兵：關閉'}
+                                        </span>
+                                    </button>
+
+                                    <button className="p-4 rounded-xl bg-red-900/20 border border-red-500/30 flex flex-col items-center justify-center gap-2 active:bg-red-900/40">
+                                        <Icon name="phone-call" size={32} className="text-red-500 animate-pulse" />
+                                        <span className="text-red-200">E-SOS 求救</span>
+                                    </button>
+                                </div>
+
+                                {/* 近期狀態 */}
+                                <div className="bg-slate-800 rounded-xl p-4 border border-slate-700">
+                                    <h3 className="text-white font-bold mb-3 flex items-center gap-2">
+                                        <Icon name="navigation" size={18} className="text-blue-400"/> 目前位置
+                                    </h3>
+                                    <div className="h-32 bg-slate-700 rounded-lg flex items-center justify-center relative overflow-hidden group">
+                                        <div className="absolute inset-0 bg-gradient-to-br from-slate-600 to-slate-800 opacity-50"></div>
+                                        {/* 簡易地圖網格效果 */}
+                                        <div className="absolute inset-0 opacity-20" style={{backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px'}}></div>
+                                        <div className="absolute flex flex-col items-center">
+                                            <Icon name="map-pin" size={32} className="text-red-500 mb-1 drop-shadow-lg" />
+                                            <span className="text-xs text-white bg-black/50 px-2 py-1 rounded backdrop-blur">台北市大安區...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+
+                    case 'events':
+                        return (
+                            <div className="space-y-4 animate-fadeIn">
+                                <h2 className="text-xl font-bold text-white mb-2">智慧事件簿</h2>
+                                {eventData.map((event) => (
+                                    <div key={event.id} className="bg-slate-800 p-4 rounded-xl border border-slate-700 flex gap-4">
+                                        <div className="w-24 h-24 bg-slate-900 rounded-lg flex-shrink-0 flex items-center justify-center relative overflow-hidden group cursor-pointer">
+                                            <div className="absolute inset-0 bg-slate-700 opacity-50"></div>
+                                            <Icon name="play-circle" size={32} className="text-white/80 z-10 group-hover:scale-110 transition-transform" />
+                                            <span className="absolute bottom-1 right-1 text-[10px] bg-black/70 text-white px-1 rounded">{event.duration}</span>
+                                        </div>
+                                        <div className="flex-1 flex flex-col justify-between">
+                                            <div>
+                                                <div className="flex justify-between items-start">
+                                                    <h3 className="text-white font-bold text-md">{event.title}</h3>
+                                                    {event.type === 'danger' && <Icon name="alert-triangle" size={16} className="text-red-500" />}
+                                                </div>
+                                                <p className="text-slate-400 text-xs mt-1 flex items-center gap-1">
+                                                    <Icon name="map-pin" size={10} /> {event.loc}
+                                                </p>
+                                                <p className="text-slate-500 text-xs">{event.time}</p>
+                                            </div>
+                                            <div className="flex gap-2 mt-2">
+                                                <button className="flex-1 bg-cyan-600 hover:bg-cyan-500 text-white text-xs py-1.5 rounded transition-colors">
+                                                    回放
+                                                </button>
+                                                <button className="flex-1 bg-slate-700 hover:bg-slate-600 text-white text-xs py-1.5 rounded transition-colors">
+                                                    下載
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        );
+
+                    case 'stats':
+                        return (
+                            <div className="space-y-6 animate-fadeIn">
+                                <h2 className="text-xl font-bold text-white">騎乘戰情室</h2>
+                                
+                                <div className="bg-gradient-to-r from-cyan-900 to-blue-900 p-6 rounded-2xl text-white flex justify-between items-center shadow-lg">
+                                    <div>
+                                        <div className="text-cyan-200 text-sm">今日安全評分</div>
+                                        <div className="text-5xl font-black mt-1">92<span className="text-lg text-cyan-200">/100</span></div>
+                                    </div>
+                                    <div className="text-right space-y-1">
+                                        <div className="text-xs text-blue-200">急煞次數: 1</div>
+                                        <div className="text-xs text-blue-200">危險超車: 0</div>
+                                        <div className="text-xs text-blue-200">里程: 12.5km</div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-slate-800 p-4 rounded-xl border border-slate-700">
+                                    <h3 className="text-slate-300 font-bold mb-4 text-sm flex items-center gap-2">
+                                        <Icon name="activity" size={16} className="text-cyan-400"/> 速度與G值分析
+                                    </h3>
+                                    <div className="h-64 w-full">
+                                        {Recharts ? (
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <AreaChart data={rideData}>
+                                                    <defs>
+                                                        <linearGradient id="colorSpeed" x1="0" y1="0" x2="0" y2="1">
+                                                            <stop offset="5%" stopColor="#22d3ee" stopOpacity={0.3}/>
+                                                            <stop offset="95%" stopColor="#22d3ee" stopOpacity={0}/>
+                                                        </linearGradient>
+                                                    </defs>
+                                                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                                                    <XAxis dataKey="time" stroke="#94a3b8" fontSize={10} />
+                                                    <YAxis stroke="#94a3b8" fontSize={10} />
+                                                    <Tooltip 
+                                                        contentStyle={{backgroundColor: '#1e293b', borderColor: '#334155', color: '#fff'}}
+                                                        itemStyle={{color: '#22d3ee'}}
+                                                    />
+                                                    <Area type="monotone" dataKey="speed" stroke="#22d3ee" fillOpacity={1} fill="url(#colorSpeed)" />
+                                                    <Line type="monotone" dataKey="gForce" stroke="#f87171" strokeWidth={2} dot={false} />
+                                                </AreaChart>
+                                            </ResponsiveContainer>
+                                        ) : (
+                                            <div className="flex items-center justify-center h-full text-slate-500">
+                                                <div className="text-center">
+                                                    <p>圖表載入中或連線異常</p>
+                                                    <p className="text-xs mt-2 text-slate-600">請檢查網路連線</p>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        );
+
+                    case 'settings':
+                        return (
+                            <div className="space-y-6 animate-fadeIn">
+                                <h2 className="text-xl font-bold text-white">個人化設定</h2>
+                                
+                                <div className="bg-slate-800 rounded-xl overflow-hidden border border-slate-700">
+                                    <div className="p-4 border-b border-slate-700">
+                                        <h3 className="text-cyan-400 text-sm font-bold mb-3 uppercase tracking-wider">AI 防護參數</h3>
+                                        
+                                        <div className="mb-4">
+                                            <div className="flex justify-between text-white text-sm mb-2">
+                                                <span>後方逼車警示距離</span>
+                                                <span className="text-cyan-400">8 公尺</span>
+                                            </div>
+                                            <input type="range" className="w-full h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer accent-cyan-500" />
+                                        </div>
+
+                                        <div>
+                                            <div className="flex justify-between text-white text-sm mb-2">
+                                                <span>傾角警示閾值</span>
+                                                <span className="text-cyan-400">35 度</span>
+                                            </div>
+                                            <input type="range" className="w-full h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer accent-cyan-500" />
+                                        </div>
+                                    </div>
+
+                                    <div className="p-4">
+                                        <h3 className="text-cyan-400 text-sm font-bold mb-3 uppercase tracking-wider">HUD 顯示</h3>
+                                        {['顯示時速', '顯示導航箭頭', '顯示時間', '顯示來電通知'].map((item, idx) => (
+                                            <div key={idx} className="flex justify-between items-center py-3 border-b border-slate-700/50 last:border-0">
+                                                <span className="text-white text-sm">{item}</span>
+                                                <div className={`w-12 h-6 rounded-full p-1 cursor-pointer transition-colors ${idx < 3 ? 'bg-cyan-600' : 'bg-slate-600'}`}>
+                                                    <div className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform ${idx < 3 ? 'translate-x-6' : ''}`}></div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                
+                                <button className="w-full bg-slate-800 text-red-400 py-3 rounded-xl font-bold border border-slate-700 hover:bg-slate-700 transition-colors">
+                                    登出 V.I.S.O.R.
+                                </button>
+                            </div>
+                        );
+                    default:
+                        return null;
+                }
+            };
+
+            const NavButton = ({ iconName, label, isActive, onClick }) => (
+                <button 
+                    onClick={onClick}
+                    className={`flex flex-col items-center gap-1 transition-all duration-300 ${isActive ? 'text-cyan-400 transform -translate-y-1' : 'text-slate-500 hover:text-slate-300'}`}
+                >
+                    <Icon name={iconName} size={24} />
+                    <span className="text-[10px] font-medium">{label}</span>
+                </button>
+            );
+
+            return (
+                <div className="flex justify-center items-center min-h-screen bg-black font-sans p-0 sm:p-4">
+                    {/* 手機外框 */}
+                    <div className="w-full max-w-md h-[100vh] sm:h-[850px] bg-slate-900 sm:rounded-[3rem] sm:border-8 sm:border-slate-800 overflow-hidden relative shadow-2xl flex flex-col">
+                        
+                        {/* 頂部狀態列 */}
+                        <div className="bg-slate-900 px-6 pt-6 pb-2 flex justify-between items-center z-10 select-none">
+                            <div className="flex items-center gap-2">
+                                <Icon name="shield" className="text-cyan-400 fill-cyan-400/20" />
+                                <h1 className="text-xl font-black text-white tracking-widest italic">V.I.S.O.R.</h1>
+                            </div>
+                            <div className="flex gap-3">
+                                <Icon name="bluetooth" size={18} className={isConnected ? "text-blue-400" : "text-slate-600"} />
+                                <Icon name="wifi" size={18} className={isConnected ? "text-green-400" : "text-slate-600"} />
+                                <Icon name="bell" size={18} className="text-slate-400" />
+                            </div>
+                        </div>
+
+                        {/* 主要內容區 */}
+                        <div className="flex-1 overflow-y-auto p-6 scrollbar-hide pb-20">
+                            {renderContent()}
+                        </div>
+
+                        {/* 底部導航列 */}
+                        <div className="bg-slate-800/90 backdrop-blur-md p-4 pb-6 border-t border-slate-700/50 absolute bottom-0 w-full z-20">
+                            <div className="flex justify-around items-center">
+                                <NavButton iconName="shield" label="監控" isActive={activeTab === 'home'} onClick={() => setActiveTab('home')} />
+                                <NavButton iconName="video" label="事件" isActive={activeTab === 'events'} onClick={() => setActiveTab('events')} />
+                                <NavButton iconName="activity" label="戰情" isActive={activeTab === 'stats'} onClick={() => setActiveTab('stats')} />
+                                <NavButton iconName="settings" label="設定" isActive={activeTab === 'settings'} onClick={() => setActiveTab('settings')} />
+                            </div>
+                        </div>
+                        
+                        {/* 底部 Home Bar 模擬 */}
+                        <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-slate-600 rounded-full z-30"></div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
