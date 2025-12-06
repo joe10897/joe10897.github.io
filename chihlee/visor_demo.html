@@ -33,6 +33,12 @@
             to { opacity: 1; transform: translateY(0); }
         }
         .animate-fadeIn { animation: fadeIn 0.5s ease-out forwards; }
+        
+        /* 模擬 OLED 像素感 */
+        .font-pixel {
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body class="bg-black text-white font-sans selection:bg-cyan-500 selection:text-black">
@@ -40,24 +46,108 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect, useMemo } = React;
+        // 加入 useRef
+        const { useState, useEffect, useMemo, useRef } = React;
         
         // 安全地取得 Recharts 元件
         const Recharts = window.Recharts || null;
         if (!Recharts) {
             console.error("Recharts 載入失敗，圖表將無法顯示");
         }
-        // 解構需要的元件，如果載入失敗則為 undefined
         const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } = Recharts || {};
 
-        // --- 簡易圖示元件 ---
+        // --- 修正後的 Icon 元件 (解決 toSvg 錯誤) ---
+        // 輔助函式：將 kebab-case (如 arrow-up) 轉為 PascalCase (如 ArrowUp)
+        const toPascalCase = (str) => 
+            str.replace(/(^\w|-\w)/g, (text) => text.replace(/-/, '').toUpperCase());
+
         const Icon = ({ name, size = 24, className = "" }) => {
+            const containerRef = useRef(null);
+
             useEffect(() => {
-                if (window.lucide) {
-                    window.lucide.createIcons();
+                if (!window.lucide || !containerRef.current) return;
+                
+                const iconName = toPascalCase(name);
+                const iconNode = window.lucide.icons[iconName];
+
+                if (!iconNode) {
+                    console.warn(`Icon ${name} (${iconName}) not found`);
+                    return;
                 }
-            });
-            return <i data-lucide={name} style={{ width: size, height: size }} className={`inline-block ${className}`}></i>;
+
+                // 使用 lucide.createElement 生成原生 DOM 元素
+                const svgElement = window.lucide.createElement(iconNode);
+                
+                // 設定屬性
+                svgElement.setAttribute('width', size);
+                svgElement.setAttribute('height', size);
+                if (className) svgElement.setAttribute('class', className);
+
+                // 清空容器並掛載 SVG
+                // 這樣 React 就不會干涉 SVG 內部的 DOM，避免 removeChild 錯誤
+                containerRef.current.innerHTML = '';
+                containerRef.current.appendChild(svgElement);
+
+            }, [name, size, className]);
+
+            return <span ref={containerRef} style={{ display: 'inline-flex', alignItems: 'center', lineHeight: 0 }}></span>;
+        };
+
+        // --- 模擬 HUD 畫面元件 ---
+        const HUDPreview = ({ options }) => {
+            const isEnabled = (id) => options.find(o => o.id === id)?.enabled;
+
+            return (
+                <div className="w-full bg-black border-4 border-slate-700 rounded-lg p-2 relative mb-6 shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-slate-800 text-[10px] px-2 rounded-b text-slate-400">HUD 預覽 (128x64)</div>
+                    
+                    <div className="aspect-[2/1] w-full bg-black relative overflow-hidden font-pixel flex flex-col justify-between p-4">
+                        <div className="flex justify-between items-start border-b border-white/30 pb-1 mb-1">
+                            <span className="text-cyan-400 text-xs font-bold">V.I.S.O.R.</span>
+                            {isEnabled('time') && <span className="text-white text-xs">10:42 AM</span>}
+                        </div>
+
+                        <div className="flex-1 flex items-center justify-between gap-2">
+                            <div className="flex flex-col items-start justify-center">
+                                {isEnabled('speed') && (
+                                    <div className="text-white">
+                                        <span className="text-4xl font-bold leading-none">58</span>
+                                        <span className="text-[10px] ml-1">km/h</span>
+                                    </div>
+                                )}
+                                {isEnabled('nav') && (
+                                    <div className="flex items-center gap-1 mt-1 text-yellow-400 animate-pulse">
+                                        <Icon name="arrow-up-right" size={16} />
+                                        <span className="text-xs">200m 右轉</span>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="flex flex-col items-end gap-1">
+                                {isEnabled('camera') && (
+                                    <div className="bg-red-900/50 text-red-400 px-1 border border-red-500/50 text-[10px] flex items-center gap-1">
+                                        <Icon name="camera" size={10} />
+                                        <span>測速</span>
+                                    </div>
+                                )}
+                                {isEnabled('calls') && (
+                                    <div className="text-green-400 text-[10px] flex items-center gap-1 border border-green-500/30 px-1 rounded">
+                                        <Icon name="phone" size={10} />
+                                        <span>來電: Mom</span>
+                                    </div>
+                                )}
+                                {isEnabled('music') && (
+                                    <div className="text-blue-300 text-[10px] flex items-center gap-1 max-w-[80px] truncate">
+                                        <Icon name="music" size={10} />
+                                        <span className="truncate">Never Gonna...</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        <div className="w-full h-[1px] bg-white/20 mt-1"></div>
+                    </div>
+                </div>
+            );
         };
 
         // --- 模擬數據 ---
@@ -80,10 +170,27 @@
         // --- 主應用程式 ---
         const App = () => {
             const [activeTab, setActiveTab] = useState('home');
+            const [settingsView, setSettingsView] = useState('main'); 
             const [isSentryMode, setIsSentryMode] = useState(false);
             const [simulatedSpeed, setSimulatedSpeed] = useState(0);
             const [simulatedTilt, setSimulatedTilt] = useState(0);
             const [isConnected, setIsConnected] = useState(true);
+
+            // HUD 設定狀態
+            const [hudOptions, setHudOptions] = useState([
+                { id: 'speed', label: '顯示即時時速', enabled: true },
+                { id: 'nav', label: '顯示導航箭頭', enabled: true },
+                { id: 'time', label: '顯示目前時間', enabled: true },
+                { id: 'camera', label: '測速照相提醒', enabled: true },
+                { id: 'calls', label: '顯示來電通知', enabled: false },
+                { id: 'music', label: '顯示音樂資訊', enabled: false },
+            ]);
+
+            const toggleHudOption = (id) => {
+                setHudOptions(prev => prev.map(opt => 
+                    opt.id === id ? { ...opt, enabled: !opt.enabled } : opt
+                ));
+            };
 
             // 模擬數據跳動
             useEffect(() => {
@@ -94,12 +201,53 @@
                 return () => clearInterval(interval);
             }, []);
 
-            // 確保圖示在渲染後更新
-            useEffect(() => {
-                if (window.lucide) window.lucide.createIcons();
-            }, [activeTab, isSentryMode, isConnected]);
-
             const renderContent = () => {
+                // 如果在設定頁面的子頁面
+                if (activeTab === 'settings' && settingsView === 'hud') {
+                    return (
+                        <div className="space-y-6 animate-fadeIn">
+                            <div className="flex items-center gap-3 mb-4">
+                                <button 
+                                    onClick={() => setSettingsView('main')}
+                                    className="p-2 rounded-full hover:bg-slate-800 transition-colors"
+                                >
+                                    <Icon name="arrow-left" size={20} className="text-white" />
+                                </button>
+                                <h2 className="text-xl font-bold text-white">HUD 顯示配置</h2>
+                            </div>
+
+                            {/* HUD 預覽元件 */}
+                            <HUDPreview options={hudOptions} />
+
+                            <div className="bg-slate-800 rounded-xl overflow-hidden border border-slate-700">
+                                <div className="p-4 border-b border-slate-700">
+                                    <h3 className="text-cyan-400 text-sm font-bold mb-3 uppercase tracking-wider">顯示內容開關</h3>
+                                    {hudOptions.map((item) => (
+                                        <div key={item.id} className="flex justify-between items-center py-3 border-b border-slate-700/50 last:border-0">
+                                            <span className="text-white text-sm">{item.label}</span>
+                                            <div 
+                                                onClick={() => toggleHudOption(item.id)}
+                                                className={`w-12 h-6 rounded-full p-1 cursor-pointer transition-colors ${item.enabled ? 'bg-cyan-600' : 'bg-slate-600'}`}
+                                            >
+                                                <div className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-200 ${item.enabled ? 'translate-x-6' : ''}`}></div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                
+                                <div className="p-4">
+                                    <h3 className="text-cyan-400 text-sm font-bold mb-3 uppercase tracking-wider">OLED 亮度</h3>
+                                    <div className="flex items-center gap-3">
+                                        <Icon name="sun" size={16} className="text-slate-400" />
+                                        <input type="range" className="w-full h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer accent-cyan-500" defaultValue="80" />
+                                        <Icon name="sun" size={24} className="text-white" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                }
+
                 switch (activeTab) {
                     case 'home':
                         return (
@@ -270,43 +418,53 @@
                             <div className="space-y-6 animate-fadeIn">
                                 <h2 className="text-xl font-bold text-white">個人化設定</h2>
                                 
-                                <div className="bg-slate-800 rounded-xl overflow-hidden border border-slate-700">
-                                    <div className="p-4 border-b border-slate-700">
-                                        <h3 className="text-cyan-400 text-sm font-bold mb-3 uppercase tracking-wider">AI 防護參數</h3>
-                                        
-                                        <div className="mb-4">
-                                            <div className="flex justify-between text-white text-sm mb-2">
-                                                <span>後方逼車警示距離</span>
-                                                <span className="text-cyan-400">8 公尺</span>
-                                            </div>
-                                            <input type="range" className="w-full h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer accent-cyan-500" />
-                                        </div>
-
-                                        <div>
-                                            <div className="flex justify-between text-white text-sm mb-2">
-                                                <span>傾角警示閾值</span>
-                                                <span className="text-cyan-400">35 度</span>
-                                            </div>
-                                            <input type="range" className="w-full h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer accent-cyan-500" />
-                                        </div>
-                                    </div>
-
-                                    <div className="p-4">
-                                        <h3 className="text-cyan-400 text-sm font-bold mb-3 uppercase tracking-wider">HUD 顯示</h3>
-                                        {['顯示時速', '顯示導航箭頭', '顯示時間', '顯示來電通知'].map((item, idx) => (
-                                            <div key={idx} className="flex justify-between items-center py-3 border-b border-slate-700/50 last:border-0">
-                                                <span className="text-white text-sm">{item}</span>
-                                                <div className={`w-12 h-6 rounded-full p-1 cursor-pointer transition-colors ${idx < 3 ? 'bg-cyan-600' : 'bg-slate-600'}`}>
-                                                    <div className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform ${idx < 3 ? 'translate-x-6' : ''}`}></div>
+                                <div className="space-y-4">
+                                    {/* AI 參數卡片 */}
+                                    <div className="bg-slate-800 rounded-xl overflow-hidden border border-slate-700">
+                                        <div className="p-4 border-b border-slate-700">
+                                            <h3 className="text-cyan-400 text-sm font-bold mb-3 uppercase tracking-wider flex items-center gap-2">
+                                                <Icon name="cpu" size={16} /> AI 防護參數
+                                            </h3>
+                                            
+                                            <div className="mb-4">
+                                                <div className="flex justify-between text-white text-sm mb-2">
+                                                    <span>後方逼車警示距離</span>
+                                                    <span className="text-cyan-400">8 公尺</span>
                                                 </div>
+                                                <input type="range" className="w-full h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer accent-cyan-500" />
                                             </div>
-                                        ))}
+
+                                            <div>
+                                                <div className="flex justify-between text-white text-sm mb-2">
+                                                    <span>傾角警示閾值</span>
+                                                    <span className="text-cyan-400">35 度</span>
+                                                </div>
+                                                <input type="range" className="w-full h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer accent-cyan-500" />
+                                            </div>
+                                        </div>
                                     </div>
+
+                                    {/* HUD 設定入口 */}
+                                    <button 
+                                        onClick={() => setSettingsView('hud')}
+                                        className="w-full bg-slate-800 p-4 rounded-xl border border-slate-700 flex justify-between items-center group hover:border-cyan-500/50 transition-colors"
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <div className="bg-cyan-900/30 p-2 rounded-lg text-cyan-400">
+                                                <Icon name="monitor" size={24} />
+                                            </div>
+                                            <div className="text-left">
+                                                <div className="text-white font-bold">HUD 顯示配置</div>
+                                                <div className="text-slate-400 text-xs">自定義頭盔顯示內容</div>
+                                            </div>
+                                        </div>
+                                        <Icon name="chevron-right" className="text-slate-500 group-hover:text-white transition-colors" />
+                                    </button>
+                                    
+                                    <button className="w-full bg-slate-800 text-red-400 py-3 rounded-xl font-bold border border-slate-700 hover:bg-slate-700 transition-colors">
+                                        登出 V.I.S.O.R.
+                                    </button>
                                 </div>
-                                
-                                <button className="w-full bg-slate-800 text-red-400 py-3 rounded-xl font-bold border border-slate-700 hover:bg-slate-700 transition-colors">
-                                    登出 V.I.S.O.R.
-                                </button>
                             </div>
                         );
                     default:
@@ -350,10 +508,10 @@
                         {/* 底部導航列 */}
                         <div className="bg-slate-800/90 backdrop-blur-md p-4 pb-6 border-t border-slate-700/50 absolute bottom-0 w-full z-20">
                             <div className="flex justify-around items-center">
-                                <NavButton iconName="shield" label="監控" isActive={activeTab === 'home'} onClick={() => setActiveTab('home')} />
-                                <NavButton iconName="video" label="事件" isActive={activeTab === 'events'} onClick={() => setActiveTab('events')} />
-                                <NavButton iconName="activity" label="戰情" isActive={activeTab === 'stats'} onClick={() => setActiveTab('stats')} />
-                                <NavButton iconName="settings" label="設定" isActive={activeTab === 'settings'} onClick={() => setActiveTab('settings')} />
+                                <NavButton iconName="shield" label="監控" isActive={activeTab === 'home' && settingsView === 'main'} onClick={() => {setActiveTab('home'); setSettingsView('main');}} />
+                                <NavButton iconName="video" label="事件" isActive={activeTab === 'events'} onClick={() => {setActiveTab('events'); setSettingsView('main');}} />
+                                <NavButton iconName="activity" label="戰情" isActive={activeTab === 'stats'} onClick={() => {setActiveTab('stats'); setSettingsView('main');}} />
+                                <NavButton iconName="settings" label="設定" isActive={activeTab === 'settings'} onClick={() => {setActiveTab('settings'); setSettingsView('main');}} />
                             </div>
                         </div>
                         
