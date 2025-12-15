@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>任務罐 APP v7.5</title>
+    <title>任務罐 APP v7.9</title>
     
     <!-- 載入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -56,7 +56,6 @@
         @keyframes glow { 0%, 100% { box-shadow: 0 0 15px rgba(251, 191, 36, 0.4); border-color: #f59e0b; } 50% { box-shadow: 0 0 30px rgba(251, 191, 36, 0.7); border-color: #fbbf24; } }
         .jar-complete { animation: glow 3s ease-in-out infinite; }
 
-        /* 打字動畫 */
         .typing-dot { animation: typing 1.4s infinite ease-in-out both; }
         .typing-dot:nth-child(1) { animation-delay: -0.32s; }
         .typing-dot:nth-child(2) { animation-delay: -0.16s; }
@@ -77,7 +76,7 @@
     <script type="text/babel">
         const { useState, useEffect, useRef, useCallback } = React;
         const APP_ICON_URL = "https://upload.wikimedia.org/wikipedia/zh/7/73/Chihlee_University_of_Technology_round_logo.png";
-        const GEMINI_API_KEY = "AIzaSyCF9huhnacOivPV6rA7nXKtk2k8ggtnLZw"; // 使用者提供的 Key
+        const GEMINI_API_KEY = "AIzaSyCF9huhnacOivPV6rA7nXKtk2k8ggtnLZw"; 
         const generateId = () => Math.random().toString(36).substr(2, 9);
 
         // --- ICONS ---
@@ -193,7 +192,7 @@
                         <div className="p-4 space-y-6">
                             <div><h4 className="text-xs font-bold text-slate-400 uppercase mb-2">帳號資訊</h4><div className="bg-slate-50 p-3 rounded-xl border border-slate-100 space-y-1"><p className="text-sm font-bold text-ink flex justify-between">ID: <span>{userId}</span></p><p className="text-[10px] text-slate-400 truncate">DB: {dbUrl ? '已連線' : '本機模式'}</p></div></div>
                             <div><h4 className="text-xs font-bold text-slate-400 uppercase mb-2">資料管理</h4><button onClick={onClearCache} className="w-full text-left p-2 text-sm text-slate-600 hover:bg-slate-50 rounded-lg transition-colors flex items-center gap-2"><Icons.RefreshCw className="w-4 h-4" /> 清除本機快取</button><button onClick={onLogout} className="w-full text-left p-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-2 mt-1"><Icons.UserPlus className="w-4 h-4 rotate-180" /> 登出帳號</button></div>
-                            <div className="text-center pt-2"><p className="text-[10px] text-slate-300">Version 7.5</p></div>
+                            <div className="text-center pt-2"><p className="text-[10px] text-slate-300">Version 7.9 (Stable)</p></div>
                         </div>
                     </div>
                 </div>
@@ -208,44 +207,159 @@
             const handleChange = (val) => setAnswers({...answers, [step.key]: val});
             const handleMultiSelect = (val) => { const current = answers[step.key] || []; if (current.includes(val)) handleChange(current.filter(x => x !== val)); else handleChange([...current, val]); };
             return (
-                <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-float-in"><div className="glass-panel rounded-2xl w-full max-w-md shadow-xl overflow-hidden border-t border-white/50 relative"><button onClick={onClose} className="absolute top-4 right-4 text-white/80 hover:text-white z-10 p-1"><Icons.X className="w-6 h-6" /></button><div className="bg-brand-500/90 backdrop-blur-md p-4 flex items-center border-b border-white/10"><div className="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center text-2xl mr-3 shadow-sm">🤖</div><h3 className="text-white font-bold text-lg tracking-wide">{title}</h3></div><div className="p-6"><div className="mb-6 bg-white/40 p-4 rounded-xl rounded-tl-none border border-white/30 text-ink shadow-sm"><p className="font-medium text-lg">{step.question}</p></div>{step.type === 'text' && <input type="text" className="w-full border-2 border-white/50 rounded-xl p-3 outline-none focus:border-brand-500 bg-white/60 backdrop-blur-sm transition-colors text-lg" placeholder="請輸入..." value={answers[step.key] || ''} onChange={(e) => handleChange(e.target.value)} autoFocus />}{step.type === 'select' && <select className="w-full border-2 border-white/50 rounded-xl p-3 outline-none bg-white/60 backdrop-blur-sm focus:border-brand-500 transition-colors text-lg" value={answers[step.key] || step.options[0]} onChange={(e) => handleChange(e.target.value)}>{step.options.map(opt => <option key={opt} value={opt}>{opt}</option>)}</select>}{step.type === 'multi-friend' && <div className="space-y-2 max-h-48 overflow-y-auto">{friends.length === 0 ? <p className="text-slate-400 text-sm">暫無好友可選 (跳過)</p> : friends.map(f => (<div key={f} onClick={() => handleMultiSelect(f)} className={`p-3 rounded-xl border flex items-center justify-between cursor-pointer transition-colors ${(answers[step.key] || []).includes(f) ? 'border-brand-500 bg-brand-50/50' : 'border-white/50 bg-white/40'}`}><span>{f}</span>{(answers[step.key] || []).includes(f) && <Icons.Check className="w-4 h-4 text-brand-600" />}</div>))}</div>}<div className="mt-8 flex justify-end"><button onClick={handleNext} disabled={!answers[step.key] && step.type !== 'select' && step.type !== 'multi-friend'} className="bg-brand-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-brand-500 disabled:opacity-50 transition-all shadow-md active:scale-95">{currentStep === steps.length - 1 ? "完成" : "下一步"}</button></div></div></div></div>
+                <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-float-in">
+                    <div className="glass-panel rounded-2xl w-full max-w-md shadow-xl overflow-hidden border-t border-white/50 relative">
+                        <button onClick={onClose} className="absolute top-4 right-4 text-white/80 hover:text-white z-10 p-1"><Icons.X className="w-6 h-6" /></button>
+                        <div className="bg-brand-500/90 backdrop-blur-md p-4 flex items-center border-b border-white/10">
+                            <div className="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center text-2xl mr-3 shadow-sm">🤖</div>
+                            <h3 className="text-white font-bold text-lg tracking-wide">{title}</h3>
+                        </div>
+                        <div className="p-6">
+                            <div className="mb-6 bg-white/40 p-4 rounded-xl rounded-tl-none border border-white/30 text-ink shadow-sm"><p className="font-medium text-lg">{step.question}</p></div>
+                            {step.type === 'text' && <input type="text" className="w-full border-2 border-white/50 rounded-xl p-3 outline-none focus:border-brand-500 bg-white/60 backdrop-blur-sm transition-colors text-lg" placeholder="請輸入..." value={answers[step.key] || ''} onChange={(e) => handleChange(e.target.value)} autoFocus />}
+                            {step.type === 'select' && <select className="w-full border-2 border-white/50 rounded-xl p-3 outline-none bg-white/60 backdrop-blur-sm focus:border-brand-500 transition-colors text-lg" value={answers[step.key] || step.options[0]} onChange={(e) => handleChange(e.target.value)}>{step.options.map(opt => <option key={opt} value={opt}>{opt}</option>)}</select>}
+                            {step.type === 'multi-friend' && (
+                                <div className="space-y-2 max-h-48 overflow-y-auto">
+                                    {friends.length === 0 ? <p className="text-slate-400 text-sm">暫無好友可選 (跳過)</p> : 
+                                    friends.map(f => (
+                                        <div key={f} onClick={() => handleMultiSelect(f)} className={`p-3 rounded-xl border flex items-center justify-between cursor-pointer transition-colors ${(answers[step.key] || []).includes(f) ? 'border-brand-500 bg-brand-50/50' : 'border-white/50 bg-white/40'}`}>
+                                            <span>{f}</span>
+                                            {(answers[step.key] || []).includes(f) && <Icons.Check className="w-4 h-4 text-brand-600" />}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                            <div className="mt-8 flex justify-end">
+                                <button onClick={handleNext} disabled={!answers[step.key] && step.type !== 'select' && step.type !== 'multi-friend'} className="bg-brand-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-brand-500 disabled:opacity-50 transition-all shadow-md active:scale-95">
+                                    {currentStep === steps.length - 1 ? "完成" : "下一步"}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             );
         };
+
         const ChatRoom = ({ me, friendId, dbUrl, onClose }) => {
             const [msgs, setMsgs] = useState([]);
             const [input, setInput] = useState('');
             const endRef = useRef(null);
-            const loadMsgs = useCallback(async () => { if (!dbUrl) return; try { const res = await api.get(dbUrl, 'get_chat', { userId: me, friendId }); if (res.result === 'success') setMsgs(res.messages); } catch(e) { } }, [dbUrl, me, friendId]);
-            useEffect(() => { loadMsgs(); const timer = setInterval(loadMsgs, 5000); return () => clearInterval(timer); }, [loadMsgs]);
-            // FIX: Scroll to bottom after render
-            useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs]);
-            const send = async () => { if (!input.trim() || !dbUrl) return; const tempMsg = { sender: me, text: input, time: new Date().toISOString() }; setMsgs(prev => [...prev, tempMsg]); setInput(''); try { await api.post(dbUrl, 'send_message', { userId: me, friendId, message: tempMsg.text }); } catch(e){} loadMsgs(); };
+
+            const loadMsgs = useCallback(async () => {
+                if (!dbUrl) return;
+                try {
+                    const res = await api.get(dbUrl, 'get_chat', { userId: me, friendId });
+                    if (res.result === 'success') setMsgs(res.messages);
+                } catch(e) { }
+            }, [dbUrl, me, friendId]);
+
+            useEffect(() => {
+                loadMsgs();
+                const timer = setInterval(loadMsgs, 5000);
+                return () => clearInterval(timer);
+            }, [loadMsgs]);
+
+            useEffect(() => { 
+                endRef.current?.scrollIntoView({ behavior: "smooth" }); 
+            }, [msgs]);
+
+            const send = async () => {
+                if (!input.trim() || !dbUrl) return;
+                const tempMsg = { sender: me, text: input, time: new Date().toISOString() };
+                setMsgs(prev => [...prev, tempMsg]);
+                setInput('');
+                try { await api.post(dbUrl, 'send_message', { userId: me, friendId, message: tempMsg.text }); } catch(e){}
+                loadMsgs();
+            };
+
             return (
-                <div className="fixed inset-0 z-50 bg-slate-100 flex flex-col animate-float-in"><div className="glass-panel p-4 flex items-center gap-3 shadow-sm z-10 bg-white/80"><button onClick={onClose}><Icons.ChevronLeft className="w-6 h-6 text-slate-600" /></button><h3 className="font-bold text-lg">{friendId}</h3></div>
-                <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[#e5e5ea] flex flex-col">
-                    {/* FIX: Map in standard order (Chronological), Flex col handles top-to-bottom */}
-                    {msgs.map((m, i) => (<div key={i} className={`flex ${m.sender === me ? 'justify-end' : 'justify-start'} mb-3`}><div className={`p-3 rounded-2xl max-w-[80%] text-sm shadow-sm ${m.sender === me ? 'bg-blue-500 text-white rounded-br-none' : 'bg-white text-black rounded-bl-none'}`}>{m.text}</div></div>))}
-                    <div ref={endRef}></div>
+                <div className="fixed inset-0 z-50 bg-slate-100 flex flex-col animate-float-in">
+                    <div className="glass-panel p-4 flex items-center gap-3 shadow-sm z-10 bg-white/80">
+                        <button onClick={onClose}><Icons.ChevronLeft className="w-6 h-6 text-slate-600" /></button>
+                        <h3 className="font-bold text-lg">{friendId}</h3>
+                    </div>
+                    
+                    <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[#e5e5ea] flex flex-col">
+                        <div ref={endRef}></div>
+                        {[...msgs].reverse().map((m, i) => (
+                            <div key={i} className={`flex ${m.sender === me ? 'justify-end' : 'justify-start'} mb-3`}>
+                                <div className={`p-3 rounded-2xl max-w-[80%] text-sm shadow-sm ${m.sender === me ? 'bg-blue-500 text-white rounded-br-none' : 'bg-white text-black rounded-bl-none'}`}>
+                                    {m.text}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    
+                    <div className="p-3 bg-white flex gap-2 border-t border-slate-200">
+                        <input className="flex-1 bg-slate-100 rounded-full px-4 py-2 outline-none" value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && send()} placeholder="傳送訊息..." />
+                        <button onClick={send} className="bg-blue-500 text-white p-2 rounded-full"><Icons.Send className="w-5 h-5" /></button>
+                    </div>
                 </div>
-                <div className="p-3 bg-white flex gap-2 border-t border-slate-200"><input className="flex-1 bg-slate-100 rounded-full px-4 py-2 outline-none" value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && send()} placeholder="傳送訊息..." /><button onClick={send} className="bg-blue-500 text-white p-2 rounded-full"><Icons.Send className="w-5 h-5" /></button></div></div>
             );
         };
+
         const ShareJarModal = ({ isOpen, onClose, jar, friends, onShare }) => {
             const [selectedFriends, setSelectedFriends] = useState([]);
-            useEffect(() => { if (isOpen && jar && jar.sharedWith) setSelectedFriends(jar.sharedWith); else setSelectedFriends([]); }, [isOpen, jar]);
+            
+            useEffect(() => {
+                if (isOpen && jar && jar.sharedWith) {
+                    setSelectedFriends(jar.sharedWith);
+                } else {
+                    setSelectedFriends([]);
+                }
+            }, [isOpen, jar]);
+
             if (!isOpen) return null;
-            const toggleFriend = (fid) => { if (selectedFriends.includes(fid)) setSelectedFriends(selectedFriends.filter(f => f !== fid)); else setSelectedFriends([...selectedFriends, fid]); };
+            const toggleFriend = (fid) => {
+                if (selectedFriends.includes(fid)) setSelectedFriends(selectedFriends.filter(f => f !== fid));
+                else setSelectedFriends([...selectedFriends, fid]);
+            };
             return (
-                <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-float-in"><div className="glass-panel bg-white/90 p-6 rounded-2xl w-full max-w-sm shadow-xl relative"><button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><Icons.X className="w-5 h-5" /></button><h3 className="font-bold text-lg mb-4">共享「{jar.name}」給好友</h3><div className="space-y-2 max-h-60 overflow-y-auto mb-4">{friends.length === 0 ? <p className="text-slate-400 text-sm">暫無好友可分享</p> : friends.map(f => (<div key={f} onClick={() => toggleFriend(f)} className={`p-3 rounded-xl border flex items-center justify-between cursor-pointer transition-colors ${selectedFriends.includes(f) ? 'border-brand-500 bg-brand-50' : 'border-white/50 bg-white/50'}`}><span>{f}</span>{selectedFriends.includes(f) && <Icons.Check className="w-4 h-4 text-brand-600" />}</div>))}</div><div className="flex justify-end gap-2"><button onClick={() => onShare(jar.id, selectedFriends)} className="px-4 py-2 rounded-lg bg-brand-600 text-white text-sm font-bold shadow-md w-full">確認共享</button></div></div></div>
+                <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-float-in">
+                    <div className="glass-panel bg-white/90 p-6 rounded-2xl w-full max-w-sm shadow-xl relative">
+                        <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><Icons.X className="w-5 h-5" /></button>
+                        <h3 className="font-bold text-lg mb-4">共享「{jar.name}」給好友</h3>
+                        <div className="space-y-2 max-h-60 overflow-y-auto mb-4">
+                            {friends.length === 0 ? <p className="text-slate-400 text-sm">暫無好友可分享</p> :
+                            friends.map(f => (
+                                <div key={f} onClick={() => toggleFriend(f)} className={`p-3 rounded-xl border flex items-center justify-between cursor-pointer transition-colors ${selectedFriends.includes(f) ? 'border-brand-500 bg-brand-50' : 'border-white/50 bg-white/50'}`}>
+                                    <span>{f}</span>
+                                    {selectedFriends.includes(f) && <Icons.Check className="w-4 h-4 text-brand-600" />}
+                                </div>
+                            ))}
+                        </div>
+                        <div className="flex justify-end gap-2">
+                            <button onClick={() => onShare(jar.id, selectedFriends)} className="px-4 py-2 rounded-lg bg-brand-600 text-white text-sm font-bold shadow-md w-full">確認共享</button>
+                        </div>
+                    </div>
+                </div>
             );
         };
 
         // --- 5. TAB COMPONENTS ---
 
-        const ChatTabComp = ({ userId, dbUrl, addFriendInput, setAddFriendInput, handleSearchFriend, friendSearchStatus, foundFriendId, handleAddFriend, friends, setActiveChatFriend }) => {
+        const ChatTabComp = ({ userId, dbUrl, addFriendInput, setAddFriendInput, handleSearchFriend, friendSearchStatus, foundFriendId, handleAddFriend, friends, setActiveChatFriend, globalUsers, setGlobalUsers }) => {
             const [subTab, setSubTab] = useState('chats');
             const [chatList, setChatList] = useState([]);
             const [loadingChats, setLoadingChats] = useState(false);
+            
+            // Auto fetch global users for contacts tab
+            useEffect(() => {
+                if (subTab === 'contacts' && dbUrl) {
+                    const fetchGlobal = async () => {
+                        try {
+                           const res = await api.get(dbUrl, 'get_all_users', {});
+                           if (res.result === 'success') {
+                               // Filter duplicates and empty strings
+                               const users = [...new Set(res.users)].filter(u => u);
+                               setGlobalUsers(users);
+                           }
+                        } catch(e) {}
+                    };
+                    fetchGlobal();
+                }
+            }, [subTab, dbUrl]);
+
             useEffect(() => {
                 if (subTab === 'chats' && friends.length > 0 && dbUrl) {
                     setLoadingChats(true);
@@ -261,18 +375,146 @@
                 }
             }, [subTab, friends, userId, dbUrl]);
             return (
-                <div className="flex-1 flex flex-col h-full overflow-hidden animate-float-in"><div className="px-4 pt-4 pb-2"><div className="flex bg-slate-200/50 p-1 rounded-xl"><button onClick={() => setSubTab('chats')} className={`flex-1 py-1.5 text-sm font-bold rounded-lg transition-all ${subTab === 'chats' ? 'bg-white shadow-sm text-brand-600' : 'text-slate-500 hover:text-slate-700'}`}>聊天</button><button onClick={() => setSubTab('contacts')} className={`flex-1 py-1.5 text-sm font-bold rounded-lg transition-all ${subTab === 'contacts' ? 'bg-white shadow-sm text-brand-600' : 'text-slate-500 hover:text-slate-700'}`}>通訊錄</button></div></div><div className="flex-1 overflow-y-auto p-4 pt-2">{subTab === 'contacts' && (<div className="space-y-4 animate-float-in"><div className="glass-panel p-4 rounded-2xl"><h3 className="text-xs font-bold text-slate-400 uppercase mb-2">新增好友</h3><div className="flex gap-2"><input className="flex-1 bg-white/50 border border-white/50 rounded-xl px-4 py-2 text-sm outline-none" placeholder="輸入好友 ID" value={addFriendInput} onChange={e => setAddFriendInput(e.target.value)} /><button onClick={handleSearchFriend} className="bg-brand-500 text-white px-3 py-2 rounded-xl text-sm font-bold shadow-md hover:bg-brand-600 transition-colors">搜尋</button></div>{friendSearchStatus === 'searching' && <p className="text-xs text-slate-400 mt-2 ml-1 flex items-center gap-1"><Icons.Loader className="w-3 h-3 animate-spin"/> 尋找用戶中...</p>}{friendSearchStatus === 'not-found' && <p className="text-xs text-red-400 mt-2 ml-1">找不到此用戶</p>}{friendSearchStatus === 'found' && (<div className="mt-3 flex items-center justify-between bg-green-50 p-2 rounded-lg border border-green-100 animate-float-in"><div className="flex items-center gap-2"><div className="w-8 h-8 bg-green-200 rounded-full flex items-center justify-center text-green-700 font-bold">{foundFriendId[0].toUpperCase()}</div><span className="text-sm text-green-800 font-bold">{foundFriendId}</span></div><button onClick={handleAddFriend} className="text-xs bg-green-500 text-white px-3 py-1.5 rounded-lg font-bold hover:bg-green-600">加入</button></div>)}</div><div><h3 className="text-xs font-bold text-slate-400 uppercase mb-2">我的好友 ({friends.length})</h3><div className="space-y-2">{friends.length === 0 ? <p className="text-slate-400 text-sm italic">暫無好友</p> : friends.map(fid => (<div key={fid} onClick={() => setActiveChatFriend(fid)} className="bg-white/60 p-3 rounded-xl flex items-center gap-3 cursor-pointer hover:bg-white border border-transparent hover:border-brand-100 transition-all"><div className="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-slate-600 font-bold text-sm"><Icons.Contact className="w-5 h-5"/></div><span className="font-bold text-ink">{fid}</span></div>))}</div></div></div>)}{subTab === 'chats' && (<div className="space-y-3 animate-float-in">{loadingChats && <p className="text-center text-slate-400 text-sm">載入中...</p>}{!loadingChats && chatList.length === 0 && <div className="text-center text-slate-400 mt-10"><Icons.MessageCircle className="w-12 h-12 mx-auto mb-2 opacity-30"/><p>沒有聊天記錄</p></div>}{!loadingChats && chatList.map(chat => (<div key={chat.friendId} onClick={() => setActiveChatFriend(chat.friendId)} className="glass-panel p-4 rounded-2xl flex items-center gap-4 hover:bg-white/70 cursor-pointer transition-colors"><div className="w-12 h-12 bg-white/50 rounded-full flex items-center justify-center text-lg font-bold text-slate-600 border border-white/30 shadow-inner">{chat.friendId.substring(0,1).toUpperCase()}</div><div className="flex-1"><div className="flex justify-between items-center mb-1"><h3 className="font-bold text-lg text-ink">{chat.friendId}</h3>{chat.time && <span className="text-[10px] text-slate-400">{new Date(chat.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>}</div><p className="text-xs text-slate-500 truncate max-w-[200px]">{chat.lastMsg}</p></div><Icons.ChevronRight className="w-5 h-5 text-slate-300" /></div>))}</div>)}</div></div>
+                <div className="flex-1 flex flex-col h-full overflow-hidden animate-float-in">
+                    <div className="px-4 pt-4 pb-2">
+                        <div className="flex bg-slate-200/50 p-1 rounded-xl">
+                            <button onClick={() => setSubTab('chats')} className={`flex-1 py-1.5 text-sm font-bold rounded-lg transition-all ${subTab === 'chats' ? 'bg-white shadow-sm text-brand-600' : 'text-slate-500 hover:text-slate-700'}`}>聊天</button>
+                            <button onClick={() => setSubTab('contacts')} className={`flex-1 py-1.5 text-sm font-bold rounded-lg transition-all ${subTab === 'contacts' ? 'bg-white shadow-sm text-brand-600' : 'text-slate-500 hover:text-slate-700'}`}>通訊錄</button>
+                        </div>
+                    </div>
+
+                    <div className="flex-1 overflow-y-auto p-4 pt-2">
+                        {subTab === 'contacts' && (
+                            <div className="space-y-4 animate-float-in">
+                                <div className="glass-panel p-4 rounded-2xl">
+                                    <h3 className="text-xs font-bold text-slate-400 uppercase mb-2">新增好友</h3>
+                                    <div className="flex gap-2">
+                                        <input className="flex-1 bg-white/50 border border-white/50 rounded-xl px-4 py-2 text-sm outline-none" placeholder="輸入好友 ID" value={addFriendInput} onChange={e => setAddFriendInput(e.target.value)} />
+                                        <button onClick={handleSearchFriend} className="bg-brand-500 text-white px-3 py-2 rounded-xl text-sm font-bold shadow-md hover:bg-brand-600 transition-colors">搜尋</button>
+                                    </div>
+                                    {friendSearchStatus === 'searching' && <p className="text-xs text-slate-400 mt-2 ml-1 flex items-center gap-1"><Icons.Loader className="w-3 h-3 animate-spin"/> 尋找用戶中...</p>}
+                                    {friendSearchStatus === 'not-found' && <p className="text-xs text-red-400 mt-2 ml-1">找不到此用戶</p>}
+                                    {friendSearchStatus === 'found' && (
+                                        <div className="mt-3 flex items-center justify-between bg-green-50 p-2 rounded-lg border border-green-100 animate-float-in">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-8 h-8 bg-green-200 rounded-full flex items-center justify-center text-green-700 font-bold">{String(foundFriendId).charAt(0).toUpperCase()}</div>
+                                                <span className="text-sm text-green-800 font-bold">{foundFriendId}</span>
+                                            </div>
+                                            <button onClick={() => handleAddFriend()} className="text-xs bg-green-500 text-white px-3 py-1.5 rounded-lg font-bold hover:bg-green-600">加入</button>
+                                        </div>
+                                    )}
+                                </div>
+                                
+                                {/* Global Users List */}
+                                <div>
+                                    <h3 className="text-xs font-bold text-slate-400 uppercase mb-2">全域用戶推薦</h3>
+                                    <div className="space-y-2">
+                                         {globalUsers.filter(u => u !== userId).map(gid => {
+                                            const isFriend = friends.includes(gid);
+                                            return (
+                                                <div key={gid} className="glass-panel p-3 rounded-xl flex items-center justify-between">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 font-bold text-sm">{String(gid).charAt(0).toUpperCase()}</div>
+                                                        <span className="font-bold text-ink">{gid}</span>
+                                                    </div>
+                                                    <button 
+                                                        onClick={() => !isFriend && handleAddFriend(gid)}
+                                                        disabled={isFriend}
+                                                        className={`text-xs px-3 py-1.5 rounded-lg font-bold transition-colors ${isFriend ? 'bg-slate-200 text-slate-500 cursor-default' : 'bg-brand-500 text-white hover:bg-brand-600'}`}
+                                                    >
+                                                        {isFriend ? '已是好友' : '加入'}
+                                                    </button>
+                                                </div>
+                                            );
+                                        })}
+                                        {globalUsers.length === 0 && <p className="text-slate-400 text-sm italic px-2">載入中...</p>}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h3 className="text-xs font-bold text-slate-400 uppercase mb-2">我的好友 ({friends.length})</h3>
+                                    <div className="space-y-2">
+                                        {friends.length === 0 ? <p className="text-slate-400 text-sm italic">暫無好友</p> : 
+                                        friends.map(fid => (
+                                            <div key={fid} onClick={() => setActiveChatFriend(fid)} className="bg-white/60 p-3 rounded-xl flex items-center gap-3 cursor-pointer hover:bg-white border border-transparent hover:border-brand-100 transition-all">
+                                                <div className="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-slate-600 font-bold text-sm"><Icons.Contact className="w-5 h-5"/></div>
+                                                <span className="font-bold text-ink">{fid}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {subTab === 'chats' && (
+                            <div className="space-y-3 animate-float-in">
+                                {loadingChats && <p className="text-center text-slate-400 text-sm">載入中...</p>}
+                                {!loadingChats && chatList.length === 0 && <div className="text-center text-slate-400 mt-10"><Icons.MessageCircle className="w-12 h-12 mx-auto mb-2 opacity-30"/><p>沒有聊天記錄</p></div>}
+                                {!loadingChats && chatList.map(chat => (
+                                    <div key={chat.friendId} onClick={() => setActiveChatFriend(chat.friendId)} className="glass-panel p-4 rounded-2xl flex items-center gap-4 hover:bg-white/70 cursor-pointer transition-colors">
+                                        <div className="w-12 h-12 bg-white/50 rounded-full flex items-center justify-center text-lg font-bold text-slate-600 border border-white/30 shadow-inner">{String(chat.friendId).charAt(0).toUpperCase()}</div>
+                                        <div className="flex-1">
+                                            <div className="flex justify-between items-center mb-1">
+                                                <h3 className="font-bold text-lg text-ink">{chat.friendId}</h3>
+                                                {chat.time && <span className="text-[10px] text-slate-400">{new Date(chat.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>}
+                                            </div>
+                                            <p className="text-xs text-slate-500 truncate max-w-[200px]">{chat.lastMsg}</p>
+                                        </div>
+                                        <Icons.ChevronRight className="w-5 h-5 text-slate-300" />
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
             );
         };
 
         const SharedTabComp = ({ sharedJars, openJar }) => (
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 animate-float-in"><h2 className="font-bold text-2xl text-ink mb-2 px-2">共享任務櫃</h2><div className="grid gap-4">{sharedJars.length === 0 ? <p className="text-slate-400 px-2">目前沒有共享的罐子</p> : sharedJars.map(s => (<div key={s.jarId} onClick={() => openJar(s.jarId, 'shared')} className="glass-panel p-5 rounded-2xl relative overflow-hidden group hover:bg-white/60 transition-all cursor-pointer"><div className="flex justify-between items-start mb-4"><div><p className="text-xs text-slate-500 font-medium">來自: <span className="font-bold text-brand-600">{s.ownerId}</span></p><h3 className="font-bold text-lg text-ink">{s.data.name}</h3></div><div className="text-xs bg-white/50 px-2 py-1 rounded-lg border border-white/50">{s.data.type}</div></div><div className="text-sm text-slate-600">進度: {s.data.tasks ? Math.round((s.data.tasks.filter(t=>t.completed).length / (s.data.tasks.length||1))*100) : 0}%</div>{s.sharedWith && s.sharedWith.length > 0 && <div className="mt-3 pt-3 border-t border-slate-200/50 text-[10px] text-slate-400">成員: {s.sharedWith.join(', ')}</div>}</div>))}</div></div>
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 animate-float-in">
+                <h2 className="font-bold text-2xl text-ink mb-2 px-2">共享任務櫃</h2>
+                <div className="grid gap-4">
+                    {sharedJars.length === 0 ? <p className="text-slate-400 px-2">目前沒有共享的罐子</p> : 
+                    sharedJars.map(s => (
+                        <div key={s.jarId} onClick={() => openJar(s.jarId, 'shared')} className="glass-panel p-5 rounded-2xl relative overflow-hidden group hover:bg-white/60 transition-all cursor-pointer">
+                            <div className="flex justify-between items-start mb-4">
+                                <div>
+                                    <p className="text-xs text-slate-500 font-medium">來自: <span className="font-bold text-brand-600">{s.ownerId}</span></p>
+                                    <h3 className="font-bold text-lg text-ink">{s.data.name}</h3>
+                                </div>
+                                <div className="text-xs bg-white/50 px-2 py-1 rounded-lg border border-white/50">{s.data.type}</div>
+                            </div>
+                            <div className="text-sm text-slate-600">
+                                進度: {s.data.tasks ? Math.round((s.data.tasks.filter(t=>t.completed).length / (s.data.tasks.length||1))*100) : 0}%
+                            </div>
+                             {s.sharedWith && s.sharedWith.length > 0 && (
+                                <div className="mt-3 pt-3 border-t border-slate-200/50 text-[10px] text-slate-400">
+                                    成員: {s.sharedWith.join(', ')}
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            </div>
         );
 
         const HistoryTabComp = ({ cabinets }) => {
-            const all = cabinets.flatMap(c => c.jars.flatMap(j => j.tasks.filter(t => t.completed).map(t => ({...t, cabinetName: c.name, jarName: j.name}))));
+            const all = [];
+            cabinets.forEach(c => {
+                c.jars.forEach(j => {
+                    j.tasks.forEach(t => {
+                        if (t.completed) {
+                            all.push({ ...t, cabinetName: c.name, jarName: j.name });
+                        }
+                    });
+                });
+            });
             return (
-                <div className="flex-1 overflow-y-auto p-4 space-y-4 animate-float-in"><h2 className="font-bold text-2xl text-ink mb-4 px-2">歷史紀錄</h2>{all.length === 0 ? <div className="flex flex-col items-center justify-center h-64 text-slate-400"><Icons.History className="w-16 h-16 mb-4 opacity-20" /><p className="font-medium">尚無完成紀錄</p></div> : <div className="space-y-3">{all.map((t, i) => (<div key={i} className="glass-panel p-4 rounded-2xl flex items-center gap-4"><div className="w-10 h-10 rounded-full bg-green-100/80 flex items-center justify-center text-green-600"><Icons.Check className="w-5 h-5" /></div><div className="flex-1"><h3 className="font-bold text-slate-700 line-through decoration-slate-300 text-lg">{t.name}</h3><div className="flex items-center gap-2 text-xs text-slate-500 mt-1 font-medium"><span className="bg-white/50 px-2 py-0.5 rounded">{t.cabinetName}</span><span>•</span><span>{t.jarName}</span></div></div><span className="text-xs font-black text-green-600 bg-green-50/50 border border-green-100 px-2 py-1 rounded-lg">DONE</span></div>))}</div>}</div>
+                <div className="flex-1 overflow-y-auto p-4 space-y-4 animate-float-in">
+                    <h2 className="font-bold text-2xl text-ink mb-4 px-2">歷史紀錄</h2>
+                    {all.length === 0 ? <div className="flex flex-col items-center justify-center h-64 text-slate-400"><Icons.History className="w-16 h-16 mb-4 opacity-20" /><p className="font-medium">尚無完成紀錄</p></div> : 
+                    <div className="space-y-3">{all.map((t, i) => (<div key={i} className="glass-panel p-4 rounded-2xl flex items-center gap-4"><div className="w-10 h-10 rounded-full bg-green-100/80 flex items-center justify-center text-green-600"><Icons.Check className="w-5 h-5" /></div><div className="flex-1"><h3 className="font-bold text-slate-700 line-through decoration-slate-300 text-lg">{t.name}</h3><div className="flex items-center gap-2 text-xs text-slate-500 mt-1 font-medium"><span className="bg-white/50 px-2 py-0.5 rounded">{t.cabinetName}</span><span>•</span><span>{t.jarName}</span></div></div><span className="text-xs font-black text-green-600 bg-green-50/50 border border-green-100 px-2 py-1 rounded-lg">DONE</span></div>))}</div>}
+                </div>
             );
         };
 
@@ -400,20 +642,21 @@
                             </>
                         ) : <div className="text-slate-400 py-4 font-medium">點擊右下角 + 新增您的第一個目標</div>}
                     </div>
-                    <div className="flex-1 flex items-center justify-center p-4 overflow-x-auto no-scrollbar relative">
-                        <div className="flex gap-8 items-end px-12 min-w-full justify-center z-10 pb-8">
+                    {/* Fixed Mobile Scrolling: justify-start ensuring leftmost is first */}
+                    <div className="flex-1 flex items-center justify-start md:justify-center p-4 overflow-x-auto no-scrollbar relative">
+                        <div className="flex gap-8 items-end px-4 md:px-12 min-w-full justify-start md:justify-center z-10 pb-8">
                             {activeCabinet.jars.map((jar) => {
                                 const total = jar.tasks.length;
                                 const completed = jar.tasks.filter(t => t.completed).length;
                                 const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
                                 const isFull = percent === 100 && total > 0;
                                 return (
-                                    <div key={jar.id} className="relative flex flex-col items-center group">
+                                    <div key={jar.id} className="relative flex flex-col items-center group flex-shrink-0">
                                         <button onClick={(e) => { e.stopPropagation(); openShareModal(jar); }} className="absolute -top-8 right-0 bg-white p-1.5 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-20"><Icons.Share className="w-4 h-4 text-brand-500" /></button>
                                         
                                         {/* Shared Indicator - Label style */}
                                         {jar.isShared && (
-                                             <div className="absolute -top-3 -right-4 z-30 flex flex-col items-end">
+                                             <div className="absolute -top-3 -right-4 z-30 flex flex-col items-end pointer-events-none">
                                                  <div className="bg-brand-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-md flex items-center border-2 border-white animate-bounce-slow">
                                                      <Icons.Users className="w-3 h-3 mr-1" />
                                                      共享中
@@ -436,7 +679,7 @@
                                     </div>
                                 );
                             })}
-                            <button onClick={() => setShowJarWizard(true)} className="w-28 h-36 border-4 border-dashed border-white/50 rounded-3xl flex flex-col items-center justify-center text-slate-400 hover:bg-white/40 hover:text-brand-500 hover:border-brand-300 transition-all mb-8 group backdrop-blur-sm"><div className="bg-white/50 p-3 rounded-full mb-2 group-hover:bg-brand-50 transition-colors"><Icons.Plus className="w-6 h-6" /></div><span className="text-xs font-bold">新罐子</span></button>
+                            <button onClick={() => setShowJarWizard(true)} className="w-28 h-36 border-4 border-dashed border-white/50 rounded-3xl flex flex-col items-center justify-center text-slate-400 hover:bg-white/40 hover:text-brand-500 hover:border-brand-300 transition-all mb-8 group backdrop-blur-sm flex-shrink-0"><div className="bg-white/50 p-3 rounded-full mb-2 group-hover:bg-brand-50 transition-colors"><Icons.Plus className="w-6 h-6" /></div><span className="text-xs font-bold">新罐子</span></button>
                         </div>
                         <div className="absolute bottom-20 left-4 right-4 h-4 glass-panel rounded-full transform skew-x-6"></div>
                     </div>
@@ -479,7 +722,8 @@
             const [jarToShare, setJarToShare] = useState(null);
             const [friendSearchStatus, setFriendSearchStatus] = useState('idle');
             const [foundFriendId, setFoundFriendId] = useState(null);
-            
+            const [globalUsers, setGlobalUsers] = useState([]);
+
             // Confirmation & Settings States
             const [showLoginConfirm, setShowLoginConfirm] = useState(false);
             const [showSettingsModal, setShowSettingsModal] = useState(false);
@@ -627,13 +871,18 @@
                 } catch (e) { setFriendSearchStatus('error'); }
             };
 
-            const handleAddFriend = async () => {
-                if (friendSearchStatus !== 'found' || !foundFriendId) return;
+            const handleAddFriend = async (friendIdToAdd) => {
+                // If passed an ID directly (from global list) use it, otherwise use foundFriendId
+                const targetId = friendIdToAdd || foundFriendId;
+                if (!targetId) return;
+                
                 try {
-                    await api.post(dbUrl, 'add_friend', { userId, friendId: foundFriendId });
-                    setAddFriendInput('');
-                    setFriendSearchStatus('idle');
-                    addToast(`成功加入好友：${foundFriendId}`, 'success');
+                    await api.post(dbUrl, 'add_friend', { userId, friendId: targetId });
+                    if (!friendIdToAdd) { // Clear input only if manual add
+                        setAddFriendInput('');
+                        setFriendSearchStatus('idle');
+                    }
+                    addToast(`成功加入好友：${targetId}`, 'success');
                     loadFriends();
                 } catch(e) { addToast("加好友失敗"); }
             };
@@ -827,7 +1076,7 @@
                 <div className="flex flex-col items-center justify-center min-h-screen p-6 relative">
                     <div className="glass-panel rounded-3xl p-10 w-full max-w-sm shadow-2xl text-center space-y-8 animate-float-in relative z-10">
                         <div className="w-40 h-40 mx-auto flex items-center justify-center relative"><img src={APP_ICON_URL} alt="致理 Logo" className="w-full h-full object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500" onError={(e) => { e.target.style.display = 'none'; document.getElementById('logo-fallback').style.display = 'flex'; }} /><div id="logo-fallback" className="hidden absolute inset-0 w-full h-full bg-white/80 rounded-full border-4 border-brand-500 flex items-center justify-center shadow-inner backdrop-blur-md"><span className="text-brand-600 font-black text-4xl tracking-tighter">CLUT</span></div></div>
-                        <div><h1 className="text-4xl font-black text-ink tracking-tight">任務罐</h1><p className="text-slate-500 font-medium tracking-wide text-sm uppercase">Chihlee Task Jar v7.5</p></div>
+                        <div><h1 className="text-4xl font-black text-ink tracking-tight">任務罐</h1><p className="text-slate-500 font-medium tracking-wide text-sm uppercase">Chihlee Task Jar v7.9</p></div>
                         <div className="space-y-4 text-left">
                             <div><label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">使用者 ID</label><input className="w-full border-2 border-white/50 rounded-xl p-3 text-sm mt-1 focus:outline-none focus:border-brand-500 bg-white/50 backdrop-blur-sm" placeholder="例如：student123" value={userId} onChange={e => setUserId(e.target.value)} /></div>
                             <div><label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-1 ml-1"><Icons.Link className="w-3 h-3"/> 資料庫網址 (Google Script)</label><input className="w-full border-2 border-white/50 rounded-xl p-3 text-sm mt-1 focus:outline-none focus:border-brand-500 bg-white/50 backdrop-blur-sm" value={dbUrl} onChange={e => setDbUrl(e.target.value)} /></div>
@@ -961,6 +1210,8 @@
                         handleAddFriend={handleAddFriend}
                         friends={friends}
                         setActiveChatFriend={setActiveChatFriend}
+                        globalUsers={globalUsers}
+                        setGlobalUsers={setGlobalUsers}
                     />}
                     {bottomTab === 'ai' && <AIChatTabComp cabinets={cabinets} />}
 
