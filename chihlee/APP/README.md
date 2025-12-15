@@ -84,15 +84,17 @@ Google Sheets Link
 ---
 
 **前端 fetch 設定**
+'''
 fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain' }, // 偽裝成純文字繞過檢查
     body: JSON.stringify(payload)
 });
+'''
 
 **React 組件重新渲染問題**
 
-==問題：若將子組件定義在 App 內部，每次輸入都會導致 Input 失去焦點。==
+- 問題：若將子組件定義在 App 內部，每次輸入都會導致 Input 失去焦點。
 
 * 解決方案：
 
@@ -101,33 +103,34 @@ fetch(url, {
 * 透過 props 傳遞狀態，確保 React Diffing 機制正常運作。
 
 ⚙️ **系統邏輯與資料結構**
-
+---
 資料結構 (Data Schema)
 
 - 前端維護的核心 cabinets 陣列結構如下：
-* [
-*   {
-*     "id": "cab_01",
-*     "name": "多益金榜 (櫃子)",
-*     "reward": "Switch 遊戲片",
-*     "jars": [
-*       {
-*         "id": "jar_01",
-*         "name": "單字累積 (罐子)",
-*         "type": "學習",
-*         "mode": "簡單罐",
-*         "isShared": true,
-*         "sharedWith": ["user2", "user3"],
-*         "tasks": [
-*           { "id": "t1", "name": "背50個單字", "completed": false }
-*         ]
-*       }
-*     ]
-*   }
-* ]
+'''
+[
+  {
+    "id": "cab_01",
+    "name": "多益金榜 (櫃子)",
+    "reward": "Switch 遊戲片",
+    "jars": [
+      {
+        "id": "jar_01",
+        "name": "單字累積 (罐子)",
+        "type": "學習",
+        "mode": "簡單罐",
+        "isShared": true,
+        "sharedWith": ["user2", "user3"],
+        "tasks": [
+          { "id": "t1", "name": "背50個單字", "completed": false }
+        ]
+      }
+    ]
+  }
+]
+'''
 
-
-- 同步機制 (Sync)
+**- 同步機制 (Sync)**
 
 * Debounce (防抖)：資料變更後，等待 2 秒無動作才寫入資料庫，減少 API 呼叫次數。
 
