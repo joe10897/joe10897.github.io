@@ -80,19 +80,19 @@ Google Sheets Link
 
 * 問題：瀏覽器直接 POST JSON 到 GAS 會觸發 CORS Preflight 錯誤。
 
-* 解決方案：
+**解決方案：**
+---
 
-* // 前端 fetch 設定
-* fetch(url, {
-*     method: 'POST',
-*     headers: { 'Content-Type': 'text/plain' }, // 偽裝成純文字繞過檢查
-*     body: JSON.stringify(payload)
-* });
+**前端 fetch 設定**
+fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' }, // 偽裝成純文字繞過檢查
+    body: JSON.stringify(payload)
+});
 
+**React 組件重新渲染問題**
 
-- React 組件重新渲染問題
-
-* 問題：若將子組件定義在 App 內部，每次輸入都會導致 Input 失去焦點。
+==問題：若將子組件定義在 App 內部，每次輸入都會導致 Input 失去焦點。==
 
 * 解決方案：
 
