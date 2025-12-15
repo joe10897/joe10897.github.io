@@ -18,7 +18,7 @@ https://script.google.com/macros/s/AKfycbzGCeuJiAXRf5Z8ZWDiYM2pAkQq9E9z_C0yLMrmB
 
 1. 使用者系統 & 引導
 
-ID 登入機制：輸入使用者 ID 即可登入，系統自動判斷是老手（載入雲端資料）還是新手（進入引導流程）。
+ID 登入機制：輸入使用者 ID 即可登入，系統自動判斷是原用戶（載入雲端資料）還是新用戶（進入引導流程）。
 
 NPC 引導 (Onboarding)：以對話機器人形式，引導新用戶建立第一個目標與任務罐。
 
