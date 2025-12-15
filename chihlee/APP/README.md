@@ -84,13 +84,13 @@ Google Sheets Link
 ---
 
 **前端 fetch 設定**
-''
+```html
 fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain' }, // 偽裝成純文字繞過檢查
     body: JSON.stringify(payload)
 });
-''
+```
 
 **React 組件重新渲染問題**
 
@@ -107,6 +107,7 @@ fetch(url, {
 資料結構 (Data Schema)
 
 - 前端維護的核心 cabinets 陣列結構如下：
+```
 [
   {
     "id": "cab_01",
@@ -127,7 +128,7 @@ fetch(url, {
     ]
   }
 ]
-
+```
 
 **- 同步機制 (Sync)**
 
