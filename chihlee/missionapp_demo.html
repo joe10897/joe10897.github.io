@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>任務罐 APP v6.8 (共享標籤優化版)</title>
+    <title>任務罐 APP v6.9.2 (最終修正版)</title>
     
     <!-- 載入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -239,7 +239,9 @@
                 return () => clearInterval(timer);
             }, [loadMsgs]);
 
-            useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs]);
+            useEffect(() => { 
+                endRef.current?.scrollIntoView({ behavior: "smooth" }); 
+            }, [msgs]);
 
             const send = async () => {
                 if (!input.trim()) return;
@@ -256,16 +258,19 @@
                         <button onClick={onClose}><Icons.ChevronLeft className="w-6 h-6 text-slate-600" /></button>
                         <h3 className="font-bold text-lg">{friendId}</h3>
                     </div>
-                    <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[#e5e5ea]">
-                        {msgs.map((m, i) => (
-                            <div key={i} className={`flex ${m.sender === me ? 'justify-end' : 'justify-start'}`}>
+                    
+                    {/* Chat Messages Area - Fixed Reverse Order */}
+                    <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[#e5e5ea] flex flex-col">
+                        <div className="flex-1"></div>
+                        {[...msgs].reverse().map((m, i) => (
+                            <div key={i} className={`flex ${m.sender === me ? 'justify-end' : 'justify-start'} mb-3`}>
                                 <div className={`p-3 rounded-2xl max-w-[80%] text-sm shadow-sm ${m.sender === me ? 'bg-blue-500 text-white rounded-br-none' : 'bg-white text-black rounded-bl-none'}`}>
                                     {m.text}
                                 </div>
                             </div>
                         ))}
-                        <div ref={endRef}></div>
                     </div>
+                    
                     <div className="p-3 bg-white flex gap-2 border-t border-slate-200">
                         <input className="flex-1 bg-slate-100 rounded-full px-4 py-2 outline-none" value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && send()} placeholder="傳送訊息..." />
                         <button onClick={send} className="bg-blue-500 text-white p-2 rounded-full"><Icons.Send className="w-5 h-5" /></button>
@@ -303,7 +308,7 @@
             );
         };
 
-        // --- 5. TAB COMPONENTS (Defined outside App to allow stable props) ---
+        // --- 5. TAB COMPONENTS ---
 
         const ChatTabComp = ({ addFriendInput, setAddFriendInput, handleSearchFriend, friendSearchStatus, foundFriendId, handleAddFriend, friends, setActiveChatFriend }) => (
             <div className="flex-1 overflow-y-auto p-4 animate-float-in">
@@ -346,10 +351,20 @@
                     sharedJars.map(s => (
                         <div key={s.jarId} onClick={() => openJar(s.jarId, 'shared')} className="glass-panel p-5 rounded-2xl relative overflow-hidden group hover:bg-white/60 transition-all cursor-pointer">
                             <div className="flex justify-between items-start mb-4">
-                                <div><p className="text-xs text-slate-500 font-medium">來自: {s.ownerId}</p><h3 className="font-bold text-lg text-ink">{s.data.name}</h3></div>
+                                <div>
+                                    <p className="text-xs text-slate-500 font-medium">來自: <span className="font-bold text-brand-600">{s.ownerId}</span></p>
+                                    <h3 className="font-bold text-lg text-ink">{s.data.name}</h3>
+                                </div>
                                 <div className="text-xs bg-white/50 px-2 py-1 rounded-lg border border-white/50">{s.data.type}</div>
                             </div>
-                            <div className="text-sm text-slate-600">進度: {s.data.tasks ? Math.round((s.data.tasks.filter(t=>t.completed).length / (s.data.tasks.length||1))*100) : 0}%</div>
+                            <div className="text-sm text-slate-600">
+                                進度: {s.data.tasks ? Math.round((s.data.tasks.filter(t=>t.completed).length / (s.data.tasks.length||1))*100) : 0}%
+                            </div>
+                            {s.sharedWith && s.sharedWith.length > 0 && (
+                                <div className="mt-3 pt-3 border-t border-slate-200/50 text-[10px] text-slate-400">
+                                    成員: {s.sharedWith.join(', ')}
+                                </div>
+                            )}
                         </div>
                     ))}
                 </div>
@@ -419,12 +434,19 @@
                                     <div key={jar.id} className="relative flex flex-col items-center group">
                                         <button onClick={(e) => { e.stopPropagation(); openShareModal(jar); }} className="absolute -top-8 right-0 bg-white p-1.5 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-20"><Icons.Share className="w-4 h-4 text-brand-500" /></button>
                                         
-                                        {/* Shared Indicator - Label style as requested */}
+                                        {/* Shared Indicator - Label style */}
                                         {jar.isShared && (
-                                            <div className="absolute -top-3 -right-4 z-30 bg-brand-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-md flex items-center border-2 border-white animate-bounce-slow">
-                                                <Icons.Users className="w-3 h-3 mr-1" />
-                                                共享中
-                                            </div>
+                                             <div className="absolute -top-3 -right-4 z-30 flex flex-col items-end">
+                                                 <div className="bg-brand-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-md flex items-center border-2 border-white animate-bounce-slow">
+                                                     <Icons.Users className="w-3 h-3 mr-1" />
+                                                     共享中
+                                                 </div>
+                                                 {jar.sharedWith && jar.sharedWith.length > 0 && (
+                                                    <div className="mt-1 bg-white/90 text-[10px] text-slate-600 px-2 py-0.5 rounded-md shadow-sm border border-slate-200">
+                                                        {jar.sharedWith.join(', ')}
+                                                    </div>
+                                                 )}
+                                             </div>
                                         )}
 
                                         <div onClick={() => setActiveJarId(jar.id)} className={`w-28 h-36 rounded-t-xl rounded-b-3xl border-4 relative overflow-hidden flex flex-col items-center justify-end p-2 shadow-xl transition-all duration-500 cursor-pointer ${isFull ? 'bg-amber-50/80 border-yellow-400 jar-complete shadow-[0_0_30px_rgba(251,191,36,0.4)]' : 'glass-panel border-white/60'}`}>
@@ -526,6 +548,39 @@
                 } catch(e) {}
             };
 
+            // V7.0 NEW: Merge Shared Data Logic
+            useEffect(() => {
+                if (sharedJars.length > 0 && cabinets.length > 0) {
+                    setCabinets(prevCabinets => {
+                        const newCabinets = [...prevCabinets];
+                        let hasChanges = false;
+                        newCabinets.forEach(cab => {
+                            cab.jars = cab.jars.map(jar => {
+                                const sharedVer = sharedJars.find(s => s.jarId === jar.id);
+                                if (sharedVer) {
+                                    // Deep check to prevent infinite loop
+                                    const tasksChanged = JSON.stringify(jar.tasks) !== JSON.stringify(sharedVer.data.tasks);
+                                    const sharedStateChanged = !jar.isShared;
+                                    
+                                    if (tasksChanged || sharedStateChanged) {
+                                        hasChanges = true;
+                                        // Merge: Use shared tasks as source of truth, mark as shared, update shared list
+                                        return { 
+                                            ...jar, 
+                                            tasks: sharedVer.data.tasks, 
+                                            isShared: true, 
+                                            sharedWith: sharedVer.sharedWith 
+                                        };
+                                    }
+                                }
+                                return jar;
+                            });
+                        });
+                        return hasChanges ? newCabinets : prevCabinets;
+                    });
+                }
+            }, [sharedJars]); // Trigger merge when shared jars are fetched
+
             const handleLogin = async () => {
                 setLoginLoading(true); setSyncErrorMsg('');
                 if (dbUrl && userId && isValidScriptUrl(dbUrl)) {
@@ -580,7 +635,9 @@
                 const jar = cabinets[cabinetIdx].jars.find(j => j.id === jarId);
                 
                 const updatedCabinets = [...cabinets];
-                updatedCabinets[cabinetIdx].jars.find(j => j.id === jarId).isShared = true;
+                const jarToUpdate = updatedCabinets[cabinetIdx].jars.find(j => j.id === jarId);
+                jarToUpdate.isShared = true;
+                jarToUpdate.sharedWith = targetUserIds;
                 setCabinets(updatedCabinets);
 
                 try {
@@ -594,7 +651,15 @@
             const openShareModal = (jar) => { setJarToShare(jar); setShowShareModal(true); };
 
             const handleCreateJar = async (data) => {
-                const newJar = { id: generateId(), name: data.name, type: data.type, mode: data.mode, tasks: [], isShared: data.sharedWith && data.sharedWith.length > 0 };
+                const newJar = { 
+                    id: generateId(), 
+                    name: data.name, 
+                    type: data.type, 
+                    mode: data.mode, 
+                    tasks: [], 
+                    isShared: data.sharedWith && data.sharedWith.length > 0,
+                    sharedWith: data.sharedWith || []
+                };
                 const updated = [...cabinets];
                 updated[currentCabinetIdx].jars.push(newJar);
                 setCabinets(updated);
@@ -609,17 +674,55 @@
 
             // Shared Jar Handlers
             const handleUpdateSharedJar = async (jarId, updatedJarData) => {
+                // 1. Optimistic Update Shared View
                 setSharedJars(prev => prev.map(s => s.jarId === jarId ? { ...s, data: updatedJarData } : s));
-                const sharedJarMeta = sharedJars.find(s => s.jarId === jarId);
-                if (sharedJarMeta) {
-                    try { await api.post(dbUrl, 'share_jar', { userId: sharedJarMeta.ownerId, jarId, targetUserIds: JSON.stringify(sharedJarMeta.sharedWith), jarData: updatedJarData }); } catch(e){}
+                
+                // 2. Optimistic Update Personal View (if it exists locally)
+                setCabinets(prev => {
+                    const newCabs = [...prev];
+                    let changed = false;
+                    newCabs.forEach(c => {
+                        const jIdx = c.jars.findIndex(j => j.id === jarId);
+                        if (jIdx !== -1) {
+                             c.jars[jIdx] = { ...c.jars[jIdx], ...updatedJarData, isShared: true };
+                             changed = true;
+                        }
+                    });
+                    return changed ? newCabs : prev;
+                });
+
+                // 3. Sync to Backend
+                const sharedJarMeta = sharedJars.find(s => s.jarId === jarId) || cabinets.flatMap(c=>c.jars).find(j=>j.id===jarId); // Find meta from either source
+                // Note: If updating from Personal, 'sharedJarMeta' might be missing 'ownerId' if not found in sharedJars list.
+                // We need to know ownerId to update shared jar.
+                // If I am owner (in Personal View), ownerId is userId.
+                // If I am viewer (in Shared View), ownerId is sharedJarMeta.ownerId.
+                
+                const ownerId = (activeJarType === 'personal') ? userId : sharedJarMeta?.ownerId;
+                const sharedWith = (activeJarType === 'personal') ? sharedJarMeta?.sharedWith : sharedJarMeta?.sharedWith;
+
+                if (ownerId) {
+                    try { 
+                        await api.post(dbUrl, 'share_jar', { 
+                            userId: ownerId, 
+                            jarId, 
+                            targetUserIds: JSON.stringify(sharedWith || []), 
+                            jarData: updatedJarData 
+                        }); 
+                    } catch(e){}
                 }
             };
 
             const handleAddTaskToShared = (jarId, data) => {
-                const jarMeta = sharedJars.find(s => s.jarId === jarId);
-                if (jarMeta) {
-                    const updatedJar = { ...jarMeta.data };
+                let jarData;
+                if (activeJarType === 'personal') {
+                    jarData = cabinets[currentCabinetIdx].jars.find(j => j.id === jarId);
+                } else {
+                    jarData = sharedJars.find(s => s.jarId === jarId)?.data;
+                }
+                
+                if (jarData) {
+                    const updatedJar = { ...jarData };
                     if (!updatedJar.tasks) updatedJar.tasks = [];
                     updatedJar.tasks.push({ id: generateId(), ...data, completed: false });
                     handleUpdateSharedJar(jarId, updatedJar);
@@ -628,15 +731,20 @@
             };
 
             const toggleSharedTaskComplete = (jarId, taskId) => {
-                const jarMeta = sharedJars.find(s => s.jarId === jarId);
-                if (jarMeta) {
-                    const updatedJar = { ...jarMeta.data };
-                    const task = updatedJar.tasks.find(t => t.id === taskId);
-                    if (task) {
-                        task.completed = !task.completed;
-                        if (updatedJar.tasks.every(t => t.completed)) confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-                        handleUpdateSharedJar(jarId, updatedJar);
-                    }
+                let jarData;
+                if (activeJarType === 'personal') {
+                    jarData = cabinets[currentCabinetIdx].jars.find(j => j.id === jarId);
+                } else {
+                    jarData = sharedJars.find(s => s.jarId === jarId)?.data;
+                }
+
+                if (jarData) {
+                    const updatedJar = { ...jarData };
+                    // Creating deep copy of tasks array to avoid mutation issues
+                    updatedJar.tasks = updatedJar.tasks.map(t => t.id === taskId ? { ...t, completed: !t.completed } : t);
+                    
+                    if (updatedJar.tasks.every(t => t.completed)) confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                    handleUpdateSharedJar(jarId, updatedJar);
                 }
             };
 
@@ -648,31 +756,51 @@
             const handleUpdateJarName = () => { const u = [...cabinets]; u[currentCabinetIdx].jars.find(j=>j.id===activeJarId).name = editJarName; setCabinets(u); setIsEditingJarName(false); };
             
             const handleAddTask = (data) => { 
-                if (activeJarType === 'personal') {
+                // Check if current jar is shared
+                const jar = cabinets[currentCabinetIdx].jars.find(j=>j.id===activeJarId);
+                if (activeJarType === 'personal' && !jar?.isShared) {
                     const u = [...cabinets]; 
                     u[currentCabinetIdx].jars.find(j=>j.id===activeJarId).tasks.push({id:generateId(), ...data, completed:false}); 
                     setCabinets(u); 
-                } else { handleAddTaskToShared(activeJarId, data); }
-                setShowAddTaskModal(false); 
+                    setShowAddTaskModal(false); 
+                } else { 
+                    // It's a shared jar (either in personal view or shared view)
+                    handleAddTaskToShared(activeJarId, data); 
+                }
             };
             
             const toggleTaskComplete = (tid) => { 
-                if (activeJarType === 'personal') {
+                const jar = cabinets[currentCabinetIdx]?.jars.find(j=>j.id===activeJarId);
+                if (activeJarType === 'personal' && !jar?.isShared) {
                     const u = [...cabinets]; 
                     const j = u[currentCabinetIdx].jars.find(j=>j.id===activeJarId); 
                     const t = j.tasks.find(x=>x.id===tid); 
                     if(t){ t.completed = !t.completed; if(j.tasks.every(x=>x.completed)) confetti({particleCount:100, spread:70, origin:{y:0.6}}); } 
                     setCabinets(u); 
-                } else { toggleSharedTaskComplete(activeJarId, tid); }
+                } else { 
+                    toggleSharedTaskComplete(activeJarId, tid); 
+                }
             };
             
             const handleUpdateTask = (tid, d) => { 
-                if (activeJarType === 'personal') {
+                 const jar = cabinets[currentCabinetIdx]?.jars.find(j=>j.id===activeJarId);
+                if (activeJarType === 'personal' && !jar?.isShared) {
                     const u = [...cabinets]; 
                     const j = u[currentCabinetIdx].jars.find(j=>j.id===activeJarId); 
                     const t = j.tasks.findIndex(x=>x.id===tid); 
                     if(t!==-1) j.tasks[t] = {...j.tasks[t], ...d}; 
                     setCabinets(u); 
+                } else {
+                     // TODO: Add shared task update logic (Update whole jar)
+                     // Simplified: Just update locally for now, robust shared update needs full jar rewrite
+                     // For V7, let's just allow local update for simplicity or implement full update
+                     const u = [...cabinets]; 
+                     const j = u[currentCabinetIdx].jars.find(j=>j.id===activeJarId); 
+                     const t = j.tasks.findIndex(x=>x.id===tid); 
+                     if(t!==-1) j.tasks[t] = {...j.tasks[t], ...d}; 
+                     // If shared, push update
+                     if(jar?.isShared) handleUpdateSharedJar(activeJarId, j);
+                     else setCabinets(u);
                 }
                 setEditTaskId(null); 
             };
@@ -685,7 +813,7 @@
                 <div className="flex flex-col items-center justify-center min-h-screen p-6 relative">
                     <div className="glass-panel rounded-3xl p-10 w-full max-w-sm shadow-2xl text-center space-y-8 animate-float-in relative z-10">
                         <div className="w-40 h-40 mx-auto flex items-center justify-center relative"><img src={APP_ICON_URL} alt="致理 Logo" className="w-full h-full object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500" onError={(e) => { e.target.style.display = 'none'; document.getElementById('logo-fallback').style.display = 'flex'; }} /><div id="logo-fallback" className="hidden absolute inset-0 w-full h-full bg-white/80 rounded-full border-4 border-brand-500 flex items-center justify-center shadow-inner backdrop-blur-md"><span className="text-brand-600 font-black text-4xl tracking-tighter">CLUT</span></div></div>
-                        <div><h1 className="text-4xl font-black text-ink tracking-tight">任務罐</h1><p className="text-slate-500 font-medium tracking-wide text-sm uppercase">Chihlee Task Jar v6.7</p></div>
+                        <div><h1 className="text-4xl font-black text-ink tracking-tight">任務罐</h1><p className="text-slate-500 font-medium tracking-wide text-sm uppercase">Chihlee Task Jar v6.9.2</p></div>
                         <div className="space-y-4 text-left">
                             <div><label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">使用者 ID</label><input className="w-full border-2 border-white/50 rounded-xl p-3 text-sm mt-1 focus:outline-none focus:border-brand-500 bg-white/50 backdrop-blur-sm" placeholder="例如：student123" value={userId} onChange={e => setUserId(e.target.value)} /></div>
                             <div><label className="text-xs font-bold text-slate-500 uppercase flex items-center gap-1 ml-1"><Icons.Link className="w-3 h-3"/> 資料庫網址 (Google Script)</label><input className="w-full border-2 border-white/50 rounded-xl p-3 text-sm mt-1 focus:outline-none focus:border-brand-500 bg-white/50 backdrop-blur-sm" value={dbUrl} onChange={e => setDbUrl(e.target.value)} /></div>
