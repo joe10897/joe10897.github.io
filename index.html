@@ -84,8 +84,15 @@
       letter-spacing: 0.02em;
       line-height: 1.6;
       overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
       background-image: radial-gradient(circle at 50% 0%, rgba(50, 50, 50, 0.2), #000 50%);
-      background-attachment: fixed;
+      z-index: -1;
+      pointer-events: none;
     }
     
     /* 質感細緻光暈 */
@@ -346,11 +353,53 @@
       opacity: 0;
     }
 
-    /* Animated underline for nav links - moved above */
+    /* 8mm Film Filter Overlay */
+    /* 膠片動態顆粒 */
+    .film-grain {
+      position: fixed;
+      top: -50vh; left: -50vw;
+      width: 200vw; height: 200vh;
+      pointer-events: none;
+      z-index: 9999;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.18; /* 增強顆粒感與對比 */
+      mix-blend-mode: overlay;
+      animation: filmNoise 0.4s steps(2) infinite;
+      will-change: transform;
+      transform: translateZ(0); /* 強制硬體加速 */
+    }
+    
+    /* 膠片暗角與復古暖色調疊加 */
+    .film-vignette {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 9998;
+      background: radial-gradient(circle, transparent 60%, rgba(0, 0, 0, 0.6) 130%), 
+                  rgba(130, 90, 40, 0.06); /* 邊緣加深，整體微暖色 */
+      mix-blend-mode: multiply;
+    }
+
+    @keyframes filmNoise {
+      0%, 100% { transform: translate(0, 0); }
+      10% { transform: translate(-2%, -2%); }
+      20% { transform: translate(-4%, 2%); }
+      30% { transform: translate(2%, -4%); }
+      40% { transform: translate(-2%, 6%); }
+      50% { transform: translate(-4%, 2%); }
+      60% { transform: translate(6%, 0); }
+      70% { transform: translate(0, 6%); }
+      80% { transform: translate(1%, 10%); }
+      90% { transform: translate(-4%, 4%); }
+    }
     
   </style>
 </head>
 <body class="bg-[#0d0d0d] text-[#f0f0f0] font-sans antialiased selection:bg-white selection:text-black">
+
+  <!-- 8mm Film Filter Overlays -->
+  <div class="film-grain"></div>
+  <div class="film-vignette"></div>
 
   <!-- 導覽列 -->
   <header class="fixed top-0 w-full z-50 fade-in transition-all duration-300 py-3">

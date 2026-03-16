@@ -1,179 +1,526 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simon 攝影服務方案</title>
-    <!-- 載入 Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 載入 Lucide Icons for aesthetic icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        /* 使用 Inter 字體以確保現代、專業感 */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monochrome Lab - Pricing</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&family=Noto+Serif+TC:wght@300;400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --glass-bg: rgba(10, 10, 10, 0.4);
+      --glass-border: rgba(255, 255, 255, 0.08);
+    }
+    body {
+      background-color: #0d0d0d;
+      color: #f2f2f2;
+      font-family: 'Inter', 'Noto Serif TC', sans-serif;
+      letter-spacing: 0.02em;
+      line-height: 1.6;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: radial-gradient(circle at 50% 0%, rgba(50, 50, 50, 0.2), #000 50%);
+      z-index: -1;
+      pointer-events: none;
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: heroFadeUp 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+    }
+    @keyframes heroFadeUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    
+    header {
+      transition: all 0.4s ease;
+      background: transparent;
+      border-bottom: 1px solid transparent;
+    }
+    header.scrolled {
+      background: var(--glass-bg);
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--glass-border);
+      box-shadow: 0 4px 40px rgba(0, 0, 0, 0.8);
+    }
+    header nav ul a {
+      position: relative;
+      text-decoration: none;
+      color: #888888;
+      transition: color 0.2s ease;
+      font-size: 0.85rem;
+      letter-spacing: 0.02em;
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+    header nav ul a:hover {
+      color: #f2f2f2;
+      background: rgba(255,255,255,0.05);
+    }
+    .glow-bg {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+      border-radius: 50%;
+      top: -300px;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    /* Linear Style 卡片設計 */
+    .linear-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.08);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.5);
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .linear-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, -20%), rgba(255,255,255,0.06), transparent 40%);
+      z-index: 0;
+      opacity: 0;
+      transition: opacity 0.5s;
+      pointer-events: none;
+    }
+    .linear-card:hover {
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(255,255,255,0.2);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.03);
+    }
+    .linear-card:hover::before {
+      opacity: 1;
+    }
+    .linear-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* 光暈按鈕 */
+    .btn-glow {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.03);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-glow::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: skewX(-20deg);
+      z-index: 0;
+    }
+    .btn-glow:hover {
+      border-color: rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.1);
+      box-shadow: 0 0 30px rgba(255,255,255,0.15);
+      transform: translateY(-2px);
+    }
+    .btn-glow:hover::before {
+      transform: translateX(200%) skewX(-20deg);
+    }
+    .btn-glow span, .btn-glow i {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* 8mm Film Filter Overlay */
+    /* 膠片動態顆粒 */
+    .film-grain {
+      position: fixed;
+      top: -50vh; left: -50vw;
+      width: 200vw; height: 200vh;
+      pointer-events: none;
+      z-index: 9999;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.18; /* 增強顆粒感與對比 */
+      mix-blend-mode: overlay;
+      animation: filmNoise 0.4s steps(2) infinite;
+      will-change: transform;
+      transform: translateZ(0); /* 強制硬體加速 */
+    }
+    
+    /* 膠片暗角與復古暖色調疊加 */
+    .film-vignette {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 9998;
+      background: radial-gradient(circle, transparent 60%, rgba(0, 0, 0, 0.6) 130%), 
+                  rgba(130, 90, 40, 0.06); /* 邊緣加深，整體微暖色 */
+      mix-blend-mode: multiply;
+    }
+
+    @keyframes filmNoise {
+      0%, 100% { transform: translate(0, 0); }
+      10% { transform: translate(-2%, -2%); }
+      20% { transform: translate(-4%, 2%); }
+      30% { transform: translate(2%, -4%); }
+      40% { transform: translate(-2%, 6%); }
+      50% { transform: translate(-4%, 2%); }
+      60% { transform: translate(6%, 0); }
+      70% { transform: translate(0, 6%); }
+      80% { transform: translate(1%, 10%); }
+      90% { transform: translate(-4%, 4%); }
+    }
+  </style>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen flex items-center justify-center p-4 sm:p-8">
+<body class="antialiased selection:bg-white selection:text-black min-h-screen flex flex-col pt-24">
+  <!-- 8mm Film Filter Overlays -->
+  <div class="film-grain"></div>
+  <div class="film-vignette"></div>
 
-    <!-- 調整最大寬度以容納三欄 -->
-    <div class="w-full max-w-6xl bg-gray-800 rounded-xl shadow-2xl overflow-hidden transform transition duration-500 hover:scale-[1.01]">
-        <!-- 頂部標題與識別 -->
-        <header class="p-6 sm:p-8 border-b border-gray-700 bg-gray-900">
-            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-1">
-                攝影服務方案
-            </h1>
-            <p class="text-sm sm:text-base text-gray-400 font-light">
-                攝影師：Simon <span class="text-yellow-400 font-semibold">| Monochrome Lab 單色研究室</span>
-            </p>
-        </header>
+  <div class="glow-bg"></div>
 
-        <!-- Packages Container - 調整為三欄佈局 (小螢幕一欄，中螢幕兩欄，大螢幕三欄) -->
-        <div class="p-4 sm:p-8 bg-gray-800 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  <!-- 導覽列 -->
+  <header class="fixed top-0 w-full z-50 transition-all duration-300 py-3">
+    <nav class="container mx-auto px-6 py-2 flex justify-between items-center max-w-7xl">
+      <div class="text-lg font-semibold tracking-wide flex items-center gap-2">
+        <div class="w-5 h-5 rounded-full bg-gradient-to-br from-gray-200 to-gray-600 shadow-[0_0_10px_rgba(255,255,255,0.2)]"></div>
+        <a href="index.html">Monochrome Lab</a>
+      </div>
+      <ul class="flex space-x-2 md:space-x-4 text-sm font-medium">
+        <li><a href="index.html#portfolio" class="hover-link" data-i18n="navPortfolio">作品</a></li>
+        <li><a href="price.html" class="hover-link text-white bg-white/5" data-i18n="navPricing">價格</a></li>
+        <li><a href="index.html#about" class="hover-link" data-i18n="navAbout">關於</a></li>
+        <li><a href="index.html#photographer" class="hover-link" data-i18n="navPhotographer">攝影師</a></li>
+        <li><a href="index.html#info" class="hover-link" data-i18n="navContact">聯絡資訊</a></li>
+        <li>
+          <button id="langToggle" class="px-2 py-1 ml-2 md:ml-4 text-xs font-semibold rounded-md border border-white/20 bg-white/5 hover:bg-white/10 transition-colors">
+            EN
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </header>
 
-            <!-- PACKAGE 1: 跟拍體驗 - NT$1500 (現在排在第一位) -->
-            <div class="bg-gray-900 p-6 rounded-lg shadow-lg border-2 border-yellow-500/50 transition duration-300 hover:scale-[1.03] hover:shadow-2xl hover:border-yellow-400 cursor-pointer">
-                <h2 class="text-2xl font-black text-yellow-400 mb-2">跟拍體驗</h2>
-                <p class="text-lg font-semibold text-gray-300 mb-4">城市漫遊紀實 (限時特惠)</p>
+  <!-- 主要內容 -->
+  <main class="flex-grow flex items-center justify-center p-4 sm:p-8 fade-in relative z-10">
+    <div class="w-full max-w-[1400px]">
+      <!-- 標題區塊 -->
+      <div class="mb-12 text-center">
+        <div class="inline-flex items-center px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-xs text-gray-400 font-medium tracking-wide mb-6">
+          <span class="w-1.5 h-1.5 rounded-full bg-gray-300 mr-2"></span> <span data-i18n="priceTag">服務方案</span>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-semibold tracking-tight text-white mb-4" data-i18n="priceTitle">
+          攝影服務方案
+        </h1>
+        <p class="text-gray-400 font-light text-sm md:text-base max-w-lg mx-auto" data-i18n="priceSubtitle">
+          以純粹的視角，紀錄您的獨特時刻。請選擇適合您的方案。
+        </p>
+      </div>
 
-                <!-- Price -->
-                <div class="mb-6">
-                    <span class="text-xl font-bold text-yellow-400 mr-0.5">NT$</span>
-                    <span class="text-5xl font-black text-white leading-none">1,500</span>
-                    <span class="text-base font-light text-gray-300 ml-0.5">元</span>
-                </div>
-
-                <!-- Details -->
-                <ul class="space-y-4 text-sm text-gray-300">
-                    <li class="flex items-start">
-                        <i data-lucide="camera" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
-                        <span>作品挑選與精修：**15 張**（高畫質細節修正）</span>
-                    </li>
-                    <li class="flex items-start">
-                        <i data-lucide="map-pin" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
-                        <span>服務範圍：台北／新北地區</span>
-                    </li>
-                    <li class="flex items-start">
-                        <i data-lucide="clock" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
-                        <span>拍攝時間：**2 小時**（限時高效拍攝）</span>
-                    </li>
-                    <li class="flex items-start">
-                        <i data-lucide="image-down" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
-                        <span>其餘照片提供：調色快修檔</span>
-                    </li>
-                </ul>
-            </div>
-
-
-            <!-- PACKAGE 2: 寫真委託 (個人寫真) - NT$3000 (排在第二位) -->
-            <div class="bg-gray-900 p-6 rounded-lg shadow-xl border-2 border-yellow-500/50 transition duration-300 hover:scale-[1.03] hover:shadow-2xl hover:border-yellow-400 cursor-pointer">
-                <h2 class="text-2xl font-black text-yellow-400 mb-2">寫真委託</h2>
-                <p class="text-lg font-semibold text-gray-300 mb-4">個人寫真專案 (高階定製)</p>
-
-                <!-- Price -->
-                <div class="mb-6">
-                    <span class="text-xl font-bold text-yellow-400 mr-0.5">NT$</span>
-                    <span class="text-5xl font-black text-white leading-none">3,000</span>
-                    <span class="text-base font-light text-gray-300 ml-0.5">元起</span>
-                </div>
-
-                <!-- Details -->
-                <ul class="space-y-4 text-sm text-gray-300">
-                    <li class="flex items-start">
-                        <i data-lucide="sparkles" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
-                        <span>作品挑選與精修：**30 張**（高畫質精緻修圖）</span>
-                    </li>
-                    <li class="flex items-start">
-                        <i data-lucide="dollar-sign" class="w-4 h-4 text-yellow-500 mr-2 mt-0.5 flex-shrink-0"></i>
-                        <span>**加購精修**：每張 **NT$200** 元</span>
-                    </li>
-                    <li class="flex items-start">
-                        <i data-lucide="map" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
-                        <span>服務範圍：<span class="font-bold text-white">台北／新北／新竹／桃園</span></span>
-                    </li>
-                    <li class="flex items-start">
-                        <i data-lucide="clock" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
-                        <span>拍攝時間：詳議（根據主題需求客製化）</span>
-                    </li>
-                    <li class="flex items-start">
-                        <i data-lucide="cloud-download" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
-                        <span>線上雲端交件：提供 7 天下載連結</span>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- PACKAGE 3: 底片寫真委託 - NT$4000 (現在排在第三位) -->
-            <div class="bg-gray-900 p-6 rounded-lg shadow-xl border-2 border-yellow-500/50 transition duration-300 hover:scale-[1.03] hover:shadow-2xl hover:border-yellow-400 cursor-pointer">
-                <h2 class="text-2xl font-black text-yellow-400 mb-2">底片寫真委託</h2>
-                <p class="text-lg font-semibold text-gray-300 mb-4">底片個人寫真 (經典復古質感)</p>
-
-                <!-- Price -->
-                <div class="mb-6">
-                    <span class="text-xl font-bold text-yellow-400 mr-0.5">NT$</span>
-                    <span class="text-5xl font-black text-white leading-none">4,000</span>
-                    <span class="text-base font-light text-gray-300 ml-0.5">元起</span>
-                </div>
-
-                <!-- Details -->
-                <ul class="space-y-4 text-sm text-gray-300">
-                    <li class="flex items-start">
-                        <i data-lucide="film" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
-                        <span>含兩卷底片（約 **72 張**）</span>
-                    </li>
-                    <li class="flex items-start">
-                        <i data-lucide="scan" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
-                        <span>底片拍攝、沖洗、掃描與基本調色</span>
-                    </li>
-                    <li class="flex items-start">
-                        <i data-lucide="map" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
-                        <span>服務範圍：<span class="font-bold text-white">台北／新北／新竹／桃園</span></span>
-                    </li>
-                    <li class="flex items-start">
-                        <i data-lucide="clock" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
-                        <span>拍攝時間：詳議（配合底片特性客製化）</span>
-                    </li>
-                    <li class="flex items-start">
-                        <i data-lucide="cloud-download" class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
-                        <span>線上雲端交件：提供 7 天下載連結</span>
-                    </li>
-                </ul>
-            </div>
+      <!-- 方案卡片區塊 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 xl:gap-8">
+        
+        <!-- 方案 1: 跟拍體驗 -->
+        <div class="linear-card p-8 flex flex-col">
+          <div class="mb-6 border-b border-white/10 pb-6">
+            <h2 class="text-2xl font-semibold text-white tracking-tight mb-2" data-i18n="pkg1Title">跟拍體驗</h2>
+            <p class="text-sm font-medium text-gray-400" data-i18n="pkg1Sub">城市漫遊紀實 (限時特惠)</p>
+          </div>
+          <div class="mb-8">
+            <span class="text-sm text-gray-500 mr-1">NT$</span>
+            <span class="text-4xl font-bold tracking-tight text-white">1,500</span>
+          </div>
+          <ul class="space-y-4 text-sm text-gray-400 mb-8 flex-grow">
+            <li class="flex items-start">
+              <i data-lucide="check" class="w-4 h-4 text-gray-300 mr-3 mt-0.5 flex-shrink-0"></i>
+              <span data-i18n="pkg1L1">精修：10 張（高畫質細節）</span>
+            </li>
+            <li class="flex items-start">
+              <i data-lucide="check" class="w-4 h-4 text-gray-300 mr-3 mt-0.5 flex-shrink-0"></i>
+              <span data-i18n="pkg1L2">限制人數：限單人</span>
+            </li>
+            <li class="flex items-start">
+              <i data-lucide="check" class="w-4 h-4 text-gray-300 mr-3 mt-0.5 flex-shrink-0"></i>
+              <span data-i18n="pkg1L3">時間：1 小時（限時拍攝）</span>
+            </li>
+            <li class="flex items-start">
+              <i data-lucide="check" class="w-4 h-4 text-gray-300 mr-3 mt-0.5 flex-shrink-0"></i>
+              <span data-i18n="pkg1L4">範圍：台北／新北地區</span>
+            </li>
+          </ul>
         </div>
 
-        <!-- 聯絡與備註 -->
-        <footer class="p-6 sm:p-8 border-t border-gray-700 bg-gray-900">
-            <p class="text-sm font-medium text-gray-400 mb-3">預約與服務說明</p>
-            <div class="text-xs text-gray-500 leading-relaxed space-y-2">
-                <p>* **NT$1,500 跟拍體驗專案** 旨在累積街拍作品集，故以超值體驗價提供服務。</p>
-                <p>* **NT$4,000 底片寫真委託** 包含兩卷底片的費用、沖洗、掃描成本及工時，適合追求底片獨特質感者。</p>
-                <p>* **NT$3,000 寫真委託** 與 **NT$4,000 底片寫真委託** 方案皆可服務至新竹、桃園地區。</p>
-                <p>* 所有服務請提前私訊確認可拍攝日期。</p>
-            </div>
-            <!-- 主要聯繫按鈕 (新增預設主旨) -->
-            <a href="mailto:monoclab1999@gmail.com?subject=攝影服務洽詢-來自價目表" class="mt-4 w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition duration-300 shadow-md flex items-center justify-center space-x-2">
-                 <i data-lucide="message-square" class-type="fill" class="w-5 h-5"></i>
-                 <span>點此聯繫 Simon (monoclab1999@gmail.com) 洽詢細節！</span>
-            </a>
-            <!-- 新增作品集連結按鈕 -->
-            <a href="https://nomochrome.site" target="_blank" class="mt-3 w-full border-2 border-gray-500 hover:border-yellow-400 text-gray-300 hover:text-yellow-400 font-bold py-3 rounded-lg transition duration-300 shadow-md flex items-center justify-center space-x-2">
-                <i data-lucide="gallery-vertical" class-type="fill" class="w-5 h-5"></i>
-                <span>觀看作品集 (https://nomochrome.site)</span>
-            </a>
-            
-            <!-- 僅保留 Instagram 連結 -->
-            <div class="flex justify-center space-x-6 mt-6">
-                <a href="https://www.instagram.com/w.iwatani" target="_blank" class="text-gray-400 hover:text-yellow-400 transition duration-300" title="Instagram w.iwatani">
-                    <i data-lucide="instagram" class="w-6 h-6"></i>
-                </a>
-            </div>
-        </footer>
-    </div>
+        <!-- 方案 2: 寫真委託 -->
+        <div class="linear-card p-8 flex flex-col relative" style="border-color: rgba(255,255,255,0.15);">
+          <!-- 推薦標籤 -->
+          <div class="absolute top-0 right-0 bg-white/10 backdrop-blur-md px-3 py-1 text-[10px] font-bold tracking-widest uppercase text-white rounded-bl-lg border-b border-l border-white/10" data-i18n="pkgRec">推薦方案</div>
+          
+          <div class="mb-6 border-b border-white/10 pb-6">
+            <h2 class="text-2xl font-semibold text-white tracking-tight mb-2" data-i18n="pkg2Title">寫真委託</h2>
+            <p class="text-sm font-medium text-gray-400" data-i18n="pkg2Sub">個人寫真專案 (高階定製)</p>
+          </div>
+          <div class="mb-8 flex items-baseline">
+            <span class="text-sm text-gray-500 mr-1">NT$</span>
+            <span class="text-4xl font-bold tracking-tight text-white">3,000</span>
+            <span class="text-xs text-gray-500 ml-2" data-i18n="pkgStarting">起</span>
+          </div>
+          <ul class="space-y-4 text-sm text-gray-400 mb-8 flex-grow">
+            <li class="flex items-start">
+              <i data-lucide="check" class="w-4 h-4 text-white mr-3 mt-0.5 flex-shrink-0"></i>
+              <span data-i18n="pkg2L1">精修：15 張（高畫質精緻修圖）</span>
+            </li>
+            <li class="flex items-start">
+              <i data-lucide="plus" class="w-4 h-4 text-gray-500 mr-3 mt-0.5 flex-shrink-0"></i>
+              <span data-i18n="pkg2L2">加購精修：每張 NT$200</span>
+            </li>
+            <li class="flex items-start">
+              <i data-lucide="check" class="w-4 h-4 text-white mr-3 mt-0.5 flex-shrink-0"></i>
+              <span data-i18n="pkg2L3">範圍：台北/新北/新竹/桃園</span>
+            </li>
+            <li class="flex items-start">
+              <i data-lucide="check" class="w-4 h-4 text-white mr-3 mt-0.5 flex-shrink-0"></i>
+              <span data-i18n="pkg2L4">時間：依主題需求彈性客製</span>
+            </li>
+            <li class="flex items-start">
+              <i data-lucide="check" class="w-4 h-4 text-white mr-3 mt-0.5 flex-shrink-0"></i>
+              <span data-i18n="pkg2L5">雲端交件：7 天下載連結</span>
+            </li>
+          </ul>
+        </div>
 
-    <!-- 初始化 Lucide Icons -->
-    <script>
-        lucide.createIcons();
-    </script>
+        <!-- 方案 3: 底片寫真委託 -->
+        <div class="linear-card p-8 flex flex-col">
+          <div class="mb-6 border-b border-white/10 pb-6">
+            <h2 class="text-2xl font-semibold text-white tracking-tight mb-2" data-i18n="pkg3Title">底片寫真委託</h2>
+            <p class="text-sm font-medium text-gray-400" data-i18n="pkg3Sub">個人底片寫真 (經典復古質感)</p>
+          </div>
+          <div class="mb-8 flex items-baseline">
+            <span class="text-sm text-gray-500 mr-1">NT$</span>
+            <span class="text-4xl font-bold tracking-tight text-white">4,000</span>
+            <span class="text-xs text-gray-500 ml-2" data-i18n="pkgStarting">起</span>
+          </div>
+          <ul class="space-y-4 text-sm text-gray-400 mb-8 flex-grow">
+            <li class="flex items-start">
+              <i data-lucide="check" class="w-4 h-4 text-gray-300 mr-3 mt-0.5 flex-shrink-0"></i>
+              <span data-i18n="pkg3L1">含兩卷底片（約 72 張）</span>
+            </li>
+            <li class="flex items-start">
+              <i data-lucide="check" class="w-4 h-4 text-gray-300 mr-3 mt-0.5 flex-shrink-0"></i>
+              <span data-i18n="pkg3L2">包含拍攝、沖洗、掃描與基本調色</span>
+            </li>
+            <li class="flex items-start">
+              <i data-lucide="check" class="w-4 h-4 text-gray-300 mr-3 mt-0.5 flex-shrink-0"></i>
+              <span data-i18n="pkg2L3">範圍：台北/新北/新竹/桃園</span>
+            </li>
+            <li class="flex items-start">
+              <i data-lucide="check" class="w-4 h-4 text-gray-300 mr-3 mt-0.5 flex-shrink-0"></i>
+              <span data-i18n="pkg3L4">時間：配合底片特性客製化</span>
+            </li>
+            <li class="flex items-start">
+              <i data-lucide="check" class="w-4 h-4 text-gray-300 mr-3 mt-0.5 flex-shrink-0"></i>
+              <span data-i18n="pkg2L5">雲端交件：7 天下載連結</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 方案 4: 客製委託 -->
+        <div class="linear-card p-8 flex flex-col">
+          <div class="mb-6 border-b border-white/10 pb-6">
+            <h2 class="text-2xl font-semibold text-white tracking-tight mb-2" data-i18n="pkg4Title">客製委託</h2>
+            <p class="text-sm font-medium text-gray-400" data-i18n="pkg4Sub">畢業照 / 多人團體 / 特殊專案</p>
+          </div>
+          <div class="mb-8 flex items-baseline">
+            <span class="text-3xl font-bold tracking-tight text-white" data-i18n="pkgContactUs">歡迎討論報價</span>
+          </div>
+          <ul class="space-y-4 text-sm text-gray-400 mb-8 flex-grow">
+            <li class="flex items-start">
+              <i data-lucide="check" class="w-4 h-4 text-gray-300 mr-3 mt-0.5 flex-shrink-0"></i>
+              <span data-i18n="pkg4L1">依據拍攝人數與需求報價</span>
+            </li>
+            <li class="flex items-start">
+              <i data-lucide="check" class="w-4 h-4 text-gray-300 mr-3 mt-0.5 flex-shrink-0"></i>
+              <span data-i18n="pkg4L2">支援多人團體、畢業合影等</span>
+            </li>
+            <li class="flex items-start">
+              <i data-lucide="check" class="w-4 h-4 text-gray-300 mr-3 mt-0.5 flex-shrink-0"></i>
+              <span data-i18n="pkg4L3">提供客製化精修數量設定</span>
+            </li>
+            <li class="flex items-start">
+              <i data-lucide="check" class="w-4 h-4 text-gray-300 mr-3 mt-0.5 flex-shrink-0"></i>
+              <span data-i18n="pkg4L4">時間：彈性配合您的行程</span>
+            </li>
+            <li class="flex items-start">
+              <i data-lucide="check" class="w-4 h-4 text-gray-300 mr-3 mt-0.5 flex-shrink-0"></i>
+              <span data-i18n="pkg2L5">雲端交件：7 天下載連結</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 頁尾行動呼籲與備註 -->
+      <div class="mt-16 text-center max-w-2xl mx-auto space-y-6">
+        <a href="mailto:monoclab1999@gmail.com?subject=攝影服務洽詢" class="btn-glow inline-flex items-center justify-center space-x-2 px-8 py-4 rounded-full text-sm font-semibold tracking-wide text-white w-full sm:w-auto mx-auto shadow-xl">
+          <i data-lucide="mail" class="w-4 h-4"></i>
+          <span data-i18n="ctaContact">洽詢服務與預約檔期</span>
+        </a>
+        
+        <div class="text-xs text-gray-500 mt-8 space-y-2 text-justify md:text-center p-6 border border-white/5 rounded-xl bg-white/[0.01]">
+          <p data-i18n="note1">* 1,500 方案旨在累積都市紀實作品，以超值體驗價提供短時專案。</p>
+          <p data-i18n="note2">* 底片專案包含兩卷底片成本、專業沖洗與高解析掃描。</p>
+          <p data-i18n="note3">* 寫真專案皆可配合前往新竹與桃園地區。</p>
+          <p data-i18n="note4">* 請務必提前來信或至 Instagram 確切預約時間與細節。</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    // Header scroll background
+    const header = document.querySelector('header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 10) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    // i18n Dictionary
+    const i18n = {
+      tw: {
+        navPortfolio: '作品',
+        navPricing: '價格',
+        navAbout: '關於',
+        navPhotographer: '攝影師',
+        navContact: '聯絡資訊',
+        priceTag: '服務方案',
+        priceTitle: '攝影服務方案',
+        priceSubtitle: '以純粹的視角，紀錄您的獨特時刻。請選擇適合您的方案。',
+        pkg1Title: '跟拍體驗',
+        pkg1Sub: '城市漫遊紀實 (限時特惠)',
+        pkg1L1: '精修：10 張（高畫質細節）',
+        pkg1L2: '限制人數：限單人',
+        pkg1L3: '時間：1 小時（限時體驗）',
+        pkg1L4: '範圍：台北／新北地區',
+        pkg2Title: '寫真委託',
+        pkg2Sub: '個人寫真專案 (高階定製)',
+        pkgRec: '推薦方案',
+        pkgStarting: '起',
+        pkg2L1: '精修：15 張（高畫質精緻修圖）',
+        pkg2L2: '加購精修：每張 NT$200',
+        pkg2L3: '範圍：台北/新北/新竹/桃園',
+        pkg2L4: '時間：依主題需求彈性客製',
+        pkg2L5: '雲端交件：7 天下載連結',
+        pkg3Title: '底片寫真委託',
+        pkg3Sub: '個人底片寫真 (經典復古質感)',
+        pkg3L1: '含兩卷底片（約 72 張）',
+        pkg3L2: '包含拍攝、沖洗、掃描與基本調色',
+        pkg3L4: '時間：配合底片特性客製化',
+        pkg4Title: '客製委託',
+        pkg4Sub: '畢業照 / 多人團體 / 特殊專案',
+        pkgContactUs: '歡迎討論報價',
+        pkg4L1: '依據拍攝人數與需求報價',
+        pkg4L2: '支援多人團體、畢業合影等',
+        pkg4L3: '提供客製化精修數量設定',
+        pkg4L4: '時間：彈性配合您的行程',
+        ctaContact: '洽詢服務與預約檔期',
+        note1: '* 1,500 方案旨在累積都市紀實作品，以超值體驗價提供短時專案。',
+        note2: '* 底片專案包含兩卷底片成本、專業沖洗與高解析掃描。',
+        note3: '* 寫真專案皆可配合前往新竹與桃園地區。',
+        note4: '* 請務必提前來信或至 Instagram 確切預約時間與細節。'
+      },
+      en: {
+        navPortfolio: 'Portfolio',
+        navPricing: 'Pricing',
+        navAbout: 'About',
+        navPhotographer: 'Photographer',
+        navContact: 'Contact',
+        priceTag: 'Pricing Plans',
+        priceTitle: 'Photography Services',
+        priceSubtitle: 'Choosing the right plan to capture your authentic moments.',
+        pkg1Title: 'Experience',
+        pkg1Sub: 'Urban Documentary (Limited)',
+        pkg1L1: 'Retouched: 10 High-res Photos',
+        pkg1L2: 'Limited to 1 Person',
+        pkg1L3: 'Time: 1 Hour Session',
+        pkg1L4: 'Location: Taipei / New Taipei',
+        pkg2Title: 'Commission',
+        pkg2Sub: 'Portrait Project (Premium)',
+        pkgRec: 'Recommended',
+        pkgStarting: 'up',
+        pkg2L1: 'Retouched: 15 Master-level Photos',
+        pkg2L2: 'Extra retouch: NT$200 / Photo',
+        pkg2L3: 'Location: Taipei/Ntpc/Hsinchu/Taoyuan',
+        pkg2L4: 'Time: Flexible based on theme',
+        pkg2L5: 'Delivery: 7-day cloud link',
+        pkg3Title: 'Film Project',
+        pkg3Sub: 'Analog Portrait (Classic Tone)',
+        pkg3L1: 'Includes 2 rolls of film (~72 shots)',
+        pkg3L2: 'Shooting, developing, scanning & grading',
+        pkg3L4: 'Time: Flexible for analog workflow',
+        pkg4Title: 'Custom Project',
+        pkg4Sub: 'Graduation / Groups / Special',
+        pkgContactUs: 'Discuss for Quote',
+        pkg4L1: 'Quote based on pax and needs',
+        pkg4L2: 'Support group & graduation shots',
+        pkg4L3: 'Customized retouch quantity',
+        pkg4L4: 'Time: Flexible for your schedule',
+        ctaContact: 'Contact Us to Book a Session',
+        note1: '* The NT$1,500 plan is a limited offer designed to source urban documentary portfolios.',
+        note2: '* The Film Project covers the cost of rolls, professional developing, and hi-res scanning.',
+        note3: '* Both Commission and Film projects accept Hsinchu and Taoyuan locations.',
+        note4: '* Please email or DM via Instagram to confirm dates prior to booking.'
+      }
+    };
+
+    let currentLang = 'tw'; // 預設語言
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'tw' ? 'en' : 'tw';
+      const langBtn = document.getElementById('langToggle');
+      langBtn.textContent = currentLang === 'tw' ? 'EN' : '繁';
+      
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (i18n[currentLang][key]) {
+           el.innerHTML = i18n[currentLang][key]; 
+        }
+      });
+    }
+
+    document.getElementById('langToggle').addEventListener('click', toggleLanguage);
+
+    // Mouse Tracking for cards
+    document.querySelectorAll('.linear-card').forEach(card => {
+        card.addEventListener('mousemove', e => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+        });
+    });
+  </script>
 </body>
 </html>
