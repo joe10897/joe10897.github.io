@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,15 +16,20 @@
       /* background texture */
       background-image: radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.05) 0%, transparent 60%);
     }
-    
+
     .film-grain {
       position: fixed;
-      top: -50vh; left: -50vw; width: 200vw; height: 200vh;
-      pointer-events: none; z-index: 0;
+      top: -50vh;
+      left: -50vw;
+      width: 200vw;
+      height: 200vh;
+      pointer-events: none;
+      z-index: 0;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-      opacity: 0.15; mix-blend-mode: overlay;
+      opacity: 0.15;
+      mix-blend-mode: overlay;
     }
-    
+
     .promo-container {
       min-height: 100svh;
       display: flex;
@@ -40,49 +46,77 @@
     .image-overlay {
       position: relative;
     }
+
     .image-overlay::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.6));
+      background: linear-gradient(to bottom, transparent 60%, rgba(0, 0, 0, 0.6));
       pointer-events: none;
     }
   </style>
 </head>
+
 <body>
   <div class="film-grain"></div>
 
   <div class="promo-container">
-    
+
     <!-- 1. Header -->
-    <header class="text-center w-full mt-4 mb-2">
-      <h1 class="text-4xl md:text-5xl font-semibold tracking-wider text-transparent bg-clip-text bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500">Monochrome<br>Lab.</h1>
+    <header class="text-center w-full mt-6 mb-4 relative z-10">
+      <div class="inline-block relative">
+        <h2 class="text-[9px] font-medium tracking-[0.5em] uppercase text-gray-400 mb-2 font-serif italic text-white/30">
+          | Photography | Film | EDITING |</h2>
+        <h1
+          class="text-4xl sm:text-4xl md:text-5xl font-semibold tracking-wider text-transparent bg-clip-text bg-gradient-to-br from-white via-gray-300 to-gray-600 drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+          Monochrome Lab<span class="text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]">.</span></h1>
+      </div>
     </header>
 
     <!-- 2. Main Content (Grid + Services) -->
     <main class="w-full flex-grow flex flex-col justify-center py-6">
-      
-      <!-- 作品縮圖 Grid -->
-      <div class="grid grid-cols-2 gap-3 mb-6">
-        <!-- 主圖 -->
-        <div class="col-span-2 h-44 rounded-2xl overflow-hidden border border-white/10 shadow-lg image-overlay relative">
-          <img src="images/C&Y/DSCF3480-編輯.jpg" alt="Portfolio 1" class="absolute inset-0 w-full h-full object-cover">
+
+      <!-- 作品縮圖 5 張 (上2 下3 排版) -->
+      <div class="flex flex-col gap-2 mb-8 h-[24rem] w-full">
+        <!-- 第一排：兩張大圖 (peggy1, MEITU) -->
+        <div class="grid grid-cols-2 gap-2 h-[60%] w-full">
+          <!-- 圖 1 -->
+          <div class="rounded-2xl overflow-hidden border border-white/10 shadow-lg relative h-full w-full">
+            <img src="images/Peggy1/peggy1.jpg" alt="peggy1" class="absolute inset-0 w-full h-full object-cover">
+          </div>
+          <!-- 圖 2 -->
+          <div class="rounded-2xl overflow-hidden border border-white/10 shadow-lg relative h-full w-full">
+            <img src="images/yiqi/MEITU_20250719_214147941.jpg" alt="MEITU"
+              class="absolute inset-0 w-full h-full object-cover">
+          </div>
         </div>
-        <!-- 副圖 1 -->
-        <div class="aspect-square rounded-2xl overflow-hidden border border-white/10 shadow-lg relative">
-          <img src="images/Peggy1/peggy1.jpg" alt="Portfolio 2" class="absolute inset-0 w-full h-full object-cover">
-        </div>
-        <!-- 副圖 2 -->
-        <div class="aspect-square rounded-2xl overflow-hidden border border-white/10 shadow-lg relative">
-          <img src="images/Vivian/v1.jpg" alt="Portfolio 3" class="absolute inset-0 w-full h-full object-cover">
+
+        <!-- 第二排：三張小圖 (P008, INTRO_6, INTRO_8) -->
+        <div class="grid grid-cols-3 gap-2 h-[40%] w-full">
+          <!-- 圖 3 -->
+          <div class="rounded-xl overflow-hidden border border-white/10 shadow-lg relative h-full w-full">
+            <img src="images/senhuang/P008.jpg" alt="P008" class="absolute inset-0 w-full h-full object-cover">
+          </div>
+          <!-- 圖 4 -->
+          <div class="rounded-xl overflow-hidden border border-white/10 shadow-lg relative h-full w-full">
+            <img src="images/INTRO_menu/LINE_ALBUM_INTRO_240401_6.jpg" alt="INTRO_6"
+              class="absolute inset-0 w-full h-full object-cover">
+          </div>
+          <!-- 圖 5 -->
+          <div class="rounded-xl overflow-hidden border border-white/10 shadow-lg relative h-full w-full">
+            <img src="images/INTRO_menu/LINE_ALBUM_INTRO_240401_8.jpg" alt="INTRO_8"
+              class="absolute inset-0 w-full h-full object-cover">
+          </div>
         </div>
       </div>
 
       <!-- 接案服務清單 -->
-      <div class="bg-black/50 border border-white/5 rounded-2xl p-5 shadow-2xl backdrop-blur-md relative overflow-hidden">
+      <div
+        class="bg-black/50 border border-white/5 rounded-2xl p-5 shadow-2xl backdrop-blur-md relative overflow-hidden">
         <!-- 裝飾光暈 -->
-        <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 blur-2xl rounded-full translate-x-1/2 -translate-y-1/2"></div>
-        
+        <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 blur-2xl rounded-full translate-x-1/2 -translate-y-1/2">
+        </div>
+
         <div class="flex items-center mb-4 border-b border-white/10 pb-3 relative z-10">
           <span class="w-1.5 h-1.5 rounded-full bg-gray-300 mr-2 shadow-[0_0_5px_rgba(255,255,255,0.8)]"></span>
           <h3 class="text-xs font-semibold tracking-[0.2em] uppercase text-gray-200">服務項目 Services</h3>
@@ -100,10 +134,13 @@
 
     <!-- 3. Footer (QR Code) -->
     <footer class="w-full mb-2">
-      <div class="flex items-center justify-between bg-gradient-to-r from-white/10 to-transparent p-3 pr-4 rounded-2xl border border-white/10 backdrop-blur-md">
+      <div
+        class="flex items-center justify-between bg-gradient-to-r from-white/10 to-transparent p-3 pr-4 rounded-2xl border border-white/10 backdrop-blur-md">
         <div class="flex items-center">
           <div class="w-16 h-16 bg-white p-1 rounded-xl shadow-lg flex-shrink-0 relative">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://nomochrome.site/&color=000000&bgcolor=ffffff&qzone=1" alt="QR Code" class="w-full h-full rounded-lg">
+            <img
+              src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://nomochrome.site/&color=000000&bgcolor=ffffff&qzone=1"
+              alt="QR Code" class="w-full h-full rounded-lg">
           </div>
           <div class="ml-4">
             <p class="text-[9px] uppercase font-bold tracking-[0.3em] text-gray-400 mb-1">Scan to Explore</p>
@@ -111,7 +148,8 @@
           </div>
         </div>
         <!-- 箭頭裝飾 -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 opacity-50" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
         </svg>
       </div>
@@ -119,4 +157,5 @@
 
   </div>
 </body>
+
 </html>
