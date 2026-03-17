@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monochrome Lab — 客戶開發儀表板</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+TC:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080808;
+      --surface: #111111;
+      --surface2: #1a1a1a;
+      --border: rgba(255,255,255,0.07);
+      --border-hover: rgba(255,255,255,0.18);
+      --text: #f0f0f0;
+      --text-muted: #666;
+      --text-sub: #999;
+      --accent: #ffffff;
+      --accent-dim: rgba(255,255,255,0.08);
+      --green: #22c55e;
+      --yellow: #eab308;
+      --blue: #3b82f6;
+      --red: #ef4444;
+      --purple: #a855f7;
+      --pink: #ec4899;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', 'Noto Serif TC', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    /* Noise texture */
+    body::after {
+      content: '';
+      position: fixed; inset: 0; z-index: 9999;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.03;
+    }
+
+    /* ─── Layout ─── */
+    .shell { display: flex; min-height: 100vh; }
+
+    /* ─── Sidebar ─── */
+    .sidebar {
+      width: 220px; flex-shrink: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      padding: 24px 16px;
+      position: fixed; top: 0; left: 0; height: 100vh;
+      z-index: 50;
+    }
+    .logo {
+      font-size: 13px; font-weight: 600;
+      letter-spacing: 0.15em; color: var(--text);
+      padding: 0 8px 24px; border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+    .logo span { color: var(--text-muted); font-weight: 300; display: block; font-size: 10px; margin-top: 2px; letter-spacing: 0.05em; }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 8px;
+      cursor: pointer; font-size: 13px; color: var(--text-sub);
+      transition: all 0.2s; margin-bottom: 2px; user-select: none;
+      border: 1px solid transparent;
+    }
+    .nav-item:hover { color: var(--text); background: var(--accent-dim); }
+    .nav-item.active { color: var(--text); background: var(--accent-dim); border-color: var(--border); }
+    .nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+    .sidebar-footer {
+      margin-top: auto; padding-top: 20px;
+      border-top: 1px solid var(--border); font-size: 11px; color: var(--text-muted);
+      text-align: center; line-height: 1.6;
+    }
+
+    /* ─── Main ─── */
+    .main { margin-left: 220px; flex: 1; padding: 40px 48px; max-width: 1100px; }
+
+    /* ─── Page header ─── */
+    .page-header { margin-bottom: 36px; }
+    .page-header h1 { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
+    .page-header p { color: var(--text-muted); font-size: 13px; margin-top: 6px; }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ─── Cards ─── */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 24px;
+      transition: border-color 0.2s;
+    }
+    .card:hover { border-color: var(--border-hover); }
+    .card-title { font-size: 12px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px; }
+
+    /* ─── Platform Pills ─── */
+    .platform-pills { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+    .pill {
+      padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 500;
+      cursor: pointer; border: 1px solid var(--border); background: transparent;
+      color: var(--text-sub); transition: all 0.2s; user-select: none;
+    }
+    .pill.active, .pill:hover { color: var(--text); border-color: rgba(255,255,255,0.25); background: var(--accent-dim); }
+
+    /* ─── Hashtag grid ─── */
+    .hashtag-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .hashtag {
+      font-size: 12px; padding: 5px 12px; border-radius: 6px;
+      background: var(--surface2); border: 1px solid var(--border);
+      color: var(--text-sub); cursor: pointer; transition: all 0.2s;
+      font-family: monospace;
+    }
+    .hashtag:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+    .hashtag.copied { border-color: var(--green); color: var(--green); }
+
+    /* ─── Strategy cards ─── */
+    .strategy-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+    .strategy-card {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 20px;
+    }
+    .strategy-card .platform-badge {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+      padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 12px;
+    }
+    .badge-threads { background: rgba(255,255,255,0.1); color: #ccc; }
+    .badge-ig { background: rgba(236,72,153,0.15); color: var(--pink); }
+    .badge-xhs { background: rgba(239,68,68,0.15); color: var(--red); }
+    .badge-fb { background: rgba(59,130,246,0.15); color: var(--blue); }
+    .strategy-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+    .strategy-card p { font-size: 12px; color: var(--text-sub); line-height: 1.7; }
+    .strategy-card ul { padding-left: 16px; }
+    .strategy-card ul li { font-size: 12px; color: var(--text-sub); margin-bottom: 4px; line-height: 1.6; }
+
+    /* ─── AI Message Generator ─── */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+    .form-group { display: flex; flex-direction: column; gap: 8px; }
+    .form-group label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+    .form-group select, .form-group input, .form-group textarea {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text); font-size: 13px;
+      padding: 10px 14px; outline: none; font-family: inherit;
+      transition: border-color 0.2s;
+    }
+    .form-group select:focus, .form-group input:focus, .form-group textarea:focus {
+      border-color: rgba(255,255,255,0.3);
+    }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .form-group.full { grid-column: 1 / -1; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 500;
+      cursor: pointer; border: 1px solid var(--border); transition: all 0.2s;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: var(--text); color: #000; border-color: var(--text);
+    }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-ghost { background: transparent; color: var(--text); }
+    .btn-ghost:hover { background: var(--accent-dim); border-color: var(--border-hover); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+
+    .ai-output-box {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 20px; min-height: 120px;
+      font-size: 14px; line-height: 1.8; color: var(--text-sub);
+      white-space: pre-wrap; position: relative;
+    }
+    .ai-output-box.has-content { color: var(--text); }
+    .copy-btn {
+      position: absolute; top: 12px; right: 12px;
+      padding: 5px 12px; font-size: 11px; border-radius: 6px;
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text-sub); cursor: pointer; transition: all 0.2s;
+    }
+    .copy-btn:hover { color: var(--text); border-color: var(--border-hover); }
+    .spinner {
+      display: inline-block; width: 14px; height: 14px;
+      border: 2px solid rgba(0,0,0,0.3); border-top-color: #000;
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner-light {
+      border: 2px solid rgba(255,255,255,0.15); border-top-color: var(--text-sub);
+    }
+
+    /* ─── CRM ─── */
+    .crm-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: gap; gap: 12px; }
+    .search-input {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text); font-size: 13px;
+      padding: 9px 14px; outline: none; font-family: inherit;
+      width: 220px; transition: border-color 0.2s;
+    }
+    .search-input:focus { border-color: rgba(255,255,255,0.3); }
+
+    .crm-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .crm-table th {
+      text-align: left; padding: 10px 14px;
+      color: var(--text-muted); font-size: 11px; letter-spacing: 0.08em; font-weight: 600;
+      border-bottom: 1px solid var(--border); white-space: nowrap;
+    }
+    .crm-table td {
+      padding: 14px; border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .crm-table tr:last-child td { border-bottom: none; }
+    .crm-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 500;
+      white-space: nowrap;
+    }
+    .status-pending { background: rgba(234,179,8,0.12); color: var(--yellow); }
+    .status-contacted { background: rgba(59,130,246,0.12); color: var(--blue); }
+    .status-replied { background: rgba(168,85,247,0.12); color: var(--purple); }
+    .status-closed { background: rgba(34,197,94,0.12); color: var(--green); }
+    .status-dead { background: rgba(100,100,100,0.12); color: var(--text-muted); }
+
+    .platform-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+    .dot-threads { background: #ccc; }
+    .dot-ig { background: var(--pink); }
+    .dot-xhs { background: var(--red); }
+    .dot-fb { background: var(--blue); }
+
+    .action-btn {
+      padding: 4px 10px; font-size: 11px; border-radius: 5px;
+      background: transparent; border: 1px solid var(--border);
+      color: var(--text-sub); cursor: pointer; transition: all 0.15s;
+      font-family: inherit; margin-right: 4px;
+    }
+    .action-btn:hover { color: var(--text); border-color: var(--border-hover); }
+    .action-btn.danger:hover { color: var(--red); border-color: rgba(239,68,68,0.4); }
+
+    /* ─── Modal ─── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(8px); z-index: 100;
+      display: none; align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: var(--surface); border: 1px solid var(--border-hover);
+      border-radius: 14px; padding: 28px; width: 100%; max-width: 480px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+    }
+    .modal-box h3 { font-size: 16px; font-weight: 600; margin-bottom: 20px; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+
+    /* ─── Stats row ─── */
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 16px 20px;
+    }
+    .stat-card .stat-num { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; }
+    .stat-card .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+    /* ─── Empty state ─── */
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+    .empty-state .empty-icon { font-size: 40px; margin-bottom: 12px; }
+    .empty-state p { font-size: 13px; }
+
+    /* ─── Tips ─── */
+    .tip-box {
+      background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2);
+      border-radius: 8px; padding: 14px 16px; font-size: 12px; color: #c8a835;
+      line-height: 1.7; margin-top: 20px;
+    }
+    .tip-box strong { color: var(--yellow); }
+
+    /* ─── Prospects found section ─── */
+    .prospect-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+    .prospect-row {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 16px; display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 16px; transition: border-color 0.2s;
+    }
+    .prospect-row:hover { border-color: var(--border-hover); }
+    .prospect-row .username { font-size: 14px; font-weight: 600; color: var(--text); }
+    .prospect-row .desc { font-size: 12px; color: var(--text-sub); margin-top: 4px; line-height: 1.6; }
+    .prospect-row .match { font-size: 11px; color: var(--green); margin-top: 6px; }
+    .prospect-row .actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .add-crm-btn {
+      padding: 6px 12px; font-size: 12px; border-radius: 6px;
+      background: var(--accent-dim); border: 1px solid var(--border);
+      color: var(--text); cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    }
+    .add-crm-btn:hover { background: rgba(255,255,255,0.12); }
+    .add-crm-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+    @media (max-width: 900px) {
+      .sidebar { width: 60px; padding: 16px 8px; }
+      .sidebar .logo, .nav-item span, .sidebar-footer { display: none; }
+      .nav-item { justify-content: center; }
+      .main { margin-left: 60px; padding: 24px 20px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="shell">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      MONOCHROME LAB
+      <span>客戶開發儀表板</span>
+    </div>
+    <nav>
+      <div class="nav-item active" data-page="prospects" onclick="switchPage('prospects')">
+        <span class="icon">🔍</span>
+        <span>搜尋結果</span>
+      </div>
+      <div class="nav-item" data-page="strategy" onclick="switchPage('strategy')">
+        <span class="icon">📡</span>
+        <span>平台策略</span>
+      </div>
+      <div class="nav-item" data-page="generator" onclick="switchPage('generator')">
+        <span class="icon">✨</span>
+        <span>AI 訊息生成</span>
+      </div>
+      <div class="nav-item" data-page="crm" onclick="switchPage('crm')">
+        <span class="icon">📋</span>
+        <span>客戶追蹤</span>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="margin-bottom:10px;">
+        <label style="font-size:9px; color:var(--text-muted); display:block; margin-bottom:4px;">Gemini API Key</label>
+        <input type="password" id="sidebar-key" placeholder="貼上自訂 Key..." 
+               style="width:100%; font-size:10px; padding:4px 8px; background:var(--surface2); border:1px solid var(--border); border-radius:4px; color:var(--text-sub);"
+               onchange="localStorage.setItem('ml_api_key', this.value); alert('API Key 已更新')">
+      </div>
+      v1.1 · Monochrome Lab<br/>
+      資料存於本機瀏覽器
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- ═══════════ PAGE: 搜尋結果 ═══════════ -->
+    <div class="page active" id="page-prospects">
+      <div class="page-header">
+        <h1>🔍 Threads 潛在客戶名單</h1>
+        <p>自動搜尋到的台灣攝影潛在客群，點「加入 CRM」開始追蹤</p>
+      </div>
+
+      <div class="tip-box">
+        <strong>💡 如何使用：</strong>對每位潛在客戶，點「加入 CRM」→ 切換到「AI 訊息生成」頁 → 填入對方資訊 → 生成個人化訊息 → 手動在 Threads 傳送。
+      </div>
+
+      <div style="margin-top:20px; margin-bottom:16px; display:flex; align-items:center; justify-content:space-between;">
+        <span style="font-size:12px;color:var(--text-muted);">找到 <strong style="color:var(--text);">6</strong> 位潛在客戶 · Threads · 2026-03-17</span>
+        <button class="btn btn-ghost" onclick="addAllToCRM()" style="font-size:12px;padding:7px 14px;">
+          ➕ 全部加入 CRM
+        </button>
+      </div>
+
+      <div class="prospect-list" id="prospectList">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- ═══════════ PAGE: 平台策略 ═══════════ -->
+    <div class="page" id="page-strategy">
+      <div class="page-header">
+        <h1>📡 平台搜尋策略</h1>
+        <p>針對你的風格，各平台最精準的關鍵字與找客方式</p>
+      </div>
+
+      <div class="platform-pills">
+        <div class="pill active" onclick="filterStrategy('all', this)">全部</div>
+        <div class="pill" onclick="filterStrategy('threads', this)">Threads</div>
+        <div class="pill" onclick="filterStrategy('ig', this)">Instagram</div>
+        <div class="pill" onclick="filterStrategy('xhs', this)">小紅書</div>
+        <div class="pill" onclick="filterStrategy('fb', this)">Facebook</div>
+      </div>
+
+      <div class="strategy-grid" id="strategyGrid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- ═══════════ PAGE: AI 訊息生成 ═══════════ -->
+    <div class="page" id="page-generator">
+      <div class="page-header">
+        <h1>✨ AI 訊息生成器</h1>
+        <p>輸入潛在客戶的資訊，由 Gemini AI 生成個人化繁中開發訊息</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">潛在客戶資訊</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>平台</label>
+            <select id="gen-platform">
+              <option value="Threads">Threads</option>
+              <option value="Instagram">Instagram</option>
+              <option value="小紅書">小紅書</option>
+              <option value="Facebook">Facebook</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>客戶帳號</label>
+            <input id="gen-username" type="text" placeholder="例：@ruruuu.tw" />
+          </div>
+          <div class="form-group">
+            <label>客群類型</label>
+            <select id="gen-type">
+              <option value="個人寫真">個人寫真</option>
+              <option value="情侶/婚紗">情侶 / 婚紗</option>
+              <option value="品牌形象照">品牌 / 形象照</option>
+              <option value="家庭親子">家庭 / 親子</option>
+              <option value="藝術人像">藝術人像</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>語氣風格</label>
+            <select id="gen-tone">
+              <option value="自然親切">自然親切</option>
+              <option value="專業正式">專業正式</option>
+              <option value="簡短直接">簡短直接</option>
+              <option value="文藝感性">文藝感性</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label>他的貼文 / 簡介摘要（讓 AI 個人化）</label>
+            <textarea id="gen-context" placeholder="貼上對方的貼文內容或簡介，例如：「求推薦台北底片感攝影師，想拍有靈魂的照片」"></textarea>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <button class="btn btn-primary" id="genBtn" onclick="generateMessage()">
+            <span id="genBtnText">✨ 生成訊息</span>
+          </button>
+          <button class="btn btn-ghost" onclick="clearGen()">清除</button>
+        </div>
+      </div>
+
+      <div style="margin-top:20px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <span style="font-size:12px;color:var(--text-muted);">生成的開發訊息</span>
+          <button class="copy-btn" onclick="copyOutput()" id="copyOutBtn" style="position:static;">複製</button>
+        </div>
+        <div class="ai-output-box" id="aiOutput">等待生成... 填入上方資訊後點擊「生成訊息」</div>
+      </div>
+
+      <div class="tip-box" style="margin-top:16px;">
+        <strong>⚠️ 提醒：</strong>生成後請自行閱讀並微調，再手動貼到 Threads / IG / 小紅書 / FB 傳出。不要大量複製同一段文字批量傳送（平台可能偵測並限流）。
+      </div>
+    </div>
+
+    <!-- ═══════════ PAGE: CRM 客戶追蹤 ═══════════ -->
+    <div class="page" id="page-crm">
+      <div class="page-header">
+        <h1>📋 潛在客戶追蹤</h1>
+        <p>記錄每位潛在客戶的聯絡進度</p>
+      </div>
+
+      <div class="stats-row" id="statsRow">
+        <!-- Populated by JS -->
+      </div>
+
+      <div class="crm-header">
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <input class="search-input" id="crmSearch" placeholder="搜尋帳號 / 備註…" oninput="renderCRM()" />
+          <select class="search-input" id="crmFilter" onchange="renderCRM()" style="width:140px;">
+            <option value="">全部狀態</option>
+            <option value="pending">待聯絡</option>
+            <option value="contacted">已傳訊</option>
+            <option value="replied">已回覆</option>
+            <option value="closed">已成交</option>
+            <option value="dead">無回應</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-ghost" onclick="exportCSV()" style="font-size:12px;padding:8px 14px;">📤 匯出 CSV</button>
+          <button class="btn btn-primary" onclick="openAddModal()" style="font-size:12px;padding:8px 14px;">➕ 新增客戶</button>
+        </div>
+      </div>
+
+      <div class="card" style="padding:0;overflow:hidden;">
+        <table class="crm-table">
+          <thead>
+            <tr>
+              <th>帳號</th>
+              <th>平台</th>
+              <th>類型</th>
+              <th>狀態</th>
+              <th>備註</th>
+              <th>日期</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="crmBody">
+          </tbody>
+        </table>
+        <div class="empty-state" id="crmEmpty" style="display:none;">
+          <div class="empty-icon">📭</div>
+          <p>還沒有客戶記錄<br/>從「搜尋結果」頁加入，或手動新增</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Add / Edit Modal -->
+<div class="modal-overlay" id="crmModal">
+  <div class="modal-box">
+    <h3 id="modalTitle">新增潛在客戶</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>帳號</label>
+        <input id="m-username" type="text" placeholder="@帳號名稱" />
+      </div>
+      <div class="form-group">
+        <label>平台</label>
+        <select id="m-platform">
+          <option>Threads</option>
+          <option>Instagram</option>
+          <option>小紅書</option>
+          <option>Facebook</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>類型</label>
+        <select id="m-type">
+          <option>個人寫真</option>
+          <option>情侶 / 婚紗</option>
+          <option>品牌 / 形象照</option>
+          <option>家庭 / 親子</option>
+          <option>藝術人像</option>
+          <option>其他</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>狀態</label>
+        <select id="m-status">
+          <option value="pending">待聯絡</option>
+          <option value="contacted">已傳訊</option>
+          <option value="replied">已回覆</option>
+          <option value="closed">已成交</option>
+          <option value="dead">無回應</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label>備註（貼文摘要、聯絡內容…）</label>
+        <textarea id="m-note" placeholder="記錄對方的貼文內容或聯絡情況…" rows="3"></textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" onclick="saveModal()">儲存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ═══════════════════════════════════════════════
+  // CONFIG
+  // ═══════════════════════════════════════════════
+  const DEFAULT_KEY = 'AIzaSyCtnW-2boNCgHERXPvdvaC_If9FBk8L98Q';
+  function getApiKey() { return localStorage.getItem('ml_api_key') || DEFAULT_KEY; }
+  function getGeminiUrl() { return `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${getApiKey()}`; }
+
+  // ═══════════════════════════════════════════════
+  // DATA — Threads search results (pre-loaded)
+  // ═══════════════════════════════════════════════
+  const threadsProspects = [
+    {
+      id: 'p1', username: '@ruruuu.tw', platform: 'Threads',
+      desc: '「請問有推薦的雙北個人寫真嗎？另外也想要尋找台北攝影師。」',
+      match: '✅ 直接目標：正在主動尋找台北地區寫真攝影師',
+      type: '個人寫真'
+    },
+    {
+      id: 'p2', username: '@beyondessenceinfo', platform: 'Threads',
+      desc: '「每年都要拍一次寫真，今年想嘗試日系雜誌風格，求推薦攝影師。」',
+      match: '⭐ 高價值客群：固定每年拍攝習慣，可包裝為「高質感黑白雜誌風」',
+      type: '個人寫真'
+    },
+    {
+      id: 'p3', username: '@a_b9926', platform: 'Threads',
+      desc: '「求推薦新北或台北拍形象照店家。」',
+      match: '🏢 商業機會：底片感形象照可區隔傳統棚拍',
+      type: '品牌 / 形象照'
+    },
+    {
+      id: 'p4', username: '@gra0215', platform: 'Threads',
+      desc: '「尋：台北形象照拍攝🎬的店家！求推薦。」',
+      match: '📍 精準定位：目標明確，位於台北，主動求推薦',
+      type: '品牌 / 形象照'
+    },
+    {
+      id: 'p5', username: '@_niyz7', platform: 'Threads',
+      desc: '「自助寫真館...完全i人友善，自己在裡面玩好久。」',
+      match: '💡 風格契合：i人（內向者），非干預紀實拍法最適合',
+      type: '個人寫真'
+    },
+    {
+      id: 'p7', username: '@ad_chour', platform: 'Threads',
+      desc: '「尋找雙北/宜蘭的孕婦寫真，強調『不想要太正式』的感覺。」',
+      match: '🤰 孕婦寫真：不喜歡太正式的風格，紀實黑白質感非常有優勢',
+      type: '個人寫真'
+    },
+    {
+      id: 'p8', username: '@a.alina_wu', platform: 'Threads',
+      desc: '「求推薦具備『氛圍感』的攝影師，不想拍太傳統的風格。」',
+      match: '✨ 氛圍感：討厭傳統擺拍，黑白膠片的光影氛圍是正解',
+      type: '個人寫真'
+    },
+    {
+      id: 'p9', username: '@sionportraits', platform: 'Threads',
+      desc: '「代友詢問雙北『自然風格』的家庭寫真。」',
+      match: '👨‍👩‍👧 家庭攝影：自然風格、紀實紀錄是其核心訴求',
+      type: '家庭親子'
+    },
+    {
+      id: 'p10', username: '@_yuyan_1229', platform: 'Threads',
+      desc: '「生日想拍一組照片給自己做紀念，求推薦攝影師。」',
+      match: '🎂 紀念攝影：生日週年紀念，對回憶的重量感有需求',
+      type: '個人寫真'
+    },
+    {
+      id: 'p6', username: '@ed_die.lhc', platform: 'Threads',
+      desc: '「台北有什麼好地方拍底片，有沒有脆友一齊去拍，求推薦。」',
+      match: '🎞️ 底片愛好者：對 Monochrome Lab 品牌高度共鳴',
+      type: '個人寫真'
+    },
+  ];
+
+  // Strategies per platform
+  const strategies = [
+    {
+      platform: 'threads', badge: 'badge-threads', label: 'THREADS',
+      title: '主動回覆求推薦貼文',
+      desc: '搜尋關鍵字「寫真」「攝影師推薦」「台北拍照」，找到正在詢問的貼文直接留言，效果最直接。',
+      keywords: ['寫真', '攝影師推薦', '台北拍照', '人像攝影', '底片攝影', '形象照', '雙北攝影']
+    },
+    {
+      platform: 'ig', badge: 'badge-ig', label: 'INSTAGRAM',
+      title: 'Hashtag 觸及 + 主動互動',
+      desc: '發佈作品使用精準標籤，並對目標 hashtag 內的貼文留言互動，吸引潛在客戶主動追蹤。',
+      keywords: ['#底片攝影', '#黑白人像', '#台北攝影師', '#新北攝影師', '#寫真推薦', '#個人寫真', '#底片寫真', '#人像攝影師']
+    },
+    {
+      platform: 'ig', badge: 'badge-ig', label: 'INSTAGRAM',
+      title: '鎖定競品粉絲',
+      desc: '找出風格相近的台北攝影師，觀察他的粉絲中有哪些人曾留言「想拍」「怎麼預約」，直接傳送 DM。',
+      keywords: []
+    },
+    {
+      platform: 'xhs', badge: 'badge-xhs', label: '小紅書',
+      title: '筆記式內容行銷',
+      desc: '發布「台灣底片攝影攻略」「黑白人像怎麼選攝影師」等教學文，植入你的工作室，吸引搜尋的用戶。',
+      keywords: ['台灣攝影師', '底片感寫真', '黑白人像', '台北拍照', '人像攝影推薦', '攝影工作室']
+    },
+    {
+      platform: 'xhs', badge: 'badge-xhs', label: '小紅書',
+      title: '搜尋「台灣攝影師求推薦」留言',
+      desc: '搜尋「台灣 攝影師 推薦」「新北 寫真」等，找到詢問貼文後，以攝影師身份附圖留言。',
+      keywords: ['台北攝影師推薦', '台灣寫真', '台北拍照推薦', '底片寫真推薦']
+    },
+    {
+      platform: 'fb', badge: 'badge-fb', label: 'FACEBOOK',
+      title: '加入攝影社團主動曝光',
+      desc: '加入「台灣人像攝影交流」「底片攝影同好」等社團，定期分享作品並開放接案。',
+      keywords: ['台灣人像攝影', '攝影師接案', '底片攝影社群', '台北攝影師分享']
+    },
+  ];
+
+  // ═══════════════════════════════════════════════
+  // PAGE NAV
+  // ═══════════════════════════════════════════════
+  function switchPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    document.querySelector(`[data-page="${name}"]`).classList.add('active');
+    if (name === 'crm') renderCRM();
+  }
+
+  // ═══════════════════════════════════════════════
+  // PROSPECTS
+  // ═══════════════════════════════════════════════
+  const addedIds = new Set(JSON.parse(localStorage.getItem('ml_added_ids') || '[]'));
+
+  function renderProspects() {
+    const list = document.getElementById('prospectList');
+    list.innerHTML = threadsProspects.map(p => `
+      <div class="prospect-row" id="pr-${p.id}">
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="username">${p.username}</span>
+            <span style="font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(255,255,255,0.06);color:var(--text-muted);">${p.platform}</span>
+            <span style="font-size:10px;padding:2px 8px;border-radius:4px;background:var(--surface2);color:var(--text-muted);">${p.type}</span>
+          </div>
+          <div class="desc">${p.desc}</div>
+          <div class="match">${p.match}</div>
+        </div>
+        <div class="actions">
+          <button class="add-crm-btn" id="btn-${p.id}" onclick="addSingleToCRM('${p.id}')" ${addedIds.has(p.id) ? 'disabled' : ''}>
+            ${addedIds.has(p.id) ? '✅ 已加入' : '加入 CRM'}
+          </button>
+          <button class="add-crm-btn" onclick="prefillGenerator('${p.id}')" style="background:transparent;border-color:var(--border);">
+            ✨ 生成訊息
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function addSingleToCRM(id) {
+    const p = threadsProspects.find(x => x.id === id);
+    if (!p) return;
+    const crm = loadCRM();
+    if (crm.find(c => c.username === p.username)) return;
+    crm.unshift({
+      id: Date.now().toString(), username: p.username, platform: p.platform,
+      type: p.type, status: 'pending', note: p.desc, date: today()
+    });
+    saveCRM(crm);
+    addedIds.add(id);
+    localStorage.setItem('ml_added_ids', JSON.stringify([...addedIds]));
+    document.getElementById('btn-' + id).disabled = true;
+    document.getElementById('btn-' + id).textContent = '✅ 已加入';
+  }
+
+  function addAllToCRM() {
+    threadsProspects.forEach(p => {
+      if (!addedIds.has(p.id)) addSingleToCRM(p.id);
+    });
+  }
+
+  function prefillGenerator(id) {
+    const p = threadsProspects.find(x => x.id === id);
+    if (!p) return;
+    document.getElementById('gen-platform').value = p.platform;
+    document.getElementById('gen-username').value = p.username;
+    document.getElementById('gen-type').value = p.type;
+    document.getElementById('gen-context').value = p.desc;
+    switchPage('generator');
+  }
+
+  // ═══════════════════════════════════════════════
+  // STRATEGY
+  // ═══════════════════════════════════════════════
+  function renderStrategy(filter = 'all') {
+    const grid = document.getElementById('strategyGrid');
+    const filtered = filter === 'all' ? strategies : strategies.filter(s => s.platform === filter);
+    grid.innerHTML = filtered.map(s => `
+      <div class="strategy-card" data-platform="${s.platform}">
+        <span class="platform-badge ${s.badge}">${s.label}</span>
+        <h3>${s.title}</h3>
+        <p>${s.desc}</p>
+        ${s.keywords.length ? `
+          <div class="hashtag-grid" style="margin-top:14px;">
+            ${s.keywords.map(k => `<span class="hashtag" onclick="copyHashtag(this, '${k}')">${k}</span>`).join('')}
+          </div>
+        ` : ''}
+      </div>
+    `).join('');
+  }
+
+  function filterStrategy(platform, el) {
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    renderStrategy(platform);
+  }
+
+  function copyHashtag(el, text) {
+    navigator.clipboard.writeText(text).then(() => {
+      el.classList.add('copied');
+      el.textContent = '✓ 複製！';
+      setTimeout(() => { el.classList.remove('copied'); el.textContent = text; }, 1500);
+    });
+  }
+
+  // ═══════════════════════════════════════════════
+  // AI GENERATOR
+  // ═══════════════════════════════════════════════
+  async function generateMessage() {
+    const platform = document.getElementById('gen-platform').value;
+    const username = document.getElementById('gen-username').value || '對方';
+    const type = document.getElementById('gen-type').value;
+    const tone = document.getElementById('gen-tone').value;
+    const context = document.getElementById('gen-context').value;
+
+    const btn = document.getElementById('genBtn');
+    const btnText = document.getElementById('genBtnText');
+    const output = document.getElementById('aiOutput');
+
+    btn.disabled = true;
+    btnText.innerHTML = '<span class="spinner"></span> 生成中…';
+    output.classList.remove('has-content');
+    output.textContent = '正在請 Gemini AI 撰寫訊息…';
+
+    const prompt = `你是 Monochrome Lab 攝影工作室（新北板橋）的攝影師 Simon。
+你的工作室風格：底片感、黑白人像、紀實攝影、不過度修圖。
+目前你要在 ${platform} 上向潛在客戶發送開發訊息。
+
+潛在客戶資訊：
+- 帳號：${username}
+- 類型：${type}
+- 對方貼文/簡介：${context || '（無）'}
+
+請根據以上資訊，用「${tone}」的語氣，撰寫一段 ${platform} 私訊（DM）開發訊息。
+要求：
+1. 開頭自然，提到你看到對方的需求或風格
+2. 簡短介紹自己的風格特色（不誇大）
+3. 提供一個行動呼籲（如：歡迎來看作品集、私訊詢問）
+4. 全程繁體中文，語氣${tone}
+5. 不超過 120 字
+6. 不要加說明或標題，直接輸出訊息本文`;
+
+    try {
+      const res = await fetch(getGeminiUrl(), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+      
+      if (!res.ok) {
+        const errorData = await res.json();
+        const errorMsg = errorData?.error?.message || '未知錯誤';
+        if (res.status === 429) {
+          throw new Error('API 流量達到上限 (429)。請稍候再試，或更換 API Key。');
+        }
+        throw new Error(`API 錯誤 (${res.status}): ${errorMsg}`);
+      }
+
+      const data = await res.json();
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '生成失敗，請重試。';
+      output.textContent = text.trim();
+      output.classList.add('has-content');
+    } catch (e) {
+      output.textContent = `❌ 錯誤：${e.message}`;
+    }
+
+    btn.disabled = false;
+    btnText.innerHTML = '✨ 生成訊息';
+  }
+
+  function copyOutput() {
+    const text = document.getElementById('aiOutput').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyOutBtn');
+      btn.textContent = '✅ 已複製';
+      setTimeout(() => btn.textContent = '複製', 1500);
+    });
+  }
+
+  function clearGen() {
+    document.getElementById('gen-username').value = '';
+    document.getElementById('gen-context').value = '';
+    document.getElementById('aiOutput').textContent = '等待生成... 填入上方資訊後點擊「生成訊息」';
+    document.getElementById('aiOutput').classList.remove('has-content');
+  }
+
+  // ═══════════════════════════════════════════════
+  // CRM
+  // ═══════════════════════════════════════════════
+  const statusMap = {
+    pending:   { label: '待聯絡', cls: 'status-pending' },
+    contacted: { label: '已傳訊', cls: 'status-contacted' },
+    replied:   { label: '已回覆', cls: 'status-replied' },
+    closed:    { label: '已成交', cls: 'status-closed' },
+    dead:      { label: '無回應', cls: 'status-dead' },
+  };
+  const platformDot = { Threads: 'dot-threads', Instagram: 'dot-ig', '小紅書': 'dot-xhs', Facebook: 'dot-fb' };
+
+  function loadCRM() { return JSON.parse(localStorage.getItem('ml_crm') || '[]'); }
+  function saveCRM(data) { localStorage.setItem('ml_crm', JSON.stringify(data)); }
+  function today() { return new Date().toLocaleDateString('zh-TW'); }
+
+  function renderCRM() {
+    const crm = loadCRM();
+    const q = document.getElementById('crmSearch').value.toLowerCase();
+    const f = document.getElementById('crmFilter').value;
+    const filtered = crm.filter(c =>
+      (!q || c.username.toLowerCase().includes(q) || (c.note||'').toLowerCase().includes(q)) &&
+      (!f || c.status === f)
+    );
+
+    // Stats
+    const stats = [
+      { label: '總潛在客戶', num: crm.length, color: 'var(--text)' },
+      { label: '已傳訊', num: crm.filter(c=>c.status==='contacted').length, color: 'var(--blue)' },
+      { label: '已回覆', num: crm.filter(c=>c.status==='replied').length, color: 'var(--purple)' },
+      { label: '已成交', num: crm.filter(c=>c.status==='closed').length, color: 'var(--green)' },
+    ];
+    document.getElementById('statsRow').innerHTML = stats.map(s => `
+      <div class="stat-card">
+        <div class="stat-num" style="color:${s.color};">${s.num}</div>
+        <div class="stat-label">${s.label}</div>
+      </div>
+    `).join('');
+
+    const tbody = document.getElementById('crmBody');
+    const empty = document.getElementById('crmEmpty');
+    if (!filtered.length) {
+      tbody.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+    tbody.innerHTML = filtered.map(c => `
+      <tr>
+        <td style="font-weight:500;">${c.username}</td>
+        <td>
+          <span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text-sub);">
+            <span class="platform-dot ${platformDot[c.platform] || 'dot-threads'}"></span>
+            ${c.platform}
+          </span>
+        </td>
+        <td style="font-size:12px;color:var(--text-sub);">${c.type||'—'}</td>
+        <td>
+          <span class="status-badge ${statusMap[c.status]?.cls || 'status-pending'}">
+            ${statusMap[c.status]?.label || c.status}
+          </span>
+        </td>
+        <td style="font-size:12px;color:var(--text-sub);max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${c.note||'—'}</td>
+        <td style="font-size:11px;color:var(--text-muted);white-space:nowrap;">${c.date||'—'}</td>
+        <td style="white-space:nowrap;">
+          <button class="action-btn" onclick="openEditModal('${c.id}')">編輯</button>
+          <button class="action-btn danger" onclick="deleteEntry('${c.id}')">刪除</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function deleteEntry(id) {
+    if (!confirm('確定要刪除這筆記錄嗎？')) return;
+    saveCRM(loadCRM().filter(c => c.id !== id));
+    renderCRM();
+  }
+
+  function exportCSV() {
+    const crm = loadCRM();
+    if (!crm.length) return alert('沒有資料可匯出');
+    const header = ['帳號', '平台', '類型', '狀態', '備註', '日期'];
+    const rows = crm.map(c => [c.username, c.platform, c.type, statusMap[c.status]?.label || c.status, c.note, c.date].map(v => `"${(v||'').replace(/"/g,'""')}"`));
+    const csv = [header, ...rows].map(r => r.join(',')).join('\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = `monochrome_lab_crm_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+  }
+
+  // ─── Modal ───
+  let editingId = null;
+  function openAddModal() { editingId = null; document.getElementById('modalTitle').textContent = '新增潛在客戶'; clearModal(); document.getElementById('crmModal').classList.add('open'); }
+  function openEditModal(id) {
+    editingId = id;
+    const c = loadCRM().find(x => x.id === id);
+    if (!c) return;
+    document.getElementById('modalTitle').textContent = '編輯客戶資料';
+    document.getElementById('m-username').value = c.username;
+    document.getElementById('m-platform').value = c.platform;
+    document.getElementById('m-type').value = c.type;
+    document.getElementById('m-status').value = c.status;
+    document.getElementById('m-note').value = c.note || '';
+    document.getElementById('crmModal').classList.add('open');
+  }
+  function closeModal() { document.getElementById('crmModal').classList.remove('open'); }
+  function clearModal() {
+    ['m-username','m-note'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('m-status').value = 'pending';
+  }
+  function saveModal() {
+    const username = document.getElementById('m-username').value.trim();
+    if (!username) return alert('請填入帳號');
+    const crm = loadCRM();
+    if (editingId) {
+      const idx = crm.findIndex(c => c.id === editingId);
+      if (idx > -1) {
+        crm[idx] = { ...crm[idx], username, platform: document.getElementById('m-platform').value, type: document.getElementById('m-type').value, status: document.getElementById('m-status').value, note: document.getElementById('m-note').value };
+      }
+    } else {
+      crm.unshift({ id: Date.now().toString(), username, platform: document.getElementById('m-platform').value, type: document.getElementById('m-type').value, status: document.getElementById('m-status').value, note: document.getElementById('m-note').value, date: today() });
+    }
+    saveCRM(crm);
+    closeModal();
+    renderCRM();
+  }
+
+  // Click outside modal to close
+  document.getElementById('crmModal').addEventListener('click', e => { if (e.target === document.getElementById('crmModal')) closeModal(); });
+
+  // ═══════════════════════════════════════════════
+  // INIT
+  // ═══════════════════════════════════════════════
+  renderProspects();
+  renderStrategy();
+  renderCRM();
+  if (localStorage.getItem('ml_api_key')) {
+    document.getElementById('sidebar-key').value = localStorage.getItem('ml_api_key');
+  }
+</script>
+</body>
+</html>

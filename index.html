@@ -508,6 +508,9 @@
       }
     }
   </style>
+  
+  <!-- Add html2canvas for Share functionality -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 
 <body
@@ -580,6 +583,8 @@
         <source src="/images/bg.mp4" type="video/mp4">
         您的瀏覽器不支援影片標籤。
       </video>
+      <!-- 粒子生命體背景 Canvas -->
+      <canvas id="particleCanvas" class="absolute inset-x-0 top-0 h-full z-0 opacity-40 pointer-events-auto mix-blend-screen"></canvas>
       <div class="content">
         <div class="glow-bg"></div>
         <section class="flex flex-col items-center justify-center h-full w-full relative z-10">
@@ -594,11 +599,22 @@
               純粹 ‧ 紀實
             </h2>
 
-            <div class="hero-title mt-12">
+            <div class="hero-title mt-12 flex justify-center gap-4">
               <button class="btn-glow px-8 py-4 rounded-full text-xs font-semibold tracking-widest uppercase text-white"
                 onclick="document.getElementById('portfolio').scrollIntoView({behavior:'smooth'})">
                 <span data-i18n="heroBtn">Explore</span>
               </button>
+              
+              <!-- 分享按鈕 -->
+              <button id="sharePromoBtn" class="px-8 py-4 rounded-full text-xs font-semibold tracking-widest uppercase text-white bg-white/10 hover:bg-white/20 border border-white/20 transition-all backdrop-blur-sm shadow-[0_0_15px_rgba(255,255,255,0.1)] flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-5.368m0 5.368l5.662 3.397M8.684 10.658l5.662-3.397M15 6a3 3 0 11-6 0 3 3 0 016 0zm6 3a3 3 0 11-6 0 3 3 0 016 0zm-6 9a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span data-i18n="heroShare">Share</span>
+              </button>
+              
+              <!-- 隱藏的 Iframe，用來載入 promo.html 以便截圖 -->
+              <iframe id="promoFrame" src="promo.html" class="fixed top-[-9999px] left-[-9999px] w-[500px] h-[900px] opacity-0 pointer-events-none" title="Promo Frame"></iframe>
             </div>
           </div>
         </section>
@@ -627,14 +643,8 @@
 
       <div class="container mx-auto max-w-7xl relative z-10">
         <div class="mb-16 flex flex-col items-center">
-          <div
-            class="inline-flex items-center px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-xs text-gray-400 font-medium tracking-wide mb-6">
-            <span class="w-1.5 h-1.5 rounded-full bg-gray-300 mr-2"></span> <span data-i18n="portTag">精選作品</span>
-          </div>
-          <h2 class="text-3xl md:text-4xl font-semibold mb-4 text-center tracking-tight text-white"><span
-              data-i18n="portTitle">光影藝廊</span></h2>
-          <p class="text-gray-400 text-center max-w-xl text-sm md:text-base"><span
-              data-i18n="portSub">以意圖與底片溫度捕捉的黑白及肖像攝影。</span></p>
+          <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center tracking-widest text-[#f0f0f0] font-sans" style="font-family: 'Inter', sans-serif;"><span
+              data-i18n="portTitle" class="text-transparent bg-clip-text bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">PROJECTS</span></h2>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
@@ -777,6 +787,31 @@
           <p data-i18n="aboutP4">我們相信，真正的情感不在於色彩，<br class="hidden md:block">而藏在明與暗的呼吸之間。</p>
           <p class="pt-6 pb-2 text-white font-medium text-xl border-t border-white/10 inline-block mt-8"
             data-i18n="aboutP5">為你留下有顆粒感的記憶，有重量的影像。</p>
+            
+          <!-- Monochrome Color Card (色卡裝飾) -->
+          <div class="mt-16 flex justify-center w-full max-w-md mx-auto opacity-80 hover:opacity-100 transition-opacity duration-500">
+            <div class="flex w-full h-12 shadow-[0_10px_30px_rgba(0,0,0,0.8)] border border-white/10 rounded-sm overflow-hidden">
+              <div class="flex-1 bg-[#0a0a0a] relative group border-r border-white/5">
+                <span class="absolute bottom-1 left-2 text-[8px] font-mono text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity">0%</span>
+              </div>
+              <div class="flex-1 bg-[#262626] relative group border-r border-white/5">
+                <span class="absolute bottom-1 left-2 text-[8px] font-mono text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity">25%</span>
+              </div>
+              <div class="flex-1 bg-[#737373] relative group border-r border-white/10">
+                <span class="absolute bottom-1 left-2 text-[8px] font-mono text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity">50%</span>
+              </div>
+              <div class="flex-1 bg-[#d4d4d4] relative group border-r border-white/20">
+                <span class="absolute bottom-1 left-2 text-[8px] font-mono text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity">75%</span>
+              </div>
+              <div class="flex-1 bg-[#ffffff] relative group">
+                <span class="absolute bottom-1 left-2 text-[8px] font-mono text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">100%</span>
+              </div>
+            </div>
+          </div>
+          <div class="text-center mt-2">
+             <span class="text-[9px] uppercase tracking-[0.3em] font-mono text-gray-600">Calibration Profile</span>
+          </div>
+
         </div>
       </div>
     </section>
@@ -1075,10 +1110,10 @@
         heroTitle: '光影的 <span class="text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-500">重量</span>',
         heroSubtitle: '純粹 ‧ 紀實',
         heroBtn: 'Explore',
+        heroShare: 'Share Promo',
         scrollDown: 'SCROLL',
         portTag: '精選作品',
-        portTitle: '光影藝廊',
-        portSub: '以意圖與底片溫度捕捉的黑白及肖像攝影。',
+        portTitle: 'PROJECTS',
         langSwitch: '語言切換',
         aboutTag: '關於我們',
         aboutP1: '我們相信光能說話，影能留聲。',
@@ -1104,10 +1139,10 @@
         heroTitle: 'The weight of <span class="text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-500">light.</span>',
         heroSubtitle: 'Pure ‧ Authentic',
         heroBtn: 'Explore',
+        heroShare: 'Share Promo',
         scrollDown: 'SCROLL',
         portTag: 'Featured Content',
-        portTitle: 'Selected Works',
-        portSub: 'A curated collection of our finest monochrome and portrait photography, captured with intention.',
+        portTitle: 'PROJECTS',
         langSwitch: 'Language',
         aboutTag: 'About Us',
         aboutP1: 'We believe light speaks, and shadows echo.',
@@ -1196,6 +1231,202 @@
         }
       });
     });
+
+    // --- 粒子生命體 (Particle Network) 動畫 ---
+    const canvas = document.getElementById('particleCanvas');
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      const particleCount = window.innerWidth < 768 ? 40 : 80; // 手機較少粒子
+      // 設定粒子連線的最大距離
+      const maxDistance = 120;
+      
+      let mouse = { x: null, y: null };
+
+      // 更新 Canvas 大小
+      function resizeCanvas() {
+        const heroSection = document.querySelector('.hero');
+        canvas.width = heroSection.offsetWidth;
+        canvas.height = heroSection.offsetHeight;
+      }
+
+      window.addEventListener('resize', resizeCanvas);
+      
+      // 滑鼠互動
+      canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
+      });
+      canvas.addEventListener('mouseleave', () => {
+        mouse.x = null;
+        mouse.y = null;
+      });
+
+      class Particle {
+        constructor() {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+          // 隨機移動速度與方向
+          this.vx = (Math.random() - 0.5) * 0.8;
+          this.vy = (Math.random() - 0.5) * 0.8;
+          // 隨機大小
+          this.radius = Math.random() * 1.5 + 0.5;
+        }
+
+        update() {
+          // 移動
+          this.x += this.vx;
+          this.y += this.vy;
+
+          // 邊界反彈
+          if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+          if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+          // 滑鼠避開效果 (輕微)
+          if (mouse.x && mouse.y) {
+            let dx = mouse.x - this.x;
+            let dy = mouse.y - this.y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < 100) {
+              this.x -= dx * 0.02;
+              this.y -= dy * 0.02;
+            }
+          }
+        }
+
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+          ctx.fill();
+        }
+      }
+
+      function initParticles() {
+        resizeCanvas();
+        particles = [];
+        for (let i = 0; i < particleCount; i++) {
+          particles.push(new Particle());
+        }
+      }
+
+      function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // 更新與繪製粒子
+        for (let i = 0; i < particles.length; i++) {
+          particles[i].update();
+          particles[i].draw();
+
+          // 粒子之間的連線
+          for (let j = i; j < particles.length; j++) {
+            let dx = particles[i].x - particles[j].x;
+            let dy = particles[i].y - particles[j].y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+
+            // 若距離夠近，則畫線
+            if (distance < maxDistance) {
+              ctx.beginPath();
+              // 距離越近，線條越不透明
+              let opacity = 1 - (distance / maxDistance);
+              ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * 0.2})`;
+              ctx.lineWidth = 0.5;
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.stroke();
+            }
+          }
+          
+          // 粒子與滑鼠的連線
+          if (mouse.x && mouse.y) {
+            let dxM = particles[i].x - mouse.x;
+            let dyM = particles[i].y - mouse.y;
+            let distanceM = Math.sqrt(dxM * dxM + dyM * dyM);
+            if (distanceM < maxDistance * 1.2) {
+              ctx.beginPath();
+              let opacityM = 1 - (distanceM / (maxDistance * 1.2));
+              ctx.strokeStyle = `rgba(200, 200, 255, ${opacityM * 0.3})`;
+              ctx.lineWidth = 0.8;
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(mouse.x, mouse.y);
+              ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(animateParticles);
+      }
+
+      initParticles();
+      animateParticles();
+    }
+
+    // Share Promo 按鈕邏輯
+    const sharePromoBtn = document.getElementById('sharePromoBtn');
+    if (sharePromoBtn) {
+      sharePromoBtn.addEventListener('click', async () => {
+        const originalText = sharePromoBtn.innerHTML;
+        // 顯示載入中狀態
+        sharePromoBtn.innerHTML = `<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> 產生中...`;
+        sharePromoBtn.disabled = true;
+
+        try {
+          // 取得隱藏 iframe 的內容
+          const iframe = document.getElementById('promoFrame');
+          const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+          
+          // 等待 iframe 內的圖片加載
+          await new Promise(resolve => setTimeout(resolve, 500)); // 給一點緩衝時間
+
+          // 使用 html2canvas 截圖 iframe 內容
+          const canvas = await html2canvas(iframeDoc.body, {
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: '#050505', // 確保背景色與 promo 一致
+            scale: 2 // 提高截圖畫質
+          });
+
+          // 將 canvas 轉為 Blob (圖片檔案)
+          canvas.toBlob(async (blob) => {
+            if (!blob) throw new Error("Canvas 生成失敗");
+
+            const file = new File([blob], "monochrome_promo.png", { type: "image/png" });
+
+            // 檢查裝置是否支援 Web Share API 及檔案分享
+            if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+              await navigator.share({
+                title: 'Monochrome Lab.',
+                text: '光影的重量，純粹・紀實。來看看我們最新的攝影作品！',
+                url: 'https://nomochrome.site/',
+                files: [file]
+              });
+              console.log('成功分享！');
+            } else {
+              // 若不支援 Web Share API，提供下載或提示
+              // 手機如果用 LINE 內建瀏覽器可能不支援可以退回下載
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'monochrome_promo.png';
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+              alert("您的瀏覽器不支援直接分享圖片，我們已為您下載宣傳圖！");
+            }
+          }, "image/png", 0.9);
+
+        } catch (error) {
+          console.error("分享發生錯誤:", error);
+          alert("產生分享圖片時發生錯誤...");
+        } finally {
+          // 恢復按鈕狀態
+          sharePromoBtn.innerHTML = originalText;
+          sharePromoBtn.disabled = false;
+        }
+      });
+    }
+
   </script>
 </body>
 
