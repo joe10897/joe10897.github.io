@@ -613,8 +613,8 @@
                 <span data-i18n="heroShare">Share</span>
               </button>
               
-              <!-- 隱藏的 Iframe，用來載入 promo.html 以便截圖 -->
-              <iframe id="promoFrame" src="promo.html" class="fixed top-[-9999px] left-[-9999px] w-[500px] h-[900px] opacity-0 pointer-events-none" title="Promo Frame"></iframe>
+              <!-- 隱藏的 Iframe，用來載入 promo.html 以便截圖 (調整為標準手機比例避免壓縮) -->
+              <iframe id="promoFrame" src="promo.html" class="fixed top-[-9999px] left-[-9999px] w-[390px] h-[844px] opacity-0 pointer-events-none" title="Promo Frame"></iframe>
             </div>
           </div>
         </section>
@@ -1375,15 +1375,24 @@
           const iframe = document.getElementById('promoFrame');
           const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
           
-          // 等待 iframe 內的圖片加載
-          await new Promise(resolve => setTimeout(resolve, 500)); // 給一點緩衝時間
+          // 等待 iframe 內容載入完畢與圖片渲染
+          await new Promise(resolve => {
+            if (iframeDoc.readyState === 'complete') resolve();
+            else iframe.onload = resolve;
+            setTimeout(resolve, 1000); // 強制等待一段時間
+          });
+
+          // 瞄準具體的容器而不是全頁 body，避免邊距問題
+          const targetElement = iframeDoc.querySelector('.promo-container') || iframeDoc.body;
 
           // 使用 html2canvas 截圖 iframe 內容
-          const canvas = await html2canvas(iframeDoc.body, {
+          const canvas = await html2canvas(targetElement, {
             useCORS: true,
             allowTaint: true,
             backgroundColor: '#050505', // 確保背景色與 promo 一致
-            scale: 2 // 提高截圖畫質
+            scale: 3, // 進一步提高截圖畫質
+            windowWidth: 390, // 強制模擬手機寬度渲染
+            windowHeight: 844
           });
 
           // 將 canvas 轉為 Blob (圖片檔案)
@@ -1397,7 +1406,7 @@
               await navigator.share({
                 title: 'Monochrome Lab.',
                 text: '光影的重量，純粹・紀實。來看看我們最新的攝影作品！',
-                url: 'https://nomochrome.site/',
+                url: 'https://nomochrome.site/promo',
                 files: [file]
               });
               console.log('成功分享！');
