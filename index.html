@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,58 +16,76 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&family=Noto+Serif+TC:wght@300;400;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&family=Noto+Serif+TC:wght@300;400;700&display=swap"
+    rel="stylesheet">
   <style>
     .hero {
-        position: relative;
-        height: 100vh;
-        overflow: hidden;
-        background-color: #000;
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+      background-color: #000;
     }
 
     .background-video {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        min-width: 100%;
-        min-height: 100%;
-        width: auto;
-        height: auto;
-        z-index: 1;
-        object-fit: cover;
-        transform: translate(-50%, -50%);
-        filter: brightness(0.35) contrast(1.1); /* 微調影片亮度與對比 */
-        transition: filter 1s ease;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      z-index: 1;
+      object-fit: cover;
+      transform: translate(-50%, -50%);
+      filter: brightness(0.35) contrast(1.1);
+      /* 微調影片亮度與對比 */
+      transition: filter 1s ease;
     }
 
     .content {
-        position: relative;
-        z-index: 2;
-        color: var(--text-main);
-        text-align: center;
-        padding: 0 20px;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+      position: relative;
+      z-index: 2;
+      color: var(--text-main);
+      text-align: center;
+      padding: 0 20px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
     /* Hero Text Animation - Minimal & Spaced */
     .hero-title {
-        opacity: 0;
-        transform: translateY(20px);
-        animation: heroFadeUp 2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
-        text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: heroFadeUp 2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
     }
-    
-    .hero-title:nth-child(1) { animation-delay: 0.8s; }
-    .hero-title:nth-child(2) { animation-delay: 1.6s; }
+
+    .hero-title:nth-child(1) {
+      animation-delay: 0.8s;
+    }
+
+    .hero-title:nth-child(2) {
+      animation-delay: 1.6s;
+    }
 
     @keyframes heroFadeUp {
-        0% { opacity: 0; transform: translateY(30px); letter-spacing: 0.4em; }
-        100% { opacity: 1; transform: translateY(0); letter-spacing: 0.8em; }
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+        letter-spacing: 0.4em;
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+        letter-spacing: 0.8em;
+      }
     }
+
     :root {
       --bg-color: #000000;
       --text-main: #f2f2f2;
@@ -76,6 +95,7 @@
       --glass-border: rgba(255, 255, 255, 0.08);
       --linear-glow: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
     }
+
     body {
       background-color: var(--bg-color);
       color: var(--text-main);
@@ -89,18 +109,21 @@
     body::before {
       content: '';
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       background-image: radial-gradient(circle at 50% 0%, rgba(50, 50, 50, 0.2), #000 50%);
       z-index: -1;
       pointer-events: none;
     }
-    
+
     /* 質感細緻光暈 */
     .glow-bg {
       position: absolute;
       width: 600px;
       height: 600px;
-      background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
       border-radius: 50%;
       top: -300px;
       left: 50%;
@@ -114,16 +137,19 @@
       transform: translateY(20px);
       transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
     }
+
     .fade-in.show {
       opacity: 1;
       transform: translateY(0);
     }
+
     /* Linear Style 卡片框與 Glassmorphism Header */
     header {
       transition: all 0.4s ease;
       background: transparent;
       border-bottom: 1px solid transparent;
     }
+
     header.scrolled {
       background: var(--glass-bg);
       backdrop-filter: blur(16px);
@@ -131,6 +157,7 @@
       border-bottom: 1px solid var(--glass-border);
       box-shadow: 0 4px 40px rgba(0, 0, 0, 0.8);
     }
+
     header nav ul a {
       position: relative;
       text-decoration: none;
@@ -141,9 +168,11 @@
       padding: 6px 12px;
       border-radius: 6px;
     }
-    header nav ul a:hover, header nav ul a.active {
+
+    header nav ul a:hover,
+    header nav ul a.active {
       color: var(--text-main);
-      background: rgba(255,255,255,0.05);
+      background: rgba(255, 255, 255, 0.05);
     }
 
     img {
@@ -153,9 +182,11 @@
       transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
       cursor: pointer;
     }
+
     img:hover {
       transform: scale(1.03);
     }
+
     /* 浮動框 (Lightbox) 樣式升級 */
     .modal {
       display: flex;
@@ -174,6 +205,7 @@
       visibility: hidden;
       transition: opacity 0.4s ease, visibility 0s linear 0.4s;
     }
+
     .modal-content {
       position: relative;
       width: 100%;
@@ -186,32 +218,38 @@
       flex-direction: column;
       align-items: center;
     }
+
     .modal.show {
       opacity: 1;
       visibility: visible;
       transition-delay: 0s;
     }
+
     .modal.show .modal-content {
       transform: scale(1) translateY(0);
     }
+
     .modal-content img {
       max-width: 100%;
       height: auto;
       margin-bottom: 2rem;
-      border-radius: 8px; /* Linear 風格圓角 */
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 20px 60px -10px rgba(0,0,0,1);
+      border-radius: 8px;
+      /* Linear 風格圓角 */
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 1);
     }
+
     @media (min-width: 768px) {
       .modal-content img {
         max-width: 80%;
       }
     }
+
     .close {
       position: fixed;
       top: 20px;
       right: 30px;
-      color: rgba(255,255,255,0.7);
+      color: rgba(255, 255, 255, 0.7);
       font-size: 40px;
       font-weight: 300;
       cursor: pointer;
@@ -219,13 +257,16 @@
       transition: color 0.3s ease, transform 0.3s ease;
       line-height: 1;
     }
+
     .close:hover {
       color: white;
       transform: rotate(90deg);
     }
+
     /* 滾動到頂部按鈕樣式 */
     #scrollToTop {
-      display: none; /* JS controls visibility */
+      display: none;
+      /* JS controls visibility */
       position: fixed;
       bottom: 20px;
       right: 20px;
@@ -241,36 +282,41 @@
       justify-content: center;
       align-items: center;
     }
+
     #scrollToTop:hover {
       background-color: rgba(0, 0, 0, 0.8);
       opacity: 1;
     }
+
     /* 高質感交互按鈕 (Glow Button) */
     .btn-glow {
       position: relative;
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.03);
       -webkit-backdrop-filter: blur(10px);
       backdrop-filter: blur(10px);
       transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 0 20px rgba(255,255,255,0.05);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
     }
-    
+
     .btn-glow::before {
       content: '';
       position: absolute;
-      top: 0; left: -100%; right: 0; bottom: 0;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      top: 0;
+      left: -100%;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
       transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
       transform: skewX(-20deg);
       z-index: 0;
     }
-    
+
     .btn-glow:hover {
-      border-color: rgba(255,255,255,0.3);
-      background: rgba(255,255,255,0.1);
-      box-shadow: 0 0 30px rgba(255,255,255,0.15), inset 0 0 15px rgba(255,255,255,0.1);
+      border-color: rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.15), inset 0 0 15px rgba(255, 255, 255, 0.1);
       transform: translateY(-2px);
     }
 
@@ -289,9 +335,10 @@
       width: 100%;
       overflow: hidden;
       padding-top: 120%;
-      border-radius: 12px; /* 更圓滑的 Linear 邊角 */
-      border: 1px solid rgba(255,255,255,0.06);
-      background: rgba(255,255,255,0.02);
+      border-radius: 12px;
+      /* 更圓滑的 Linear 邊角 */
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.02);
       transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
       box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.5);
     }
@@ -299,7 +346,10 @@
     .image-container::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       border-radius: 12px;
       box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
       z-index: 2;
@@ -309,7 +359,7 @@
     .image-container:hover {
       box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 255, 255, 0.05);
       transform: translateY(-4px) scale(1.01);
-      border-color: rgba(255,255,255,0.15);
+      border-color: rgba(255, 255, 255, 0.15);
     }
 
     .image-container img {
@@ -327,7 +377,8 @@
 
     .image-container img:hover {
       transform: translate(-50%, -50%) scale(1.06);
-      filter: contrast(1.05) brightness(1.05); /* 輕微提亮，保留原圖色彩 */
+      filter: contrast(1.05) brightness(1.05);
+      /* 輕微提亮，保留原圖色彩 */
     }
 
     /* 現代化載入動畫 (Skeleton Loading) - 線性掃光 */
@@ -337,7 +388,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(110deg, rgba(255,255,255,0.02) 8%, rgba(255,255,255,0.08) 18%, rgba(255,255,255,0.02) 33%);
+      background: linear-gradient(110deg, rgba(255, 255, 255, 0.02) 8%, rgba(255, 255, 255, 0.08) 18%, rgba(255, 255, 255, 0.02) 33%);
       background-size: 200% 100%;
       animation: skeletonLoading 1.5s linear infinite;
       z-index: 0;
@@ -345,8 +396,13 @@
     }
 
     @keyframes skeletonLoading {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
     }
 
     img.loading {
@@ -357,305 +413,448 @@
     /* 膠片動態顆粒 */
     .film-grain {
       position: fixed;
-      top: -50vh; left: -50vw;
-      width: 200vw; height: 200vh;
+      top: -50vh;
+      left: -50vw;
+      width: 200vw;
+      height: 200vh;
       pointer-events: none;
       z-index: 9999;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-      opacity: 0.18; /* 增強顆粒感與對比 */
+      opacity: 0.18;
+      /* 增強顆粒感與對比 */
       mix-blend-mode: overlay;
       animation: filmNoise 0.4s steps(2) infinite;
       will-change: transform;
-      transform: translateZ(0); /* 強制硬體加速 */
+      transform: translateZ(0);
+      /* 強制硬體加速 */
     }
-    
+
     /* 膠片暗角與復古暖色調疊加 */
     .film-vignette {
       position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
       pointer-events: none;
       z-index: 9998;
-      background: radial-gradient(circle, transparent 60%, rgba(0, 0, 0, 0.6) 130%), 
-                  rgba(130, 90, 40, 0.06); /* 邊緣加深，整體微暖色 */
+      background: radial-gradient(circle, transparent 60%, rgba(0, 0, 0, 0.6) 130%),
+        rgba(130, 90, 40, 0.06);
+      /* 邊緣加深，整體微暖色 */
       mix-blend-mode: multiply;
     }
 
     @keyframes filmNoise {
-      0%, 100% { transform: translate(0, 0); }
-      10% { transform: translate(-2%, -2%); }
-      20% { transform: translate(-4%, 2%); }
-      30% { transform: translate(2%, -4%); }
-      40% { transform: translate(-2%, 6%); }
-      50% { transform: translate(-4%, 2%); }
-      60% { transform: translate(6%, 0); }
-      70% { transform: translate(0, 6%); }
-      80% { transform: translate(1%, 10%); }
-      90% { transform: translate(-4%, 4%); }
+
+      0%,
+      100% {
+        transform: translate(0, 0);
+      }
+
+      10% {
+        transform: translate(-2%, -2%);
+      }
+
+      20% {
+        transform: translate(-4%, 2%);
+      }
+
+      30% {
+        transform: translate(2%, -4%);
+      }
+
+      40% {
+        transform: translate(-2%, 6%);
+      }
+
+      50% {
+        transform: translate(-4%, 2%);
+      }
+
+      60% {
+        transform: translate(6%, 0);
+      }
+
+      70% {
+        transform: translate(0, 6%);
+      }
+
+      80% {
+        transform: translate(1%, 10%);
+      }
+
+      90% {
+        transform: translate(-4%, 4%);
+      }
     }
-    
+
     @keyframes scrollDrop {
-      0% { transform: translateY(-100%); opacity: 0; }
-      10% { opacity: 1; }
-      80% { opacity: 1; }
-      100% { transform: translateY(200%); opacity: 0; }
+      0% {
+        transform: translateY(-100%);
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      80% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(200%);
+        opacity: 0;
+      }
     }
   </style>
 </head>
-<body class="bg-[#0d0d0d] text-[#f0f0f0] font-sans antialiased selection:bg-white selection:text-black">
 
-  <!-- 8mm Film Filter Overlays -->
-  <div class="film-grain"></div>
-  <div class="film-vignette"></div>
+<body
+  class="bg-[#0d0d0d] text-[#f0f0f0] font-sans antialiased selection:bg-white selection:text-black overflow-x-hidden w-full m-0 p-0">
 
-  <!-- 導覽列 -->
-  <header class="fixed top-0 w-full z-50 fade-in transition-all duration-300 py-3">
-    <nav class="container mx-auto px-6 py-2 flex justify-between items-center max-w-7xl">
-      <div class="text-lg font-semibold tracking-wide flex items-center gap-2">
-        <div class="w-5 h-5 rounded-full bg-gradient-to-br from-gray-200 to-gray-600 shadow-[0_0_10px_rgba(255,255,255,0.2)]"></div>
-        <a href="#">Monochrome Lab</a>
-      </div>
-      <ul class="flex space-x-2 md:space-x-4 text-sm font-medium">
-        <li><a href="#portfolio" class="hover-link" data-i18n="navPortfolio">作品</a></li>
-        <li><a href="price.html" class="hover-link" data-i18n="navPricing">價格</a></li>
-        <li><a href="#about" class="hover-link" data-i18n="navAbout">關於</a></li>
-        <li><a href="#photographer" class="hover-link" data-i18n="navPhotographer">攝影師</a></li>
-        <li><a href="#info" class="hover-link" data-i18n="navContact">聯絡資訊</a></li>
-        <!-- 語系切換按鈕 -->
-        <li>
-          <button id="langToggle" class="px-2 py-1 ml-2 md:ml-4 text-xs font-semibold rounded-md border border-white/20 bg-white/5 hover:bg-white/10 transition-colors">
-            EN
+  <div id="app-wrapper" class="relative w-full overflow-hidden min-h-screen flex flex-col pt-0">
+    <!-- 8mm Film Filter Overlays -->
+    <div class="film-grain"></div>
+    <div class="film-vignette"></div>
+
+    <!-- 導覽列 -->
+    <header class="fixed top-0 w-full z-50 fade-in transition-all duration-300 py-3 backdrop-blur-sm bg-black/20">
+      <nav class="container mx-auto px-6 py-2 flex justify-between items-center max-w-7xl">
+        <div class="text-lg font-semibold tracking-wide flex items-center gap-2 relative z-50">
+          <!-- <div class="w-5 h-5 rounded-full bg-gradient-to-br from-gray-200 to-gray-600 shadow-[0_0_10px_rgba(255,255,255,0.2)]"></div> -->
+          <a href="#">Monochrome Lab</a>
+        </div>
+
+        <!-- 桌布版選單 -->
+        <ul class="hidden md:flex space-x-6 text-sm font-medium items-center">
+          <li><a href="#portfolio" class="hover-link" data-i18n="navPortfolio">作品</a></li>
+          <li><a href="price.html" class="hover-link" data-i18n="navPricing">價格</a></li>
+          <li><a href="#about" class="hover-link" data-i18n="navAbout">關於</a></li>
+          <li><a href="#photographer" class="hover-link" data-i18n="navPhotographer">攝影師</a></li>
+          <li><a href="#info" class="hover-link" data-i18n="navContact">聯絡資訊</a></li>
+          <!-- 語系切換按鈕 -->
+          <li>
+            <button id="langToggle"
+              class="px-2 py-1 ml-4 text-xs font-semibold rounded-md border border-white/20 bg-white/5 hover:bg-white/10 transition-colors">
+              EN
+            </button>
+          </li>
+        </ul>
+
+        <!-- 手機版漢堡按鈕 -->
+        <button id="mobileMenuBtn" aria-label="Toggle Mobile Menu" title="Toggle Mobile Menu"
+          class="md:hidden flex flex-col justify-center items-center w-8 h-8 space-y-1.5 focus:outline-none z-50 relative">
+          <span class="w-6 h-px bg-white transition-transform duration-300 origin-center"></span>
+          <span class="w-6 h-px bg-white transition-opacity duration-300"></span>
+          <span class="w-6 h-px bg-white transition-transform duration-300 origin-center"></span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- 手機版全螢幕選單 -->
+    <div id="mobileMenu"
+      class="fixed inset-0 bg-black/95 backdrop-blur-xl z-40 flex flex-col items-center justify-center translate-x-full transition-transform duration-500 ease-[cubic-bezier(0.77,0,0.175,1)]">
+      <ul class="flex flex-col space-y-8 text-xl font-medium items-center text-white/80">
+        <li><a href="#portfolio" class="hover:text-white transition-colors mobile-link" data-i18n="navPortfolio">作品</a>
+        </li>
+        <li><a href="price.html" class="hover:text-white transition-colors" data-i18n="navPricing">價格</a></li>
+        <li><a href="#about" class="hover:text-white transition-colors mobile-link" data-i18n="navAbout">關於</a></li>
+        <li><a href="#photographer" class="hover:text-white transition-colors mobile-link"
+            data-i18n="navPhotographer">攝影師</a></li>
+        <li><a href="#info" class="hover:text-white transition-colors mobile-link" data-i18n="navContact">聯絡資訊</a></li>
+        <li class="pt-6 border-t border-white/10 flex flex-col items-center gap-4 w-full">
+          <span class="text-xs text-gray-500 tracking-widest uppercase" data-i18n="langSwitch">Language</span>
+          <button id="mobileLangToggle"
+            class="px-6 py-2 text-sm font-semibold rounded-full border border-white/20 bg-white/5 hover:bg-white/10 transition-colors w-full">
+            English
           </button>
         </li>
       </ul>
-    </nav>
-  </header>
+    </div>
 
-  <!-- Hero 區塊 -->
-  <div class="hero">
-    <video autoplay muted loop playsinline class="background-video" poster="/images/preview.jpg">
-      <source src="/images/bg.mp4" type="video/mp4">
+    <!-- Hero 區塊 -->
+    <div class="hero">
+      <video autoplay muted loop playsinline aria-label="Background Video" title="Background Video"
+        class="background-video" poster="/images/preview.jpg">
+        <source src="/images/bg.mp4" type="video/mp4">
         您的瀏覽器不支援影片標籤。
-    </video>
-    <div class="content">
+      </video>
+      <div class="content">
         <div class="glow-bg"></div>
         <section class="flex flex-col items-center justify-center h-full w-full relative z-10">
-            <div class="space-y-6 text-center">
-                <h1 class="hero-title text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-white mb-2" style="font-family: 'Inter', sans-serif;" data-i18n="heroTitle">
-                  光影的 <span class="text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-500">重量</span>
-                </h1>
-                <h2 class="hero-title text-sm md:text-lg font-light tracking-[0.3em] uppercase text-gray-400 max-w-lg mx-auto" data-i18n="heroSubtitle">
-                  純粹 ‧ 紀實
-                </h2>
-                
-                <div class="hero-title mt-12">
-                  <button class="btn-glow px-8 py-4 rounded-full text-xs font-semibold tracking-widest uppercase text-white" onclick="document.getElementById('portfolio').scrollIntoView({behavior:'smooth'})">
-                    <span data-i18n="heroBtn">Explore</span>
-                  </button>
-                </div>
+          <div class="space-y-6 text-center">
+            <h1 class="hero-title text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-white mb-2"
+              style="font-family: 'Inter', sans-serif;" data-i18n="heroTitle">
+              光影的 <span class="text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-500">重量</span>
+            </h1>
+            <h2
+              class="hero-title text-sm md:text-lg font-light tracking-[0.3em] uppercase text-gray-400 max-w-lg mx-auto"
+              data-i18n="heroSubtitle">
+              純粹 ‧ 紀實
+            </h2>
+
+            <div class="hero-title mt-12">
+              <button class="btn-glow px-8 py-4 rounded-full text-xs font-semibold tracking-widest uppercase text-white"
+                onclick="document.getElementById('portfolio').scrollIntoView({behavior:'smooth'})">
+                <span data-i18n="heroBtn">Explore</span>
+              </button>
             </div>
+          </div>
         </section>
-        
+
         <!-- 現代極簡向下指引動畫 (Modern Scroll Indicator) -->
-        <div class="absolute bottom-10 md:bottom-12 left-1/2 transform -translate-x-1/2 flex flex-col items-center opacity-60 hover:opacity-100 transition-opacity duration-700 cursor-pointer" onclick="document.getElementById('portfolio').scrollIntoView({behavior:'smooth'})">
-          <span class="text-[10px] uppercase font-light tracking-[0.4em] mb-4 md:mb-6 text-gray-500" data-i18n="scrollDown">SCROLL</span>
+        <div
+          class="absolute bottom-10 md:bottom-12 left-1/2 transform -translate-x-1/2 flex flex-col items-center opacity-60 hover:opacity-100 transition-opacity duration-700 cursor-pointer"
+          onclick="document.getElementById('portfolio').scrollIntoView({behavior:'smooth'})">
+          <span class="text-[10px] uppercase font-light tracking-[0.4em] mb-4 md:mb-6 text-gray-500"
+            data-i18n="scrollDown">SCROLL</span>
           <div class="w-[1px] h-12 md:h-16 bg-white/10 relative overflow-hidden">
-            <div class="w-full h-1/2 bg-white/70 absolute top-0 -translate-y-full animate-[scrollDrop_2s_cubic-bezier(0.77,0,0.175,1)_infinite]"></div>
+            <div
+              class="w-full h-1/2 bg-white/70 absolute top-0 -translate-y-full animate-[scrollDrop_2s_cubic-bezier(0.77,0,0.175,1)_infinite]">
+            </div>
           </div>
         </div>
+      </div>
     </div>
-  </div>
 
-  <!-- 作品區塊 -->
-<section id="portfolio" class="py-32 px-4 bg-[var(--bg-color)] fade-in relative">
-  <!-- 裝飾用背景光暈 -->
-  <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-full h-[500px] bg-gradient-to-b from-white/[0.03] to-transparent rounded-full blur-[120px] pointer-events-none"></div>
-  
-  <div class="container mx-auto max-w-7xl relative z-10">
-    <div class="mb-16 flex flex-col items-center">
-      <div class="inline-flex items-center px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-xs text-gray-400 font-medium tracking-wide mb-6">
-        <span class="w-1.5 h-1.5 rounded-full bg-gray-300 mr-2"></span> <span data-i18n="portTag">精選作品</span>
+    <!-- 作品區塊 -->
+    <section id="portfolio" class="py-32 px-4 bg-[var(--bg-color)] fade-in relative">
+      <!-- 裝飾用背景光暈 -->
+      <div
+        class="absolute top-0 left-1/2 transform -translate-x-1/2 w-full h-[500px] bg-gradient-to-b from-white/[0.03] to-transparent rounded-full blur-[120px] pointer-events-none">
       </div>
-      <h2 class="text-3xl md:text-4xl font-semibold mb-4 text-center tracking-tight text-white"><span data-i18n="portTitle">光影藝廊</span></h2>
-      <p class="text-gray-400 text-center max-w-xl text-sm md:text-base"><span data-i18n="portSub">以意圖與底片溫度捕捉的黑白及肖像攝影。</span></p>
-    </div>
-    
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
-      <div class="image-container">
-        <div class="loader"></div>
-        <img src="/images/Peggy1/peggy1.jpg" alt="peggy1" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('peggy1')" />
-      </div>
-      <div class="image-container">
-        <div class="loader"></div>
-        <img src="/images/BW1/bw1.jpg" alt="作品2" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('作品2')" />
-      </div>
-      <div class="image-container">
-        <div class="loader"></div>
-        <img src="/images/Vivian/v1.jpg" alt="作品3" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('作品3')" />
-      </div>
-    </div>
-  </div>
-  <div class="container mx-auto max-w-7xl mt-12 md:mt-20 relative z-10">
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-10">
-      <div class="image-container">
-        <div class="loader"></div>
-        <img src="/images/C&Y/DSCF3480-編輯.jpg" alt="C&Y" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('C&Y')" />
-      </div>
-      <div class="image-container">
-        <div class="loader"></div>
-        <img src="/images/DSCF4787.jpg" alt="作品6" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('作品6')" />
-      </div>
-      <div class="image-container">
-        <div class="loader"></div>
-        <img src="/images/20230427-por1.jpg" alt="20230427-por1" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('20230427-por1')" />
-      </div>
-    </div>
-  </div>
-  
-  <!-- 第三行：INTRO 系列 -->
-  <div class="container mx-auto max-w-7xl mt-12 md:mt-20 relative z-10">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10">
-      <div class="image-container">
-        <div class="loader"></div>
-        <img src="/images/INTRO_menu/LINE_ALBUM_INTRO_240401_17.jpg" alt="INTRO1" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('INTRO1')" />
-      </div>
-      <div class="image-container">
-        <div class="loader"></div>
-        <img src="/images/INTRO_menu/LINE_ALBUM_INTRO_240401_6.jpg" alt="INTRO2" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('INTRO2')" />
-      </div>
-      <div class="image-container">
-        <div class="loader"></div>
-        <img src="/images/INTRO_menu/LINE_ALBUM_INTRO_240401_13.jpg" alt="INTRO3" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('INTRO3')" />
-      </div>
-      <div class="image-container">
-        <div class="loader"></div>
-        <img src="/images/INTRO_menu/LINE_ALBUM_INTRO_240401_8.jpg" alt="INTRO4" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('INTRO4')" />
-      </div>
-    </div>
-  </div>
-  <div class="container mx-auto max-w-7xl mt-12 md:mt-20 relative z-10">
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-6 md:gap-10">
-      <div class="image-container">
-        <div class="loader"></div>
-        <img src="/images/yiqi/MEITU_20250719_214147941.jpg" alt="yiqi1" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('yiqi')" />
-      </div>
-      <div class="image-container">
-        <div class="loader"></div>
-        <img src="/images/yiqi/MEITU_20250720_030252673.jpg" alt="yiqi2" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('yiqi')" />
-      </div>
-      <div class="image-container">
-        <div class="loader"></div>
-        <img src="/images/yiqi/MEITU_20250720_161220629.jpg" alt="yiqi3" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('yiqi')" />
-      </div>
-      <div class="image-container">
-        <div class="loader"></div>
-        <img src="/images/yiqi/MEITU_20250727_184751459.jpg" alt="yiqi4" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('yiqi')" />
-      </div>
-      <div class="image-container">
-        <div class="loader"></div>
-        <img src="/images/yiqi/MEITU_20250728_023108462.jpg" alt="yiqi5" class="w-full h-auto loading" onload="imageLoaded(this)" onclick="openModal('yiqi')" />
-      </div>
-    </div>
-  </div>
-</section>
 
-
-  <!-- 浮動框 (Lightbox) -->
-  <div id="myModal" class="modal" onclick="closeModal()">
-    <span class="close" onclick="closeModal()">&times;</span>
-    <div class="modal-content" onclick="event.stopPropagation();"> 
-      <!-- 阻止事件冒泡 -->
-      <div id="modalImages" class="w-full flex flex-col items-center max-w-5xl">
-        <!-- 圖片將在這裡動態添加 -->
-      </div>
-    </div>
-  </div>
-
-      <!-- 關於區塊 -->
-      <section id="about" class="relative py-32 px-4 fade-in overflow-hidden border-t border-white/5">
-        <video autoplay muted loop playsinline class="absolute top-0 left-0 w-full h-full object-cover -z-10" style="filter: brightness(0.15) grayscale(100%);">
-          <source src="/images/moon.mp4" type="video/mp4">
-          您的瀏覽器不支援影片標籤。
-        </video>
-        <div class="container mx-auto max-w-3xl relative z-10 text-center">
-          <div class="inline-flex items-center px-3 py-1 rounded-full border border-white/10 bg-black/40 backdrop-blur-md text-xs text-gray-400 font-medium tracking-wide mb-8">
-             <span data-i18n="aboutTag">關於我們</span>
+      <div class="container mx-auto max-w-7xl relative z-10">
+        <div class="mb-16 flex flex-col items-center">
+          <div
+            class="inline-flex items-center px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-xs text-gray-400 font-medium tracking-wide mb-6">
+            <span class="w-1.5 h-1.5 rounded-full bg-gray-300 mr-2"></span> <span data-i18n="portTag">精選作品</span>
           </div>
-          <div class="space-y-8 text-gray-300 text-lg leading-relaxed font-normal">
-            <p data-i18n="aboutP1">我們相信光能說話，影能留聲。</p>
-            <p data-i18n="aboutP2">選擇以底片的細膩、黑白的純粹，<br class="hidden md:block">抵抗影像過度修飾的時代。</p>
-            <p data-i18n="aboutP3">每一張作品，皆由光親自曝光，由時間顯影。</p>
-            <p data-i18n="aboutP4">我們相信，真正的情感不在於色彩，<br class="hidden md:block">而藏在明與暗的呼吸之間。</p>
-            <p class="pt-6 pb-2 text-white font-medium text-xl border-t border-white/10 inline-block mt-8" data-i18n="aboutP5">為你留下有顆粒感的記憶，有重量的影像。</p>
+          <h2 class="text-3xl md:text-4xl font-semibold mb-4 text-center tracking-tight text-white"><span
+              data-i18n="portTitle">光影藝廊</span></h2>
+          <p class="text-gray-400 text-center max-w-xl text-sm md:text-base"><span
+              data-i18n="portSub">以意圖與底片溫度捕捉的黑白及肖像攝影。</span></p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
+          <div class="image-container">
+            <div class="loader"></div>
+            <img src="/images/Peggy1/peggy1.jpg" alt="peggy1" class="w-full h-auto loading" onload="imageLoaded(this)"
+              onclick="openModal('peggy1')" />
+          </div>
+          <div class="image-container">
+            <div class="loader"></div>
+            <img src="/images/BW1/bw1.jpg" alt="作品2" class="w-full h-auto loading" onload="imageLoaded(this)"
+              onclick="openModal('作品2')" />
+          </div>
+          <div class="image-container">
+            <div class="loader"></div>
+            <img src="/images/Vivian/v1.jpg" alt="作品3" class="w-full h-auto loading" onload="imageLoaded(this)"
+              onclick="openModal('作品3')" />
           </div>
         </div>
-      </section>
-
-  <!-- 攝影師區塊 -->
-  <section id="photographer" class="py-32 px-4 bg-[var(--bg-color)] fade-in border-t border-white/5 relative">
-    <div class="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none"></div>
-    <div class="container mx-auto max-w-5xl relative z-10">
-      <div class="text-center mb-20">
-        <div class="inline-flex items-center px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-xs text-gray-400 font-medium tracking-wide mb-4">
-           <span data-i18n="photoTag">攝影團隊</span>
-        </div>
-        <h2 class="text-3xl bg-clip-text text-transparent bg-gradient-to-r from-gray-100 to-gray-500 font-semibold mb-4 text-center tracking-tight" data-i18n="photoTitle">首席攝影師</h2>
       </div>
-      <div class="flex flex-col md:flex-row items-center md:items-start md:space-x-16 bg-white/[0.02] border border-white/5 rounded-2xl p-8 md:p-12 shadow-[0_8px_32px_rgba(0,0,0,0.5)] backdrop-blur-sm">
-        <div class="relative w-48 h-48 md:w-64 md:h-64 mb-10 md:mb-0 flex-shrink-0 mx-auto md:mx-0 group">
-          <div class="absolute inset-0 border border-white/10 rounded-2xl transform translate-x-3 translate-y-3 transition-transform duration-500 group-hover:translate-x-1 group-hover:translate-y-1"></div>
-          <img src="/images/366425.jpg" alt="攝影師Simon" class="relative z-10 w-full h-full object-cover rounded-2xl filter brightness-90 transition-all duration-500 group-hover:brightness-105 group-hover:scale-105 border border-white/10 shadow-2xl" />
-        </div>
-        <div class="text-center md:text-left space-y-4 flex flex-col items-center md:items-start w-full">
-          <div class="mb-6">
-            <h3 class="text-3xl font-semibold text-white tracking-tight">Simon</h3>
-            <p class="text-sm font-medium text-gray-500 mt-1 mx-auto md:mx-0" data-i18n="photoRole">創辦人 / 攝影總監</p>
+      <div class="container mx-auto max-w-7xl mt-12 md:mt-20 relative z-10">
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-10">
+          <div class="image-container">
+            <div class="loader"></div>
+            <img src="/images/C&Y/DSCF3480-編輯.jpg" alt="C&Y" class="w-full h-auto loading" onload="imageLoaded(this)"
+              onclick="openModal('C&Y')" />
           </div>
-          <p class="text-gray-400 text-base leading-relaxed text-center md:text-left mx-auto md:mx-0 max-w-lg" data-i18n="photoDesc">
-            擁有新聞、商業、人像和紀實等多樣影像經驗，具備完整的拍攝與剪輯能力。曾於香港任職新聞攝影記者與媒體總編輯，擅長快速應變與捕捉故事。<br><br>
-            接案類型涵蓋商業攝影、婚禮紀錄、人像拍攝與文物紀實，熟悉拍攝全流程，能獨立完成從前期規劃到後製調整的工作，賦予每一幅影像深刻的靈魂。
-          </p>
+          <div class="image-container">
+            <div class="loader"></div>
+            <img src="/images/DSCF4787.jpg" alt="作品6" class="w-full h-auto loading" onload="imageLoaded(this)"
+              onclick="openModal('作品6')" />
+          </div>
+          <div class="image-container">
+            <div class="loader"></div>
+            <img src="/images/20230427-por1.jpg" alt="20230427-por1" class="w-full h-auto loading"
+              onload="imageLoaded(this)" onclick="openModal('20230427-por1')" />
+          </div>
+        </div>
+      </div>
+
+      <!-- 第三行：INTRO 系列 -->
+      <div class="container mx-auto max-w-7xl mt-12 md:mt-20 relative z-10">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10">
+          <div class="image-container">
+            <div class="loader"></div>
+            <img src="/images/INTRO_menu/LINE_ALBUM_INTRO_240401_17.jpg" alt="INTRO1" class="w-full h-auto loading"
+              onload="imageLoaded(this)" onclick="openModal('INTRO1')" />
+          </div>
+          <div class="image-container">
+            <div class="loader"></div>
+            <img src="/images/INTRO_menu/LINE_ALBUM_INTRO_240401_6.jpg" alt="INTRO2" class="w-full h-auto loading"
+              onload="imageLoaded(this)" onclick="openModal('INTRO2')" />
+          </div>
+          <div class="image-container">
+            <div class="loader"></div>
+            <img src="/images/INTRO_menu/LINE_ALBUM_INTRO_240401_13.jpg" alt="INTRO3" class="w-full h-auto loading"
+              onload="imageLoaded(this)" onclick="openModal('INTRO3')" />
+          </div>
+          <div class="image-container">
+            <div class="loader"></div>
+            <img src="/images/INTRO_menu/LINE_ALBUM_INTRO_240401_8.jpg" alt="INTRO4" class="w-full h-auto loading"
+              onload="imageLoaded(this)" onclick="openModal('INTRO4')" />
+          </div>
+        </div>
+      </div>
+      <div class="container mx-auto max-w-7xl mt-12 md:mt-20 relative z-10">
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-6 md:gap-10">
+          <div class="image-container">
+            <div class="loader"></div>
+            <img src="/images/yiqi/MEITU_20250719_214147941.jpg" alt="yiqi1" class="w-full h-auto loading"
+              onload="imageLoaded(this)" onclick="openModal('yiqi')" />
+          </div>
+          <div class="image-container">
+            <div class="loader"></div>
+            <img src="/images/yiqi/MEITU_20250720_030252673.jpg" alt="yiqi2" class="w-full h-auto loading"
+              onload="imageLoaded(this)" onclick="openModal('yiqi')" />
+          </div>
+          <div class="image-container">
+            <div class="loader"></div>
+            <img src="/images/yiqi/MEITU_20250720_161220629.jpg" alt="yiqi3" class="w-full h-auto loading"
+              onload="imageLoaded(this)" onclick="openModal('yiqi')" />
+          </div>
+          <div class="image-container">
+            <div class="loader"></div>
+            <img src="/images/yiqi/MEITU_20250727_184751459.jpg" alt="yiqi4" class="w-full h-auto loading"
+              onload="imageLoaded(this)" onclick="openModal('yiqi')" />
+          </div>
+          <div class="image-container">
+            <div class="loader"></div>
+            <img src="/images/yiqi/MEITU_20250728_023108462.jpg" alt="yiqi5" class="w-full h-auto loading"
+              onload="imageLoaded(this)" onclick="openModal('yiqi')" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- 浮動框 (Lightbox) -->
+    <div id="myModal" class="modal" onclick="closeModal()">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <div class="modal-content" onclick="event.stopPropagation();">
+        <!-- 阻止事件冒泡 -->
+        <div id="modalImages" class="w-full flex flex-col items-center max-w-5xl">
+          <!-- 圖片將在這裡動態添加 -->
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- 資訊區塊 -->
-  <section id="info" class="py-24 px-4 bg-black border-t border-white/5 fade-in">
-    <div class="container mx-auto max-w-4xl">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-        <div class="p-6 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col items-center">
-          <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2" data-i18n="contactEmail">電子郵件</h4>
-          <a href="mailto:monoclab1999@gmail.com" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">monoclab1999@gmail.com</a>
+    <!-- 關於區塊 -->
+    <section id="about" class="relative py-32 px-4 fade-in overflow-hidden border-t border-white/5">
+      <video autoplay muted loop playsinline class="absolute top-0 left-0 w-full h-full object-cover -z-10"
+        style="filter: brightness(0.15) grayscale(100%);">
+        <source src="/images/moon.mp4" type="video/mp4">
+        您的瀏覽器不支援影片標籤。
+      </video>
+      <div class="container mx-auto max-w-3xl relative z-10 text-center">
+        <div
+          class="inline-flex items-center px-3 py-1 rounded-full border border-white/10 bg-black/40 backdrop-blur-md text-xs text-gray-400 font-medium tracking-wide mb-8">
+          <span data-i18n="aboutTag">關於我們</span>
         </div>
-        <div class="p-6 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col items-center">
-          <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2" data-i18n="contactSocial">社群平台</h4>
-          <a href="https://www.instagram.com/w.iwatani" target="_blank" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Instagram @w.iwatani</a>
-        </div>
-        <div class="p-6 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col items-center">
-          <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2" data-i18n="contactStudio">工作室地址</h4>
-          <p class="text-gray-300 text-sm font-medium" data-i18n="contactAddr">新北市板橋區藝文街156號822</p>
+        <div class="space-y-8 text-gray-300 text-lg leading-relaxed font-normal">
+          <p data-i18n="aboutP1">我們相信光能說話，影能留聲。</p>
+          <p data-i18n="aboutP2">選擇以底片的細膩、黑白的純粹，<br class="hidden md:block">抵抗影像過度修飾的時代。</p>
+          <p data-i18n="aboutP3">每一張作品，皆由光親自曝光，由時間顯影。</p>
+          <p data-i18n="aboutP4">我們相信，真正的情感不在於色彩，<br class="hidden md:block">而藏在明與暗的呼吸之間。</p>
+          <p class="pt-6 pb-2 text-white font-medium text-xl border-t border-white/10 inline-block mt-8"
+            data-i18n="aboutP5">為你留下有顆粒感的記憶，有重量的影像。</p>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Footer -->
-  <footer class="py-10 bg-black text-center border-t border-white/5 fade-in">
-    <p class="text-xs tracking-[0.2em] text-gray-600 uppercase ml-[0.2em]">&copy; 2026 Monochrome Lab. All Rights Reserved.</p>
-  </footer>
+    <!-- 攝影師區塊 -->
+    <section id="photographer" class="py-32 px-4 bg-[var(--bg-color)] fade-in border-t border-white/5 relative">
+      <div class="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none"></div>
+      <div class="container mx-auto max-w-5xl relative z-10">
+        <div class="text-center mb-20">
+          <div
+            class="inline-flex items-center px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-xs text-gray-400 font-medium tracking-wide mb-4">
+            <span data-i18n="photoTag">攝影團隊</span>
+          </div>
+          <h2
+            class="text-3xl bg-clip-text text-transparent bg-gradient-to-r from-gray-100 to-gray-500 font-semibold mb-4 text-center tracking-tight"
+            data-i18n="photoTitle">首席攝影師</h2>
+        </div>
+        <div
+          class="flex flex-col md:flex-row items-center md:items-start md:space-x-16 bg-white/[0.02] border border-white/5 rounded-2xl p-8 md:p-12 shadow-[0_8px_32px_rgba(0,0,0,0.5)] backdrop-blur-sm">
+          <div class="relative w-48 h-48 md:w-64 md:h-64 mb-10 md:mb-0 flex-shrink-0 mx-auto md:mx-0 group">
+            <div
+              class="absolute inset-0 border border-white/10 rounded-2xl transform translate-x-3 translate-y-3 transition-transform duration-500 group-hover:translate-x-1 group-hover:translate-y-1">
+            </div>
+            <img src="/images/366425.jpg" alt="攝影師Simon"
+              class="relative z-10 w-full h-full object-cover rounded-2xl filter brightness-90 transition-all duration-500 group-hover:brightness-105 group-hover:scale-105 border border-white/10 shadow-2xl" />
+          </div>
+          <div class="text-center md:text-left space-y-4 flex flex-col items-center md:items-start w-full">
+            <div class="mb-6">
+              <h3 class="text-3xl font-semibold text-white tracking-tight">Simon</h3>
+              <p class="text-sm font-medium text-gray-500 mt-1 mx-auto md:mx-0" data-i18n="photoRole">創辦人 / 攝影總監</p>
+            </div>
+            <p class="text-gray-400 text-base leading-relaxed text-center md:text-left mx-auto md:mx-0 max-w-lg"
+              data-i18n="photoDesc">
+              擁有新聞、商業、人像和紀實等多樣影像經驗，具備完整的拍攝與剪輯能力。曾於香港任職新聞攝影記者與媒體總編輯，擅長快速應變與捕捉故事。<br><br>
+              接案類型涵蓋商業攝影、婚禮紀錄、人像拍攝與文物紀實，熟悉拍攝全流程，能獨立完成從前期規劃到後製調整的工作，賦予每一幅影像深刻的靈魂。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <!-- 滾動到頂部按鈕 -->
-  <button id="scrollToTop" onclick="scrollToTop()">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
-    </svg>
-  </button>
+    <!-- 資訊區塊 -->
+    <section id="info" class="py-24 px-4 bg-black border-t border-white/5 fade-in">
+      <div class="container mx-auto max-w-4xl">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+          <div
+            class="p-6 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col items-center">
+            <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2" data-i18n="contactEmail">電子郵件
+            </h4>
+            <a href="mailto:monoclab1999@gmail.com"
+              class="text-gray-300 hover:text-white transition-colors text-sm font-medium">monoclab1999@gmail.com</a>
+          </div>
+          <div
+            class="p-6 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col items-center">
+            <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2" data-i18n="contactSocial">
+              社群平台</h4>
+            <a href="https://www.instagram.com/w.iwatani" target="_blank"
+              class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Instagram @w.iwatani</a>
+          </div>
+          <div
+            class="p-6 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors duration-300 flex flex-col items-center">
+            <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2" data-i18n="contactStudio">
+              工作室地址</h4>
+            <p class="text-gray-300 text-sm font-medium" data-i18n="contactAddr">新北市板橋區藝文街156號822</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 bg-black text-center border-t border-white/5 fade-in">
+      <p class="text-xs tracking-[0.2em] text-gray-600 uppercase ml-[0.2em]">&copy; 2026 Monochrome Lab. All Rights
+        Reserved.</p>
+    </footer>
+
+    <!-- 滾動到頂部按鈕 -->
+    <button id="scrollToTop" onclick="scrollToTop()">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+        stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+      </svg>
+    </button>
+  </div> <!-- End of app-wrapper -->
 
   <!-- Scroll Animation Script -->
   <script>
     const faders = document.querySelectorAll('.fade-in');
-    const appearOptions = { threshold: 0.2 };
-    const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
+    // 降低 threshold 並增加 rootMargin，確保手機版能提早且穩定觸發
+    const appearOptions = {
+      threshold: 0.05,
+      rootMargin: "0px 0px -50px 0px"
+    };
+    const appearOnScroll = new IntersectionObserver(function (entries, appearOnScroll) {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
         entry.target.classList.add('show');
@@ -759,10 +958,10 @@
         img.src = src;
         img.alt = imageId;
         img.className = 'w-full h-auto m-2'; // 可以調整樣式
-      //當圖片被點擊時，打開新視窗顯示原圖
-      img.onclick = function() {
-        window.open(src, '_blank'); // 打開新視窗
-      };
+        //當圖片被點擊時，打開新視窗顯示原圖
+        img.onclick = function () {
+          window.open(src, '_blank'); // 打開新視窗
+        };
         modalImages.appendChild(img);
       });
 
@@ -780,7 +979,7 @@
     }
 
     // 當頁面滾動時顯示或隱藏滾動到頂部按鈕
-    window.onscroll = function() {
+    window.onscroll = function () {
       const button = document.getElementById('scrollToTop');
       if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
         button.style.display = "flex";
@@ -790,13 +989,13 @@
     };
 
     // 網頁加載時滾動到頂部
-    window.addEventListener('load', function() {
-      setTimeout(function() {
+    window.addEventListener('load', function () {
+      setTimeout(function () {
         window.scrollTo(0, 0); // 滾動到頁面頂端
       }, 100); // 延遲 100 毫秒
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       // window.scrollTo(0, 0); // 滾動到頁面頂端
       const heroVideo = document.querySelector('.background-video');
       // 監測視口
@@ -811,113 +1010,173 @@
       });
       observer.observe(heroVideo); // 觀察影片
     });
+    function imageLoaded(img) {
+      img.classList.remove("loading");
+      img.style.opacity = 1;
 
-          function imageLoaded(img) {
-            img.classList.remove("loading");
-            // Fade in effect relies on CSS transition defined in the img rule,
-            // we just added it to the general img tag styling earlier or rely on opacity.
-            // But we already have transition defined on img for transform/filter, let's just set opacity.
-            img.style.opacity = 1;
+      const loader = img.previousElementSibling;
+      if (loader && loader.classList.contains("loader")) {
+        loader.style.transition = "opacity 0.5s ease";
+        loader.style.opacity = 0;
+        setTimeout(() => {
+          loader.remove();
+        }, 500);
+      }
+    }
 
-            const loader = img.previousElementSibling;
-            if (loader && loader.classList.contains("loader")) {
-              // Fade out loader smoothly
-              loader.style.transition = "opacity 0.5s ease";
-              loader.style.opacity = 0;
-              setTimeout(() => {
-                loader.remove();
-              }, 500);
-            }
-          }
-    
-          // Header scroll effect
-          const header = document.querySelector('header');
-          window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) { // 50px threshold
-              header.classList.add('scrolled');
-            } else {
-              header.classList.remove('scrolled');
-            }
-          });
+    // Fallback: 如果圖片已經被快取，onload 可能不會觸發，我們手動檢查
+    document.addEventListener('DOMContentLoaded', () => {
+      const images = document.querySelectorAll('img.loading');
+      images.forEach(img => {
+        if (img.complete) {
+          imageLoaded(img);
+        }
+      });
+    });
 
-          // i18n 語系切換邏輯
-          const i18n = {
-            tw: {
-              navPortfolio: '作品',
-              navPricing: '價格',
-              navAbout: '關於',
-              navPhotographer: '攝影師',
-              navContact: '聯絡資訊',
-              heroTitle: '光影的 <span class="text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-500">重量</span>',
-              heroSubtitle: '純粹 ‧ 紀實',
-              heroBtn: 'Explore',
-              scrollDown: 'SCROLL',
-              portTag: '精選作品',
-              portTitle: '光影藝廊',
-              portSub: '以意圖與底片溫度捕捉的黑白及肖像攝影。',
-              aboutTag: '關於我們',
-              aboutP1: '我們相信光能說話，影能留聲。',
-              aboutP2: '選擇以底片的細膩、黑白的純粹，<br class="hidden md:block">抵抗影像過度修飾的時代。',
-              aboutP3: '每一張作品，皆由光親自曝光，由時間顯影。',
-              aboutP4: '我們相信，真正的情感不在於色彩，<br class="hidden md:block">而藏在明與暗的呼吸之間。',
-              aboutP5: '為你留下有顆粒感的記憶，有重量的影像。',
-              photoTag: '攝影團隊',
-              photoTitle: '首席攝影師',
-              photoRole: '創辦人 / 攝影總監',
-              photoDesc: '擁有新聞、商業、人像和紀實等多樣影像經驗，具備完整的拍攝與剪輯能力。曾於香港任職新聞攝影記者與媒體總編輯，擅長快速應變與捕捉故事。<br><br>接案類型涵蓋商業攝影、婚禮紀錄、人像拍攝與文物紀實，熟悉拍攝全流程，能獨立完成從前期規劃到後製調整的工作，賦予每一幅影像深刻的靈魂。',
-              contactEmail: '電子郵件',
-              contactSocial: '社群平台',
-              contactStudio: '工作室地址',
-              contactAddr: '新北市板橋區藝文街156號822'
-            },
-            en: {
-              navPortfolio: 'Portfolio',
-              navPricing: 'Pricing',
-              navAbout: 'About',
-              navPhotographer: 'Photographer',
-              navContact: 'Contact',
-              heroTitle: 'The weight of <span class="text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-500">light.</span>',
-              heroSubtitle: 'Pure ‧ Authentic',
-              heroBtn: 'Explore',
-              scrollDown: 'SCROLL',
-              portTag: 'Featured Content',
-              portTitle: 'Selected Works',
-              portSub: 'A curated collection of our finest monochrome and portrait photography, captured with intention.',
-              aboutTag: 'About Us',
-              aboutP1: 'We believe light speaks, and shadows echo.',
-              aboutP2: 'Choosing the subtlety of film and the purity of black and white, <br class="hidden md:block">we resist the era of over-edited imagery.',
-              aboutP3: 'Every piece is exposed by light itself, developed through time.',
-              aboutP4: 'We believe true emotion lies not in color, <br class="hidden md:block">but hidden in the breath between light and dark.',
-              aboutP5: 'Leaving you with grainy memories, and images with true weight.',
-              photoTag: 'The Team',
-              photoTitle: 'Lead Photographer',
-              photoRole: 'Founder & Lead Photographer',
-              photoDesc: 'With diverse experience in photojournalism, commercial, portrait, and documentary photography. Former photojournalist and editor-in-chief in Hong Kong, excelling in rapid response and storytelling.<br><br>Capable of independently managing the entire process from planning to post-production, infusing a profound soul into every image.',
-              contactEmail: 'Email',
-              contactSocial: 'Social',
-              contactStudio: 'Studio',
-              contactAddr: 'No. 156, Yiwen St., Banqiao Dist., New Taipei City'
-            }
-          };
+    // Header scroll effect
+    const header = document.querySelector('header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) { // 50px threshold
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
 
-          let currentLang = 'tw'; // 預設語系
+    // i18n 語系切換邏輯
+    const i18n = {
+      tw: {
+        navPortfolio: '作品',
+        navPricing: '價格',
+        navAbout: '關於',
+        navPhotographer: '攝影師',
+        navContact: '聯絡資訊',
+        heroTitle: '光影的 <span class="text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-500">重量</span>',
+        heroSubtitle: '純粹 ‧ 紀實',
+        heroBtn: 'Explore',
+        scrollDown: 'SCROLL',
+        portTag: '精選作品',
+        portTitle: '光影藝廊',
+        portSub: '以意圖與底片溫度捕捉的黑白及肖像攝影。',
+        langSwitch: '語言切換',
+        aboutTag: '關於我們',
+        aboutP1: '我們相信光能說話，影能留聲。',
+        aboutP2: '選擇以底片的細膩、黑白的純粹，<br class="hidden md:block">抵抗影像過度修飾的時代。',
+        aboutP3: '每一張作品，皆由光親自曝光，由時間顯影。',
+        aboutP4: '我們相信，真正的情感不在於色彩，<br class="hidden md:block">而藏在明與暗的呼吸之間。',
+        aboutP5: '為你留下有顆粒感的記憶，有重量的影像。',
+        photoTag: '攝影團隊',
+        photoTitle: '首席攝影師',
+        photoRole: '創辦人 / 攝影總監',
+        photoDesc: '擁有新聞、商業、人像和紀實等多樣影像經驗，具備完整的拍攝與剪輯能力。曾於香港任職新聞攝影記者與媒體總編輯，擅長快速應變與捕捉故事。<br><br>接案類型涵蓋商業攝影、婚禮紀錄、人像拍攝與文物紀實，熟悉拍攝全流程，能獨立完成從前期規劃到後製調整的工作，賦予每一幅影像深刻的靈魂。',
+        contactEmail: '電子郵件',
+        contactSocial: '社群平台',
+        contactStudio: '工作室地址',
+        contactAddr: '新北市板橋區藝文街156號822'
+      },
+      en: {
+        navPortfolio: 'Portfolio',
+        navPricing: 'Pricing',
+        navAbout: 'About',
+        navPhotographer: 'Photographer',
+        navContact: 'Contact',
+        heroTitle: 'The weight of <span class="text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-500">light.</span>',
+        heroSubtitle: 'Pure ‧ Authentic',
+        heroBtn: 'Explore',
+        scrollDown: 'SCROLL',
+        portTag: 'Featured Content',
+        portTitle: 'Selected Works',
+        portSub: 'A curated collection of our finest monochrome and portrait photography, captured with intention.',
+        langSwitch: 'Language',
+        aboutTag: 'About Us',
+        aboutP1: 'We believe light speaks, and shadows echo.',
+        aboutP2: 'Choosing the subtlety of film and the purity of black and white, <br class="hidden md:block">we resist the era of over-edited imagery.',
+        aboutP3: 'Every piece is exposed by light itself, developed through time.',
+        aboutP4: 'We believe true emotion lies not in color, <br class="hidden md:block">but hidden in the breath between light and dark.',
+        aboutP5: 'Leaving you with grainy memories, and images with true weight.',
+        photoTag: 'The Team',
+        photoTitle: 'Lead Photographer',
+        photoRole: 'Founder & Lead Photographer',
+        photoDesc: 'With diverse experience in photojournalism, commercial, portrait, and documentary photography. Former photojournalist and editor-in-chief in Hong Kong, excelling in rapid response and storytelling.<br><br>Capable of independently managing the entire process from planning to post-production, infusing a profound soul into every image.',
+        contactEmail: 'Email',
+        contactSocial: 'Social',
+        contactStudio: 'Studio',
+        contactAddr: 'No. 156, Yiwen St., Banqiao Dist., New Taipei City'
+      }
+    };
 
-          function toggleLanguage() {
-            currentLang = currentLang === 'tw' ? 'en' : 'tw';
-            const langBtn = document.getElementById('langToggle');
-            langBtn.textContent = currentLang === 'tw' ? 'EN' : '繁'; // 按鈕顯示切換的目標語系
-            
-            // 更新所有 i18n 標籤
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-              const key = el.getAttribute('data-i18n');
-              if (i18n[currentLang][key]) {
-                 el.innerHTML = i18n[currentLang][key]; // 用 innerHTML 來支援 <br> 及 <span> 等標籤
-              }
-            });
-          }
+    let currentLang = 'tw'; // 預設語系
+    const i18nData = i18n; // 避免變數衝突
 
-          document.getElementById('langToggle').addEventListener('click', toggleLanguage);
-    
-        </script>
+    function setLanguage(lang) {
+      // 更新所有標籤文本
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (i18nData[lang][key]) {
+          el.innerHTML = i18nData[lang][key];
+        }
+      });
+
+      // 分別更新電腦端與手機端的語系切換按鈕文字
+      const deskBtn = document.getElementById('langToggle');
+      const mobBtn = document.getElementById('mobileLangToggle');
+      if (deskBtn) deskBtn.textContent = lang === 'tw' ? 'EN' : '繁中';
+      if (mobBtn) mobBtn.textContent = lang === 'tw' ? 'English' : '繁體中文';
+    }
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'tw' ? 'en' : 'tw';
+      setLanguage(currentLang);
+    }
+
+    // 綁定電腦端與手機端切換按鈕事件
+    document.getElementById('langToggle')?.addEventListener('click', toggleLanguage);
+    document.getElementById('mobileLangToggle')?.addEventListener('click', toggleLanguage);
+
+    // 初始化執行語系
+    setLanguage(currentLang);
+
+    // 手機版選單邏輯
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+    const lines = mobileMenuBtn ? mobileMenuBtn.querySelectorAll('span') : [];
+
+    function toggleMobileMenu() {
+      if (!mobileMenu || !mobileMenuBtn) return;
+      const isMenuOpen = !mobileMenu.classList.contains('translate-x-full');
+
+      if (isMenuOpen) {
+        // 關閉選單
+        mobileMenu.classList.add('translate-x-full');
+        document.body.style.overflow = '';
+        lines[0].style.transform = 'none';
+        lines[1].style.opacity = '1';
+        lines[2].style.transform = 'none';
+      } else {
+        // 開啟選單
+        mobileMenu.classList.remove('translate-x-full');
+        document.body.style.overflow = 'hidden';
+        lines[0].style.transform = 'translateY(7px) rotate(45deg)';
+        lines[1].style.opacity = '0';
+        lines[2].style.transform = 'translateY(-7px) rotate(-45deg)';
+      }
+    }
+
+    if (mobileMenuBtn) {
+      mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+    }
+
+    // 點擊選項後自動收合選單
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if (mobileMenu && !mobileMenu.classList.contains('translate-x-full')) {
+          toggleMobileMenu();
+        }
+      });
+    });
+  </script>
 </body>
+
 </html>

@@ -191,34 +191,63 @@
     }
   </style>
 </head>
-<body class="antialiased selection:bg-white selection:text-black min-h-screen flex flex-col pt-24">
-  <!-- 8mm Film Filter Overlays -->
-  <div class="film-grain"></div>
-  <div class="film-vignette"></div>
+<body class="bg-[#0d0d0d] text-[#f0f0f0] font-sans antialiased selection:bg-white selection:text-black overflow-x-hidden w-full m-0 p-0">
+  
+  <div id="app-wrapper" class="relative w-full overflow-hidden min-h-screen flex flex-col pt-24">
+    <!-- 8mm Film Filter Overlays -->
+    <div class="film-grain"></div>
+    <div class="film-vignette"></div>
 
   <div class="glow-bg"></div>
 
   <!-- 導覽列 -->
-  <header class="fixed top-0 w-full z-50 transition-all duration-300 py-3">
+  <header class="fixed top-0 w-full z-50 transition-all duration-300 py-3 backdrop-blur-md bg-black/50 border-b border-white/10">
     <nav class="container mx-auto px-6 py-2 flex justify-between items-center max-w-7xl">
-      <div class="text-lg font-semibold tracking-wide flex items-center gap-2">
+      <div class="text-lg font-semibold tracking-wide flex items-center gap-2 relative z-50">
         <div class="w-5 h-5 rounded-full bg-gradient-to-br from-gray-200 to-gray-600 shadow-[0_0_10px_rgba(255,255,255,0.2)]"></div>
         <a href="index.html">Monochrome Lab</a>
       </div>
-      <ul class="flex space-x-2 md:space-x-4 text-sm font-medium">
+      
+      <!-- 桌機版選單 -->
+      <ul class="hidden md:flex space-x-6 text-sm font-medium items-center">
         <li><a href="index.html#portfolio" class="hover-link" data-i18n="navPortfolio">作品</a></li>
-        <li><a href="price.html" class="hover-link text-white bg-white/5" data-i18n="navPricing">價格</a></li>
+        <li><a href="price.html" class="hover-link text-white font-bold" data-i18n="navPricing">價格</a></li>
         <li><a href="index.html#about" class="hover-link" data-i18n="navAbout">關於</a></li>
         <li><a href="index.html#photographer" class="hover-link" data-i18n="navPhotographer">攝影師</a></li>
         <li><a href="index.html#info" class="hover-link" data-i18n="navContact">聯絡資訊</a></li>
+        <!-- 語系切換按鈕 -->
         <li>
-          <button id="langToggle" class="px-2 py-1 ml-2 md:ml-4 text-xs font-semibold rounded-md border border-white/20 bg-white/5 hover:bg-white/10 transition-colors">
+          <button id="langToggle" aria-label="Toggle Language" title="Toggle Language" class="px-2 py-1 ml-4 text-xs font-semibold rounded-md border border-white/20 bg-white/5 hover:bg-white/10 transition-colors">
             EN
           </button>
         </li>
       </ul>
+
+      <!-- 手機版漢堡按鈕 -->
+      <button id="mobileMenuBtn" aria-label="Toggle mobile menu" title="Toggle mobile menu" class="md:hidden flex flex-col justify-center items-center w-8 h-8 space-y-1.5 focus:outline-none z-50 relative">
+        <span class="w-6 h-px bg-white transition-transform duration-300 origin-center"></span>
+        <span class="w-6 h-px bg-white transition-opacity duration-300"></span>
+        <span class="w-6 h-px bg-white transition-transform duration-300 origin-center"></span>
+      </button>
     </nav>
   </header>
+
+  <!-- 手機版全螢幕選單 -->
+  <div id="mobileMenu" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-40 flex flex-col items-center justify-center translate-x-full transition-transform duration-500 ease-[cubic-bezier(0.77,0,0.175,1)]">
+    <ul class="flex flex-col space-y-8 text-xl font-medium items-center text-white/80">
+      <li><a href="index.html#portfolio" class="hover:text-white transition-colors mobile-link" data-i18n="navPortfolio">作品</a></li>
+      <li><a href="price.html" class="text-white font-bold mobile-link" data-i18n="navPricing">價格</a></li>
+      <li><a href="index.html#about" class="hover:text-white transition-colors mobile-link" data-i18n="navAbout">關於</a></li>
+      <li><a href="index.html#photographer" class="hover:text-white transition-colors mobile-link" data-i18n="navPhotographer">攝影師</a></li>
+      <li><a href="index.html#info" class="hover:text-white transition-colors mobile-link" data-i18n="navContact">聯絡資訊</a></li>
+      <li class="pt-6 border-t border-white/10 flex flex-col items-center gap-4 w-full">
+        <span class="text-xs text-gray-500 tracking-widest uppercase" data-i18n="langSwitch">Language</span>
+        <button id="mobileLangToggle" aria-label="Toggle Mobile Language" title="Toggle Mobile Language" class="px-6 py-2 text-sm font-semibold rounded-full border border-white/20 bg-white/5 hover:bg-white/10 transition-colors w-full">
+          English
+        </button>
+      </li>
+    </ul>
+  </div>
 
   <!-- 主要內容 -->
   <main class="flex-grow flex items-center justify-center p-4 sm:p-8 fade-in relative z-10">
@@ -391,10 +420,37 @@
         </div>
       </div>
     </div>
+      </div>
+    </div>
   </main>
+
+  <!-- Footer -->
+  <footer class="py-10 bg-black text-center border-t border-white/5 relative z-10 w-full">
+    <p class="text-[10px] sm:text-xs tracking-[0.2em] text-gray-600 uppercase">&copy; 2026 Monochrome Lab. All Rights Reserved.</p>
+  </footer>
+
+  </div> <!-- End of app-wrapper -->
 
   <script>
     lucide.createIcons();
+
+    // Fade-in Animation Observer
+    const faders = document.querySelectorAll('.fade-in');
+    const appearOptions = { 
+        threshold: 0.05,
+        rootMargin: "0px 0px -50px 0px"
+    };
+    const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('show');
+            appearOnScroll.unobserve(entry.target);
+        });
+    }, appearOptions);
+
+    faders.forEach(fader => {
+        appearOnScroll.observe(fader);
+    });
 
     // Header scroll background
     const header = document.querySelector('header');
@@ -448,7 +504,8 @@
         note1: '* 1,500 方案旨在累積都市紀實作品，以超值體驗價提供短時專案。',
         note2: '* 底片專案包含兩卷底片成本、專業沖洗與高解析掃描。',
         note3: '* 寫真專案皆可配合前往新竹與桃園地區。',
-        note4: '* 請務必提前來信或至 Instagram 確切預約時間與細節。'
+        note4: '* 請務必提前來信或至 Instagram 確切預約時間與細節。',
+        langSwitch: '語言切換'
       },
       en: {
         navPortfolio: 'Portfolio',
@@ -490,26 +547,76 @@
         note1: '* The NT$1,500 plan is a limited offer designed to source urban documentary portfolios.',
         note2: '* The Film Project covers the cost of rolls, professional developing, and hi-res scanning.',
         note3: '* Both Commission and Film projects accept Hsinchu and Taoyuan locations.',
-        note4: '* Please email or DM via Instagram to confirm dates prior to booking.'
+        note4: '* Please email or DM via Instagram to confirm dates prior to booking.',
+        langSwitch: 'Language'
       }
     };
 
     let currentLang = 'tw'; // 預設語言
+    const i18nData = i18n;
+
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (i18nData[lang][key]) {
+           el.innerHTML = i18nData[lang][key]; 
+        }
+      });
+
+      // 分別更新電腦端與手機端的語言按鈕文字
+      const deskBtn = document.getElementById('langToggle');
+      const mobBtn = document.getElementById('mobileLangToggle');
+      if (deskBtn) deskBtn.textContent = lang === 'tw' ? 'EN' : '繁中';
+      if (mobBtn) mobBtn.textContent = lang === 'tw' ? 'English' : '繁體中文';
+    }
 
     function toggleLanguage() {
       currentLang = currentLang === 'tw' ? 'en' : 'tw';
-      const langBtn = document.getElementById('langToggle');
-      langBtn.textContent = currentLang === 'tw' ? 'EN' : '繁';
-      
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (i18n[currentLang][key]) {
-           el.innerHTML = i18n[currentLang][key]; 
-        }
-      });
+      setLanguage(currentLang);
     }
 
-    document.getElementById('langToggle').addEventListener('click', toggleLanguage);
+    document.getElementById('langToggle')?.addEventListener('click', toggleLanguage);
+    document.getElementById('mobileLangToggle')?.addEventListener('click', toggleLanguage);
+
+    // 初始化語言
+    setLanguage(currentLang);
+
+    // 手機版漢堡選單邏輯
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+    const lines = mobileMenuBtn ? mobileMenuBtn.querySelectorAll('span') : [];
+
+    function toggleMobileMenu() {
+      if(!mobileMenu || !mobileMenuBtn) return;
+      const isMenuOpen = !mobileMenu.classList.contains('translate-x-full');
+      
+      if (isMenuOpen) {
+        mobileMenu.classList.add('translate-x-full');
+        document.body.style.overflow = '';
+        lines[0].style.transform = 'none';
+        lines[1].style.opacity = '1';
+        lines[2].style.transform = 'none';
+      } else {
+        mobileMenu.classList.remove('translate-x-full');
+        document.body.style.overflow = 'hidden';
+        lines[0].style.transform = 'translateY(7px) rotate(45deg)';
+        lines[1].style.opacity = '0';
+        lines[2].style.transform = 'translateY(-7px) rotate(-45deg)';
+      }
+    }
+
+    if (mobileMenuBtn) {
+      mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+    }
+
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if(mobileMenu && !mobileMenu.classList.contains('translate-x-full')) {
+          toggleMobileMenu();
+        }
+      });
+    });
 
     // Mouse Tracking for cards
     document.querySelectorAll('.linear-card').forEach(card => {
