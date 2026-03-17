@@ -204,7 +204,7 @@
   <header class="fixed top-0 w-full z-50 transition-all duration-300 py-3 backdrop-blur-md bg-black/50 border-b border-white/10">
     <nav class="container mx-auto px-6 py-2 flex justify-between items-center max-w-7xl">
       <div class="text-lg font-semibold tracking-wide flex items-center gap-2 relative z-50">
-        <div class="w-5 h-5 rounded-full bg-gradient-to-br from-gray-200 to-gray-600 shadow-[0_0_10px_rgba(255,255,255,0.2)]"></div>
+        <!-- <div class="w-5 h-5 rounded-full bg-gradient-to-br from-gray-200 to-gray-600 shadow-[0_0_10px_rgba(255,255,255,0.2)]"></div> -->
         <a href="index.html">Monochrome Lab</a>
       </div>
       
@@ -281,7 +281,7 @@
           <ul class="space-y-4 text-sm text-gray-400 mb-8 flex-grow">
             <li class="flex items-start">
               <i data-lucide="check" class="w-4 h-4 text-gray-300 mr-3 mt-0.5 flex-shrink-0"></i>
-              <span data-i18n="pkg1L1">精修：10 張（高畫質細節）</span>
+              <span data-i18n="pkg1L1">精修：6 張（高畫質細節）</span>
             </li>
             <li class="flex items-start">
               <i data-lucide="check" class="w-4 h-4 text-gray-300 mr-3 mt-0.5 flex-shrink-0"></i>
@@ -315,11 +315,15 @@
           <ul class="space-y-4 text-sm text-gray-400 mb-8 flex-grow">
             <li class="flex items-start">
               <i data-lucide="check" class="w-4 h-4 text-white mr-3 mt-0.5 flex-shrink-0"></i>
-              <span data-i18n="pkg2L1">精修：15 張（高畫質精緻修圖）</span>
+              <span data-i18n="pkg2L1">精修：15 張（高畫質精致修圖）</span>
             </li>
             <li class="flex items-start">
               <i data-lucide="plus" class="w-4 h-4 text-gray-500 mr-3 mt-0.5 flex-shrink-0"></i>
               <span data-i18n="pkg2L2">加購精修：每張 NT$200</span>
+            </li>
+            <li class="flex items-start">
+              <i data-lucide="users" class="w-4 h-4 text-white mr-3 mt-0.5 flex-shrink-0"></i>
+              <span data-i18n="pkg2L6">雙人寫真 NT$4,500 起</span>
             </li>
             <li class="flex items-start">
               <i data-lucide="check" class="w-4 h-4 text-white mr-3 mt-0.5 flex-shrink-0"></i>
@@ -371,19 +375,23 @@
           </ul>
         </div>
 
-        <!-- 方案 4: 客製委託 -->
+        <!-- 方案 4: 婚禮紀錄 / 客製委託 -->
         <div class="linear-card p-8 flex flex-col">
           <div class="mb-6 border-b border-white/10 pb-6">
-            <h2 class="text-2xl font-semibold text-white tracking-tight mb-2" data-i18n="pkg4Title">客製委託</h2>
-            <p class="text-sm font-medium text-gray-400" data-i18n="pkg4Sub">畢業照 / 多人團體 / 特殊專案</p>
+            <h2 class="text-2xl font-semibold text-white tracking-tight mb-2" data-i18n="pkg4Title">婚禮紀錄 / 客製</h2>
+            <p class="text-sm font-medium text-gray-400" data-i18n="pkg4Sub">Pre Wedding · 婚禮紀錄 · 特殊專案</p>
           </div>
           <div class="mb-8 flex items-baseline">
             <span class="text-3xl font-bold tracking-tight text-white" data-i18n="pkgContactUs">歡迎討論報價</span>
           </div>
           <ul class="space-y-4 text-sm text-gray-400 mb-8 flex-grow">
             <li class="flex items-start">
+              <i data-lucide="heart" class="w-4 h-4 text-gray-300 mr-3 mt-0.5 flex-shrink-0"></i>
+              <span data-i18n="pkg4L0">Pre Wedding 影像、婚禮紀錄全程均可接案</span>
+            </li>
+            <li class="flex items-start">
               <i data-lucide="check" class="w-4 h-4 text-gray-300 mr-3 mt-0.5 flex-shrink-0"></i>
-              <span data-i18n="pkg4L1">依據拍攝人數與需求報價</span>
+              <span data-i18n="pkg4L1">依拍攝時長與需求報價</span>
             </li>
             <li class="flex items-start">
               <i data-lucide="check" class="w-4 h-4 text-gray-300 mr-3 mt-0.5 flex-shrink-0"></i>
@@ -416,6 +424,8 @@
           <p data-i18n="note1">* 1,500 方案旨在累積都市紀實作品，以超值體驗價提供短時專案。</p>
           <p data-i18n="note2">* 底片專案包含兩卷底片成本、專業沖洗與高解析掃描。</p>
           <p data-i18n="note3">* 寫真專案皆可配合前往新竹與桃園地區。</p>
+          <p data-i18n="note5">* 如需要妝髮可以幫忙配合，價錢另行報價。</p>
+          <p data-i18n="note6">* 拍攝款項當天付清（現金、轉帳、支付寶 / Payme）。</p>
           <p data-i18n="note4">* 請務必提前來信或至 Instagram 確切預約時間與細節。</p>
         </div>
       </div>
@@ -485,6 +495,7 @@
         pkgStarting: '起',
         pkg2L1: '精修：15 張（高畫質精緻修圖）',
         pkg2L2: '加購精修：每張 NT$200',
+        pkg2L6: '雙人寫真 NT$4,500 起',
         pkg2L3: '範圍：台北/新北/新竹/桃園',
         pkg2L4: '時間：依主題需求彈性客製',
         pkg2L5: '雲端交件：7 天下載連結',
@@ -493,10 +504,11 @@
         pkg3L1: '含兩卷底片（約 72 張）',
         pkg3L2: '包含拍攝、沖洗、掃描與基本調色',
         pkg3L4: '時間：配合底片特性客製化',
-        pkg4Title: '客製委託',
-        pkg4Sub: '畢業照 / 多人團體 / 特殊專案',
+        pkg4Title: '婚禮紀錄 / 客製',
+        pkg4Sub: 'Pre Wedding · 婚禮紀錄 · 特殊專案',
         pkgContactUs: '歡迎討論報價',
-        pkg4L1: '依據拍攝人數與需求報價',
+        pkg4L0: 'Pre Wedding 影像、婚禮紀錄全程均可接案',
+        pkg4L1: '依拍攝時長與需求報價',
         pkg4L2: '支援多人團體、畢業合影等',
         pkg4L3: '提供客製化精修數量設定',
         pkg4L4: '時間：彈性配合您的行程',
@@ -504,6 +516,8 @@
         note1: '* 1,500 方案旨在累積都市紀實作品，以超值體驗價提供短時專案。',
         note2: '* 底片專案包含兩卷底片成本、專業沖洗與高解析掃描。',
         note3: '* 寫真專案皆可配合前往新竹與桃園地區。',
+        note5: '* 如需要妝髮可以幫忙配合，價錢另行報價。',
+        note6: '* 拍攝款項當天付清（現金、轉帳、支付寶 / Payme）。',
         note4: '* 請務必提前來信或至 Instagram 確切預約時間與細節。',
         langSwitch: '語言切換'
       },
@@ -528,6 +542,7 @@
         pkgStarting: 'up',
         pkg2L1: 'Retouched: 15 Master-level Photos',
         pkg2L2: 'Extra retouch: NT$200 / Photo',
+        pkg2L6: 'Couples Portrait: NT$4,500 up',
         pkg2L3: 'Location: Taipei/Ntpc/Hsinchu/Taoyuan',
         pkg2L4: 'Time: Flexible based on theme',
         pkg2L5: 'Delivery: 7-day cloud link',
@@ -536,10 +551,11 @@
         pkg3L1: 'Includes 2 rolls of film (~72 shots)',
         pkg3L2: 'Shooting, developing, scanning & grading',
         pkg3L4: 'Time: Flexible for analog workflow',
-        pkg4Title: 'Custom Project',
-        pkg4Sub: 'Graduation / Groups / Special',
-        pkgContactUs: 'Discuss for Quote',
-        pkg4L1: 'Quote based on pax and needs',
+        pkg4Title: 'Wedding / Custom',
+        pkg4Sub: 'Pre Wedding · Wedding Coverage · Special',
+        pkgContactUs: 'Contact for Quote',
+        pkg4L0: 'Pre Wedding & full wedding coverage accepted',
+        pkg4L1: 'Quote based on shooting duration & needs',
         pkg4L2: 'Support group & graduation shots',
         pkg4L3: 'Customized retouch quantity',
         pkg4L4: 'Time: Flexible for your schedule',
@@ -547,6 +563,8 @@
         note1: '* The NT$1,500 plan is a limited offer designed to source urban documentary portfolios.',
         note2: '* The Film Project covers the cost of rolls, professional developing, and hi-res scanning.',
         note3: '* Both Commission and Film projects accept Hsinchu and Taoyuan locations.',
+        note5: '* Hair & makeup coordination available upon request — quote provided separately.',
+        note6: '* Full payment on the day of shoot (Cash / Bank Transfer / Alipay / Payme).',
         note4: '* Please email or DM via Instagram to confirm dates prior to booking.',
         langSwitch: 'Language'
       }
