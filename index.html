@@ -1375,23 +1375,27 @@
           const iframe = document.getElementById('promoFrame');
           const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
           
-          // 等待 iframe 內容載入完畢與圖片渲染
+          // 等待 iframe 內容與圖片全部渲染完畢
           await new Promise(resolve => {
-            if (iframeDoc.readyState === 'complete') resolve();
-            else iframe.onload = resolve;
-            setTimeout(resolve, 1000); // 強制等待一段時間
+            if (iframeDoc.readyState === 'complete') {
+              // 再多等一秒確保內部的 QR code 跟 字體 真的畫上去了
+              setTimeout(resolve, 1500);
+            } else {
+              iframe.onload = () => setTimeout(resolve, 1500);
+            }
           });
 
-          // 瞄準具體的容器而不是全頁 body，避免邊距問題
+          // 瞄準具體的容器
           const targetElement = iframeDoc.querySelector('.promo-container') || iframeDoc.body;
 
-          // 使用 html2canvas 截圖 iframe 內容
+          // 使用 html2canvas 截圖 (降低 scale 以免手機記憶體不足)
           const canvas = await html2canvas(targetElement, {
             useCORS: true,
             allowTaint: true,
-            backgroundColor: '#050505', // 確保背景色與 promo 一致
-            scale: 3, // 進一步提高截圖畫質
-            windowWidth: 390, // 強制模擬手機寬度渲染
+            logging: false, // 正式環境關閉 logging，如需調試可開啟
+            backgroundColor: '#050505',
+            scale: 2, // 2 倍畫質在手機較為安全穩健
+            windowWidth: 390,
             windowHeight: 844
           });
 

@@ -31,7 +31,7 @@
     }
 
     .promo-container {
-      min-height: 100svh;
+      min-height: 844px; /* 固定高度提高截圖穩定性 */
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -140,7 +140,7 @@
           <div class="w-16 h-16 bg-white p-1 rounded-xl shadow-lg flex-shrink-0 relative">
             <img
               src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://nomochrome.site/&color=000000&bgcolor=ffffff&qzone=1"
-              alt="QR Code" class="w-full h-full rounded-lg">
+              alt="QR Code" crossorigin="anonymous" class="w-full h-full rounded-lg">
           </div>
           <a href="https://nomochrome.site/" target="_blank" rel="noopener" class="ml-4 hover:opacity-80 transition-opacity">
             <p class="text-[9px] uppercase font-bold tracking-[0.3em] text-gray-400 mb-1">Scan to Explore</p>
