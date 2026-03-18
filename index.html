@@ -1396,7 +1396,21 @@
             backgroundColor: '#050505',
             scale: 2, // 2 倍畫質在手機較為安全穩健
             windowWidth: 390,
-            windowHeight: 844
+            windowHeight: 844,
+            onclone: (clonedDoc) => {
+              // 修正 html2canvas 對於 bg-clip-text 支援不佳的問題
+              // 在克隆出的 DOM 中將標題暫時改為純白色以確保截圖成功
+              const promoTitle = clonedDoc.querySelector('h1');
+              if (promoTitle) {
+                promoTitle.style.background = 'none';
+                promoTitle.style.webkitBackgroundClip = 'initial';
+                promoTitle.style.backgroundClip = 'initial';
+                promoTitle.style.color = '#ffffff';
+                promoTitle.style.textShadow = '0 0 10px rgba(255,255,255,0.4)';
+                // 為了保險，處理一下透明文字
+                promoTitle.style.webkitTextFillColor = '#ffffff';
+              }
+            }
           });
 
           // 將 canvas 轉為 Blob (圖片檔案)
@@ -1405,12 +1419,16 @@
 
             const file = new File([blob], "monochrome_promo.png", { type: "image/png" });
 
+            const shareTitle = 'Monochrome Lab.';
+            const shareText = `Welcome to Monochrome Lab\nhttps://nomochrome.site/promo`;
+            const shareUrl = 'https://nomochrome.site/promo';
+
             // 檢查裝置是否支援 Web Share API 及檔案分享
             if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
               await navigator.share({
-                title: 'Monochrome Lab.',
-                text: '光影的重量，純粹・紀實。來看看我們最新的攝影作品！',
-                url: 'https://nomochrome.site/promo',
+                title: shareTitle,
+                text: shareText,
+                url: shareUrl,
                 files: [file]
               });
               console.log('成功分享！');
@@ -1425,7 +1443,7 @@
               a.click();
               document.body.removeChild(a);
               URL.revokeObjectURL(url);
-              alert("您的瀏覽器不支援直接分享圖片，我們已為您下載宣傳圖！");
+              alert("您的瀏覽器不支援直接分享圖片，我們已為您下載宣傳圖！\n請手動分享至社群平台：https://nomochrome.site/promo");
             }
           }, "image/png", 0.9);
 
