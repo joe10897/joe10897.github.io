@@ -507,14 +507,140 @@
         opacity: 0;
       }
     }
+    /* ===== Interactive Effects ===== */
+
+    /* Scroll Progress Bar */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), rgba(200,200,200,0.3), transparent);
+      background-size: 200% 100%;
+      z-index: 99999;
+      width: 0%;
+      transition: width 0.15s ease-out;
+      box-shadow: 0 0 8px rgba(255,255,255,0.15);
+    }
+
+    /* Cursor Spotlight */
+    .cursor-spotlight {
+      position: fixed;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 30%, transparent 70%);
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      will-change: transform;
+    }
+    .cursor-spotlight.visible {
+      opacity: 1;
+    }
+    @media (hover: none) {
+      .cursor-spotlight { display: none; }
+    }
+
+    /* Filter Tags */
+    .filter-tag {
+      padding: 6px 18px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.03);
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      text-transform: uppercase;
+    }
+    .filter-tag:hover {
+      color: rgba(255,255,255,0.8);
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.2);
+    }
+    .filter-tag.active {
+      color: #fff;
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.3);
+      box-shadow: 0 0 20px rgba(255,255,255,0.05);
+    }
+
+    /* Image container filter animation */
+    .image-container.filter-hide {
+      opacity: 0;
+      transform: scale(0.95) translateY(10px);
+      pointer-events: none;
+      position: absolute;
+      visibility: hidden;
+      transition: opacity 0.4s ease, transform 0.4s ease, visibility 0s 0.4s;
+    }
+    .image-container.filter-show {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      pointer-events: auto;
+      visibility: visible;
+      transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s 0s;
+    }
+    /* Filter grid wrapper for proper hide layout */
+    .filter-grid-wrap {
+      position: relative;
+    }
+    .filter-grid-wrap > .image-container {
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    /* Film Grain Toggle */
+    #grainToggle {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      z-index: 100;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.4);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(8px);
+    }
+    #grainToggle:hover {
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.8);
+      border-color: rgba(255,255,255,0.2);
+    }
+    #grainToggle.active {
+      color: rgba(255,255,255,0.8);
+      background: rgba(255,255,255,0.12);
+    }
+
+    /* Smooth scroll offset for fixed header */
+    .scroll-anchor {
+      scroll-margin-top: 80px;
+    }
   </style>
-  
+
   <!-- Add html2canvas for Share functionality -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 
 <body
   class="bg-[#0d0d0d] text-[#f0f0f0] font-sans antialiased selection:bg-white selection:text-black overflow-x-hidden w-full m-0 p-0">
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+  <!-- Cursor Spotlight -->
+  <div class="cursor-spotlight" id="cursorSpotlight"></div>
 
   <div id="app-wrapper" class="relative w-full overflow-hidden min-h-screen flex flex-col pt-0">
     <!-- 8mm Film Filter Overlays -->
@@ -642,23 +768,32 @@
       </div>
 
       <div class="container mx-auto max-w-7xl relative z-10">
-        <div class="mb-16 flex flex-col items-center">
-          <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center tracking-widest text-[#f0f0f0] font-sans" style="font-family: 'Inter', sans-serif;"><span
+        <div class="mb-12 flex flex-col items-center">
+          <h2 class="text-3xl md:text-4xl font-bold mb-8 text-center tracking-widest text-[#f0f0f0] font-sans" style="font-family: 'Inter', sans-serif;"><span
               data-i18n="portTitle" class="text-transparent bg-clip-text bg-gradient-to-br from-gray-100 via-gray-300 to-gray-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">PROJECTS</span></h2>
+          <!-- Filter Tags -->
+          <div class="flex flex-wrap justify-center gap-3 mb-4">
+            <button class="filter-tag active" data-filter="all">全部</button>
+            <button class="filter-tag" data-filter="portrait">人像</button>
+            <button class="filter-tag" data-filter="wedding">婚禮</button>
+            <button class="filter-tag" data-filter="documentary">紀實</button>
+            <button class="filter-tag" data-filter="commercial">商業</button>
+            <button class="filter-tag" data-filter="bw">黑白</button>
+          </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
-          <div class="image-container">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 md:gap-12 filter-grid-wrap">
+          <div class="image-container" data-category="portrait">
             <div class="loader"></div>
             <img src="/images/Peggy1/peggy1.jpg" alt="peggy1" class="w-full h-auto loading" onload="imageLoaded(this)"
               onclick="openModal('peggy1')" />
           </div>
-          <div class="image-container">
+          <div class="image-container" data-category="bw">
             <div class="loader"></div>
             <img src="/images/BW1/bw1.jpg" alt="作品2" class="w-full h-auto loading" onload="imageLoaded(this)"
               onclick="openModal('作品2')" />
           </div>
-          <div class="image-container">
+          <div class="image-container" data-category="portrait">
             <div class="loader"></div>
             <img src="/images/Vivian/v1.jpg" alt="作品3" class="w-full h-auto loading" onload="imageLoaded(this)"
               onclick="openModal('作品3')" />
@@ -667,32 +802,32 @@
       </div>
       <div class="container mx-auto max-w-7xl mt-12 md:mt-20 relative z-10">
         <div class="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-10">
-          <div class="image-container">
+          <div class="image-container" data-category="wedding">
             <div class="loader"></div>
             <img src="/images/C&Y/DSCF3480-編輯.jpg" alt="C&Y" class="w-full h-auto loading" onload="imageLoaded(this)"
               onclick="openModal('C&Y')" />
           </div>
-          <div class="image-container">
+          <div class="image-container" data-category="documentary">
             <div class="loader"></div>
             <img src="/images/DSCF4787.jpg" alt="作品6" class="w-full h-auto loading" onload="imageLoaded(this)"
               onclick="openModal('作品6')" />
           </div>
-          <div class="image-container">
+          <div class="image-container" data-category="portrait">
             <div class="loader"></div>
             <img src="/images/20230427-por1.jpg" alt="20230427-por1" class="w-full h-auto loading"
               onload="imageLoaded(this)" onclick="openModal('20230427-por1')" />
           </div>
-          <div class="image-container">
+          <div class="image-container" data-category="documentary">
             <div class="loader"></div>
             <img src="/images/senhuang/73-1.jpg" alt="senhuang" class="w-full h-auto loading"
               onload="imageLoaded(this)" onclick="openModal('senhuang')" />
           </div>
-          <div class="image-container">
+          <div class="image-container" data-category="documentary">
             <div class="loader"></div>
             <img src="/images/senhuang/P008.jpg" alt="senhuang" class="w-full h-auto loading"
               onload="imageLoaded(this)" onclick="openModal('senhuang')" />
           </div>
-          <div class="image-container">
+          <div class="image-container" data-category="documentary">
             <div class="loader"></div>
             <img src="/images/senhuang/P028.jpg" alt="senhuang" class="w-full h-auto loading"
               onload="imageLoaded(this)" onclick="openModal('senhuang')" />
@@ -703,22 +838,22 @@
       <!-- 第三行：INTRO 系列 -->
       <div class="container mx-auto max-w-7xl mt-12 md:mt-20 relative z-10">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10">
-          <div class="image-container">
+          <div class="image-container" data-category="commercial">
             <div class="loader"></div>
             <img src="/images/INTRO_menu/LINE_ALBUM_INTRO_240401_17.jpg" alt="INTRO1" class="w-full h-auto loading"
               onload="imageLoaded(this)" onclick="openModal('INTRO1')" />
           </div>
-          <div class="image-container">
+          <div class="image-container" data-category="commercial">
             <div class="loader"></div>
             <img src="/images/INTRO_menu/LINE_ALBUM_INTRO_240401_6.jpg" alt="INTRO2" class="w-full h-auto loading"
               onload="imageLoaded(this)" onclick="openModal('INTRO2')" />
           </div>
-          <div class="image-container">
+          <div class="image-container" data-category="commercial">
             <div class="loader"></div>
             <img src="/images/INTRO_menu/LINE_ALBUM_INTRO_240401_13.jpg" alt="INTRO3" class="w-full h-auto loading"
               onload="imageLoaded(this)" onclick="openModal('INTRO3')" />
           </div>
-          <div class="image-container">
+          <div class="image-container" data-category="commercial">
             <div class="loader"></div>
             <img src="/images/INTRO_menu/LINE_ALBUM_INTRO_240401_8.jpg" alt="INTRO4" class="w-full h-auto loading"
               onload="imageLoaded(this)" onclick="openModal('INTRO4')" />
@@ -727,27 +862,27 @@
       </div>
       <div class="container mx-auto max-w-7xl mt-12 md:mt-20 relative z-10">
         <div class="grid grid-cols-2 md:grid-cols-5 gap-6 md:gap-10">
-          <div class="image-container">
+          <div class="image-container" data-category="portrait">
             <div class="loader"></div>
             <img src="/images/yiqi/MEITU_20250719_214147941.jpg" alt="yiqi1" class="w-full h-auto loading"
               onload="imageLoaded(this)" onclick="openModal('yiqi')" />
           </div>
-          <div class="image-container">
+          <div class="image-container" data-category="portrait">
             <div class="loader"></div>
             <img src="/images/yiqi/MEITU_20250720_030252673.jpg" alt="yiqi2" class="w-full h-auto loading"
               onload="imageLoaded(this)" onclick="openModal('yiqi')" />
           </div>
-          <div class="image-container">
+          <div class="image-container" data-category="portrait">
             <div class="loader"></div>
             <img src="/images/yiqi/MEITU_20250720_161220629.jpg" alt="yiqi3" class="w-full h-auto loading"
               onload="imageLoaded(this)" onclick="openModal('yiqi')" />
           </div>
-          <div class="image-container">
+          <div class="image-container" data-category="portrait">
             <div class="loader"></div>
             <img src="/images/yiqi/MEITU_20250727_184751459.jpg" alt="yiqi4" class="w-full h-auto loading"
               onload="imageLoaded(this)" onclick="openModal('yiqi')" />
           </div>
-          <div class="image-container">
+          <div class="image-container" data-category="portrait">
             <div class="loader"></div>
             <img src="/images/yiqi/MEITU_20250728_023108462.jpg" alt="yiqi5" class="w-full h-auto loading"
               onload="imageLoaded(this)" onclick="openModal('yiqi')" />
@@ -886,6 +1021,13 @@
       <p class="text-xs tracking-[0.2em] text-gray-600 uppercase ml-[0.2em]">&copy; 2026 Monochrome Lab. All Rights
         Reserved.</p>
     </footer>
+
+    <!-- 底片顆粒開關 -->
+    <button id="grainToggle" title="Toggle Film Grain" aria-label="Toggle Film Grain">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
 
     <!-- 滾動到頂部按鈕 -->
     <button id="scrollToTop" onclick="scrollToTop()">
@@ -1161,8 +1303,8 @@
       }
     };
 
-    let currentLang = 'tw'; // 預設語系
-    const i18nData = i18n; // 避免變數衝突
+    let currentLang = localStorage.getItem('lang') || 'tw';
+    const i18nData = i18n;
 
     function setLanguage(lang) {
       // 更新所有標籤文本
@@ -1182,6 +1324,7 @@
 
     function toggleLanguage() {
       currentLang = currentLang === 'tw' ? 'en' : 'tw';
+      localStorage.setItem('lang', currentLang);
       setLanguage(currentLang);
     }
 
@@ -1458,6 +1601,97 @@
       });
     }
 
+  </script>
+
+  <!-- Interactive Effects -->
+  <script>
+    // (1) Scroll Progress Bar
+    const progressBar = document.getElementById('scrollProgress');
+    window.addEventListener('scroll', () => {
+      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      progressBar.style.width = (winScroll / height * 100) + '%';
+    });
+
+    // (2) Cursor Spotlight (smooth follow)
+    (function() {
+      const spot = document.getElementById('cursorSpotlight');
+      let mx = -400, my = -400, cx = -400, cy = -400;
+      document.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        spot.classList.add('visible');
+      });
+      document.addEventListener('mouseleave', () => spot.classList.remove('visible'));
+      function tick() {
+        cx += (mx - cx) * 0.08; cy += (my - cy) * 0.08;
+        spot.style.left = cx + 'px'; spot.style.top = cy + 'px';
+        requestAnimationFrame(tick);
+      }
+      tick();
+    })();
+
+    // (3) Filter Tags
+    (function() {
+      const tags = document.querySelectorAll('.filter-tag');
+      const containers = document.querySelectorAll('.image-container[data-category]');
+      tags.forEach(tag => {
+        tag.addEventListener('click', () => {
+          tags.forEach(t => t.classList.remove('active'));
+          tag.classList.add('active');
+          const filter = tag.dataset.filter;
+          containers.forEach(c => {
+            if (filter === 'all' || c.dataset.category === filter) {
+              c.classList.remove('filter-hide');
+              c.classList.add('filter-show');
+            } else {
+              c.classList.remove('filter-show');
+              c.classList.add('filter-hide');
+            }
+          });
+        });
+      });
+      // show all initially
+      containers.forEach(c => c.classList.add('filter-show'));
+    })();
+
+    // (4) 3D Tilt Effect on images
+    (function() {
+      const containers = document.querySelectorAll('.image-container');
+      containers.forEach(container => {
+        container.addEventListener('mousemove', e => {
+          const rect = container.getBoundingClientRect();
+          const x = (e.clientX - rect.left) / rect.width - 0.5;
+          const y = (e.clientY - rect.top) / rect.height - 0.5;
+          const img = container.querySelector('img');
+          if (img) {
+            img.style.transform = `translate(-50%, -50%) scale(1.06) rotateX(${y * -8}deg) rotateY(${x * 8}deg)`;
+          }
+        });
+        container.addEventListener('mouseleave', () => {
+          const img = container.querySelector('img');
+          if (img) {
+            img.style.transform = '';
+            img.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+            setTimeout(() => { img.style.transition = ''; }, 600);
+          }
+        });
+      });
+    })();
+
+    // (5) Film Grain Toggle
+    (function() {
+      const btn = document.getElementById('grainToggle');
+      const grain = document.querySelector('.film-grain');
+      if (btn && grain) {
+        btn.classList.add('active');
+        btn.addEventListener('click', () => {
+          const isActive = grain.style.opacity !== '0';
+          grain.style.opacity = isActive ? '0' : '';
+          grain.style.transition = 'opacity 0.4s ease';
+          btn.classList.toggle('active');
+        });
+      }
+    })();
   </script>
 </body>
 

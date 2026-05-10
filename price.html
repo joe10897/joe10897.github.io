@@ -177,6 +177,35 @@
       mix-blend-mode: multiply;
     }
 
+    .scroll-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), rgba(200,200,200,0.3), transparent);
+      z-index: 99999;
+      width: 0%;
+      transition: width 0.15s ease-out;
+      box-shadow: 0 0 8px rgba(255,255,255,0.15);
+    }
+    #grainToggle {
+      position: fixed;
+      bottom: 80px; right: 20px;
+      z-index: 100;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.4);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(8px);
+    }
+    #grainToggle:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); border-color: rgba(255,255,255,0.2); }
+    #grainToggle.active { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.12); }
+
     @keyframes filmNoise {
       0%, 100% { transform: translate(0, 0); }
       10% { transform: translate(-2%, -2%); }
@@ -192,7 +221,9 @@
   </style>
 </head>
 <body class="bg-[#0d0d0d] text-[#f0f0f0] font-sans antialiased selection:bg-white selection:text-black overflow-x-hidden w-full m-0 p-0">
-  
+
+  <div class="scroll-progress" id="scrollProgress"></div>
+
   <div id="app-wrapper" class="relative w-full overflow-hidden min-h-screen flex flex-col pt-24">
     <!-- 8mm Film Filter Overlays -->
     <div class="film-grain"></div>
@@ -281,7 +312,7 @@
           <ul class="space-y-4 text-sm text-gray-400 mb-8 flex-grow">
             <li class="flex items-start">
               <i data-lucide="check" class="w-4 h-4 text-gray-300 mr-3 mt-0.5 flex-shrink-0"></i>
-              <span data-i18n="pkg1L1">精修：6 張（高畫質細節）</span>
+              <span data-i18n="pkg1L1">精修：10 張（高畫質細節）</span>
             </li>
             <li class="flex items-start">
               <i data-lucide="check" class="w-4 h-4 text-gray-300 mr-3 mt-0.5 flex-shrink-0"></i>
@@ -430,8 +461,6 @@
         </div>
       </div>
     </div>
-      </div>
-    </div>
   </main>
 
   <!-- Footer -->
@@ -439,6 +468,12 @@
     <p class="text-[10px] sm:text-xs tracking-[0.2em] text-gray-600 uppercase">&copy; 2026 Monochrome Lab. All Rights Reserved.</p>
   </footer>
 
+    <!-- 底片顆粒開關 -->
+    <button id="grainToggle" title="Toggle Film Grain">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
   </div> <!-- End of app-wrapper -->
 
   <script>
@@ -570,7 +605,7 @@
       }
     };
 
-    let currentLang = 'tw'; // 預設語言
+    let currentLang = localStorage.getItem('lang') || 'tw';
     const i18nData = i18n;
 
     function setLanguage(lang) {
@@ -590,6 +625,7 @@
 
     function toggleLanguage() {
       currentLang = currentLang === 'tw' ? 'en' : 'tw';
+      localStorage.setItem('lang', currentLang);
       setLanguage(currentLang);
     }
 
@@ -645,7 +681,36 @@
             card.style.setProperty('--mouse-x', `${x}px`);
             card.style.setProperty('--mouse-y', `${y}px`);
         });
+        card.addEventListener('mouseleave', () => {
+            card.style.setProperty('--mouse-x', '50%');
+            card.style.setProperty('--mouse-y', '-20%');
+        });
     });
+  </script>
+
+  <script>
+    // Scroll Progress Bar
+    const progressBar = document.getElementById('scrollProgress');
+    window.addEventListener('scroll', () => {
+      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      progressBar.style.width = (winScroll / height * 100) + '%';
+    });
+
+    // Film Grain Toggle
+    (function() {
+      const btn = document.getElementById('grainToggle');
+      const grain = document.querySelector('.film-grain');
+      if (btn && grain) {
+        btn.classList.add('active');
+        btn.addEventListener('click', () => {
+          const isActive = grain.style.opacity !== '0';
+          grain.style.opacity = isActive ? '0' : '';
+          grain.style.transition = 'opacity 0.4s ease';
+          btn.classList.toggle('active');
+        });
+      }
+    })();
   </script>
 </body>
 </html>
