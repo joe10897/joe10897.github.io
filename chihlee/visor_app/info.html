@@ -1,235 +1,488 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="V.I.S.O.R. Motorcycle Assist System - 基於 Raspberry Pi 5 與 YOLOv26n+LSTR CULane 的 CPU-only 邊緣 AI 即時輔助系統技術白皮書">
     <title>V.I.S.O.R. | 全系統開發深度分析白皮書</title>
     
-    <!-- 核心資源 (CDN) -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://images.unsplash.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500&family=Orbitron:wght@400;700&family=Noto+Sans+TC:wght@300;500;900&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500&family=Orbitron:wght@400;700&family=Noto+Sans+TC:wght@300;500;900&display=swap" rel="stylesheet">
 
     <style>
-        :root {
-            --neon-cyan: #22d3ee;
-            --neon-blue: #3b82f6;
-            --neon-purple: #a855f7;
-            --bg-dark: #020617;
-            --card-dark: #0f172a;
-        }
-        body {
-            background-color: var(--bg-dark);
-            color: #f1f5f9;
-            font-family: 'Noto Sans TC', "Microsoft JhengHei", sans-serif;
-            scroll-behavior: smooth;
-        }
+        :root { --neon-cyan: #22d3ee; --neon-blue: #3b82f6; --neon-purple: #a855f7; --bg-dark: #020617; --card-dark: #0f172a; }
+        body { background-color: var(--bg-dark); color: #f1f5f9; font-family: 'Noto Sans TC', "Microsoft JhengHei", sans-serif; scroll-behavior: smooth; }
         .font-orbitron { font-family: 'Orbitron', sans-serif; }
         .font-mono { font-family: 'Fira Code', monospace; }
-        
-        .glass-card {
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(34, 211, 238, 0.1);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .glass-card:hover {
-            border-color: rgba(34, 211, 238, 0.4);
-            box-shadow: 0 0 40px rgba(34, 211, 238, 0.15);
-            transform: translateY(-4px);
-        }
-        
+        .glass-card { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(34, 211, 238, 0.1); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .glass-card:hover { border-color: rgba(34, 211, 238, 0.4); box-shadow: 0 0 40px rgba(34, 211, 238, 0.15); transform: translateY(-4px); }
         .neon-glow { text-shadow: 0 0 15px rgba(34, 211, 238, 0.6); }
-
-        pre {
-            background: #000 !important;
-            border-radius: 12px;
-            padding: 1.5rem;
-            font-size: 0.75rem;
-            border: 1px solid #1e293b;
-            color: #22d3ee;
-            overflow-x: auto;
-            line-height: 1.6;
-        }
-        .code-kw { color: #f472b6; }
-        .code-fn { color: #fbbf24; }
-        .code-cmt { color: #64748b; font-style: italic; }
-
-        /* Timeline */
-        .timeline-line { position: absolute; left: 20px; top: 0; bottom: 0; width: 2px; background: #1e293b; }
-        .timeline-dot { position: absolute; left: 12px; width: 18px; height: 18px; border-radius: 50%; background: var(--neon-cyan); border: 4px solid var(--bg-dark); box-shadow: 0 0 10px var(--neon-cyan); }
-
+        pre { background: #000 !important; border-radius: 12px; padding: 1.5rem; font-size: 0.7rem; border: 1px solid #1e293b; color: #22d3ee; overflow-x: auto; line-height: 1.6; }
         nav { background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
 <body class="selection:bg-cyan-500 selection:text-black">
-
-    <!-- Header Navigation -->
-    <nav class="fixed top-0 w-full z-50">
+    <nav class="fixed top-0 w-full z-50" aria-label="主導航">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-cyan-500 rounded-xl flex items-center justify-center text-black font-black text-xl shadow-[0_0_15px_#22d3ee]">V</div>
+                <div class="w-10 h-10 bg-cyan-500 rounded-xl flex items-center justify-center text-black font-black text-xl shadow-[0_0_15px_#22d3ee]" aria-hidden="true">V</div>
                 <span class="font-orbitron font-bold tracking-widest text-white leading-none">V.I.S.O.R.</span>
             </div>
             <div class="hidden lg:flex gap-8 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
                 <a href="#overview" class="hover:text-cyan-400 transition-colors">系統概覽</a>
                 <a href="#vision" class="hover:text-cyan-400 transition-colors">視覺管道</a>
                 <a href="#training" class="hover:text-cyan-400 transition-colors">模型訓練</a>
+                <a href="#demos" class="hover:text-cyan-400 transition-colors">實測影片</a>
+                <a href="#optimization" class="hover:text-cyan-400 transition-colors">效能優化</a>
                 <a href="#app-console" class="hover:text-cyan-400 transition-colors">中控 App</a>
                 <a href="#comm" class="hover:text-cyan-400 transition-colors">通訊矩陣</a>
-                <a href="#optimization" class="hover:text-cyan-400 transition-colors">效能優化</a>
                 <a href="#roadmap" class="hover:text-cyan-400 transition-colors">未來展望</a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <header class="relative min-h-[80vh] flex items-center justify-center pt-20 overflow-hidden">
         <div class="absolute inset-0 z-0">
             <div class="absolute inset-0 bg-gradient-to-b from-transparent via-bg-dark/70 to-bg-dark z-10"></div>
-            <img src="https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover opacity-25 grayscale scale-110">
+            <img src="https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2070&auto=format&fit=crop" alt="Motorcycle background" loading="lazy" class="w-full h-full object-cover opacity-25 grayscale scale-110">
         </div>
         <div class="relative z-20 text-center px-6">
             <h1 class="text-7xl md:text-[10rem] font-black font-orbitron mb-8 tracking-tighter text-white uppercase neon-glow leading-none">V.I.S.O.R.</h1>
-            <p class="text-xl md:text-3xl text-slate-300 font-light max-w-4xl mx-auto leading-relaxed">
-                基於 <span class="text-cyan-400 font-bold">Raspberry Pi 5</span> 與 <span class="text-blue-400 font-bold">YOLOv8</span> 的全方位輔助系統
+            <p class="text-xl md:text-3xl text-slate-300 font-light max-w-4xl mx-auto leading-relaxed mb-6">
+                基於 <span class="text-cyan-400 font-bold">Raspberry Pi 5</span> 與 <span class="text-blue-400 font-bold">YOLOv26n + LSTR CULane</span> 的即時邊緣 AI 輔助系統<br>
             </p>
+            <div class="flex flex-wrap justify-center gap-3 text-sm font-mono">
+                <span class="px-4 py-2 glass-card rounded-full border-cyan-500/30 text-cyan-300">32-38 FPS (Windows)</span>
+                <span class="px-4 py-2 glass-card rounded-full border-blue-500/30 text-blue-300">~10.8 FPS (Pi 5)</span>
+                <span class="px-4 py-2 glass-card rounded-full border-purple-500/30 text-purple-300">YOLOv26n 2.6M</span>
+                <span class="px-4 py-2 glass-card rounded-full border-green-500/30 text-green-300">LSTR CULane TS</span>
+                <span class="px-4 py-2 glass-card rounded-full border-orange-500/30 text-orange-300">Per-class -3m dist</span>
+                <span class="px-4 py-2 glass-card rounded-full border-pink-500/30 text-pink-300">Kalman EMA TTC</span>
+            </div>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-6 py-32 space-y-64">
 
-        <!-- 1. 系統概覽 (System Overview) -->
         <section id="overview">
             <div class="flex items-center gap-4 mb-16">
                 <i data-lucide="scan-eye" class="text-cyan-400 w-10 h-10"></i>
                 <h2 class="text-4xl font-bold font-orbitron text-white uppercase tracking-tight">系統概覽與核心哲學</h2>
             </div>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="p-8 glass-card rounded-3xl border-t-4 border-cyan-500">
-                    <h3 class="text-2xl font-bold text-white mb-4 text-center">核心大腦 (Pi 5)</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed text-center">負責 AI 推理、WebSocket 伺服器與哨兵模式錄影。強大的 8G RAM 支撐高效運算。</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+                <div class="col-span-2 lg:col-span-1">
+                    <div class="glass-card rounded-3xl p-8 border-t-4 border-cyan-500 h-full">
+                        <h3 class="text-2xl font-bold text-white mb-4 text-center">Pipeline 架構</h3>
+                        <div class="flex flex-col items-center gap-4 text-xs text-slate-400">
+                            <div class="grid grid-cols-5 gap-2 w-full text-center">
+                                <div class="p-3 glass-card rounded-xl border border-slate-700"><span class="text-cyan-400 font-bold block mb-1">Input</span>1280x720<br>@ 30 fps</div>
+                                <div class="flex items-center justify-center text-slate-600 text-2xl">→</div>
+                                <div class="p-3 glass-card rounded-xl border border-slate-700"><span class="text-blue-400 font-bold block mb-1">YOLOv26n</span>2.6M params<br>imgsz=320</div>
+                                <div class="flex items-center justify-center text-slate-600 text-2xl">→</div>
+                                <div class="p-3 glass-card rounded-xl border border-slate-700"><span class="text-green-400 font-bold block mb-1">LSTR CULane</span>TorchScript<br>765K params</div>
+                            </div>
+                            <div class="text-slate-600 text-2xl">↓</div>
+                            <div class="grid grid-cols-3 gap-2 w-full text-center">
+                                <div class="p-3 glass-card rounded-xl border border-slate-700"><span class="text-purple-400 font-bold block mb-1">Spatial Fusion v2</span>Per-class dist - Kalman TTC</div>
+                                <div class="p-3 glass-card rounded-xl border border-slate-700"><span class="text-orange-400 font-bold block mb-1">3-Tier Threat</span>critical/warning/caution</div>
+                                <div class="p-3 glass-card rounded-xl border border-slate-700"><span class="text-pink-400 font-bold block mb-1">HUD Render</span>Lane carpet + 4-color</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="p-8 glass-card rounded-3xl border-t-4 border-blue-500">
-                    <h3 class="text-2xl font-bold text-white mb-4 text-center">戰術視覺 (Pi Zero)</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed text-center">驅動 SSD1306 OLED，透過 UDP 廣播接收遙測數據並進行毫秒級渲染。</p>
-                </div>
-                <div class="p-8 glass-card rounded-3xl border-t-4 border-purple-500">
-                    <h3 class="text-2xl font-bold text-white mb-4 text-center">中控系統 (App)</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed text-center">提供 Cyberpunk 風格儀表板、Gemini AI 行為分析與 SOS 緊急連動。</p>
+                <div>
+                    <div class="glass-card rounded-3xl p-8 border-t-4 border-blue-500 h-full">
+                        <h3 class="text-2xl font-bold text-white mb-4 text-center">核心設計原則</h3>
+                        <ul class="space-y-4 text-sm text-slate-400">
+                            <li class="flex items-start gap-3"><i data-lucide="zap" class="w-5 h-5 text-yellow-400 mt-0.5 shrink-0"></i> <span><strong class="text-white">CPU-only 邊緣部署</strong> -- 全部推論在 ARM Cortex-A76 上執行，無 GPU/CUDA 依賴</span></li>
+                            <li class="flex items-start gap-3"><i data-lucide="route" class="w-5 h-5 text-green-400 mt-0.5 shrink-0"></i> <span><strong class="text-white">輕量化模型選型</strong> -- YOLOv26n (2.6M) + LSTR (765K) 總大小 &lt;9MB</span></li>
+                            <li class="flex items-start gap-3"><i data-lucide="shield" class="w-5 h-5 text-cyan-400 mt-0.5 shrink-0"></i> <span><strong class="text-white">機車專用 TTC 閾值</strong> -- 較 ISO 15623 汽車標準更嚴格 (1.0/1.5/2.5s)，搭配距離上限防止誤報</span></li>
+                            <li class="flex items-start gap-3"><i data-lucide="git-branch" class="w-5 h-5 text-purple-400 mt-0.5 shrink-0"></i> <span><strong class="text-white">三重時序穩定</strong> -- EMA 平滑 (α=0.4) + 突變過濾 (α=0.08) + 15 幀慣性 Coasting</span></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- 2. 視覺處理管道 (Vision Pipeline) -->
         <section id="vision">
             <div class="flex items-center gap-4 mb-16">
                 <i data-lucide="video" class="text-cyan-400 w-10 h-10"></i>
-                <h2 class="text-4xl font-bold font-orbitron text-white uppercase tracking-tight">視覺處理管道 (Vision Pipeline)</h2>
+                <h2 class="text-4xl font-bold font-orbitron text-white uppercase tracking-tight">視覺處理管道 (Vision Pipeline v2)</h2>
             </div>
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-12">
+
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 mb-12">
                 <div class="text-center p-6 glass-card rounded-2xl">
                     <i data-lucide="camera" class="text-cyan-500 w-8 h-8 mx-auto mb-4"></i>
                     <h5 class="font-bold text-white mb-2">FrameReader</h5>
-                    <p class="text-xs text-slate-500">獨立線程擷取 RAW 影格</p>
+                    <p class="text-xs text-slate-500">獨立線程 RAW 擷取<br>1280x720 @ 30fps</p>
                 </div>
                 <div class="text-center p-6 glass-card rounded-2xl">
                     <i data-lucide="target" class="text-blue-500 w-8 h-8 mx-auto mb-4"></i>
-                    <h5 class="font-bold text-white mb-2">Detector</h5>
-                    <p class="text-xs text-slate-500">YOLOv8n + 320px 優化</p>
+                    <h5 class="font-bold text-white mb-2">YOLOv26n</h5>
+                    <p class="text-xs text-slate-500">2.6M params<br>imgsz=256/320</p>
+                </div>
+                <div class="text-center p-6 glass-card rounded-2xl">
+                    <i data-lucide="route" class="text-green-500 w-8 h-8 mx-auto mb-4"></i>
+                    <h5 class="font-bold text-white mb-2">LSTR CULane</h5>
+                    <p class="text-xs text-slate-500">765K params<br>TorchScript + skip-2</p>
                 </div>
                 <div class="text-center p-6 glass-card rounded-2xl">
                     <i data-lucide="fingerprint" class="text-purple-500 w-8 h-8 mx-auto mb-4"></i>
-                    <h5 class="font-bold text-white mb-2">Tracker</h5>
-                    <p class="text-xs text-slate-500">Centroid 持續追蹤</p>
+                    <h5 class="font-bold text-white mb-2">Spatial Fusion v2</h5>
+                    <p class="text-xs text-slate-500">Kalman EMA Speed<br>Per-class -3m dist</p>
                 </div>
                 <div class="text-center p-6 glass-card rounded-2xl">
                     <i data-lucide="alert-triangle" class="text-orange-500 w-8 h-8 mx-auto mb-4"></i>
-                    <h5 class="font-bold text-white mb-2">Fusion</h5>
-                    <p class="text-xs text-slate-500">TTC & 距離融合判定</p>
+                    <h5 class="font-bold text-white mb-2">3-Tier Threat</h5>
+                    <p class="text-xs text-slate-500">critical / warning / caution<br>Lane-position gating</p>
                 </div>
             </div>
 
-            <!-- Deep Dive into Tracker & BBox -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
                 <div class="space-y-6">
                     <h4 class="text-xl font-bold text-white flex items-center gap-2">
-                        <i data-lucide="binary" class="text-purple-400 w-5 h-5"></i> 物件持續追蹤 (ID Persistence)
+                        <i data-lucide="route" class="text-green-400 w-5 h-5"></i> LSTR 車道偵測 + 時序穩定
                     </h4>
                     <p class="text-sm text-slate-400 leading-relaxed">
-                        我們實作了基於中心點 (Centroid) 的歐幾里得距離匹配算法。即便 AI 在某一幀漏檢，追蹤器仍會根據快取位置預測物件路徑，並在設定的門檻內 (Max Disappeared) 保持物件 ID 的唯一性，這對於計算 TTC (碰撞預期時間) 的連續性至關重要。
+                        LSTR (Lane Shape Prediction with Transformers) 以 ResNet18s 骨幹 (765K params) 搭配 Transformer Decoder，輸出有理函數曲線。採用 <strong class="text-white">CULane 權重</strong>（城市/彎道路況），適合台灣道路交通環境。
                     </p>
                     <div class="p-6 bg-slate-900/50 border border-slate-800 rounded-2xl">
                         <ul class="space-y-3 text-xs text-slate-500">
-                            <li class="flex items-center gap-2"><i data-lucide="check-square" class="w-3 h-3 text-purple-500"></i> 跨幀 ID 匹配：避免警報因偵測跳動而頻繁閃爍</li>
-                            <li class="flex items-center gap-2"><i data-lucide="check-square" class="w-3 h-3 text-purple-500"></i> 座標平滑化：過濾偵測框的細微震顫</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check-square" class="w-3 h-3 text-green-500"></i> 有理函數: <code class="text-cyan-400">x = c0/(y-c1)^2 + c2/(y-c1) + c3 + c4*y - c5</code></li>
+                            <li class="flex items-center gap-2"><i data-lucide="check-square" class="w-3 h-3 text-green-500"></i> EMA 平滑: α=0.4 / 突變降為 0.08 + Coasting 15 幀</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check-square" class="w-3 h-3 text-green-500"></i> Logspace Y-sampling: 50 pts（近密遠疏）</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check-square" class="w-3 h-3 text-green-500"></i> Skip-2 跳幀: 每 3 幀推論一次，攤銷 ~17ms/幀</li>
                         </ul>
                     </div>
                 </div>
                 <div class="space-y-6">
                     <h4 class="text-xl font-bold text-white flex items-center gap-2">
-                        <i data-lucide="pencil-line" class="text-cyan-400 w-5 h-5"></i> 智慧標框與視覺疊加
+                        <i data-lucide="shield-alert" class="text-orange-400 w-5 h-5"></i> 距離估算 + TTC 威脅分級
                     </h4>
                     <p class="text-sm text-slate-400 leading-relaxed">
-                        在 Pi 5 本地螢幕 (`--visual` 模式) 中，系統會將處理後的偵測框動態疊加於 RAW 影格。我們根據信心度動態調整邊框亮度，並在偵測到威脅時將綠色邊框瞬間轉化為高亮紅色，實現視覺上的直觀預警。
+                        基於 <strong class="text-white">per-class 真實寬度</strong> 的單眼距離估算（pinhole model），搭配 <strong class="text-white">-3m 偏移</strong>（相機至車尾中心校正）。Kalman EMA 追蹤相對速度，TTC 閾值針對機車煞車距離收緊。
                     </p>
                     <div class="p-6 bg-slate-900/50 border border-slate-800 rounded-2xl">
                         <ul class="space-y-3 text-xs text-slate-500">
-                            <li class="flex items-center gap-2"><i data-lucide="check-square" class="w-3 h-3 text-cyan-500"></i> 動態 Label 繪製：顯示 Class Name 與 Confidence</li>
-                            <li class="flex items-center gap-2"><i data-lucide="check-square" class="w-3 h-3 text-cyan-500"></i> 威脅分級渲染：根據距離自動變換框色與粗細</li>
+                            <li class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-red-500 inline-block shrink-0"></span> <strong class="text-white">critical</strong>: TTC &lt; 1.0s &amp; dist &lt; 2.0m -- 僅 IN_LANE</li>
+                            <li class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-orange-500 inline-block shrink-0"></span> <strong class="text-white">warning</strong>: TTC &lt; 1.5s &amp; dist &lt; 4.0m -- 僅 IN_LANE</li>
+                            <li class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-yellow-500 inline-block shrink-0"></span> <strong class="text-white">caution</strong>: TTC &lt; 2.5s &amp; dist &lt; 8.0m -- 全部車道</li>
+                            <li class="flex items-center gap-2"><i data-lucide="filter" class="w-3 h-3 text-cyan-500 shrink-0"></i> 邊緣過濾: x &lt; 10% or &gt; 90% 寬度 → safe</li>
+                            <li class="flex items-center gap-2"><i data-lucide="clock" class="w-3 h-3 text-purple-500 shrink-0"></i> 新物件降級: age &lt; 3 幀 → 最高 caution</li>
                         </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
+                <div class="glass-card p-8 rounded-3xl">
+                    <h4 class="text-lg font-bold text-white mb-4">Per-Class 真實寬度</h4>
+                    <table class="w-full text-xs text-slate-400">
+                        <thead><tr class="border-b border-slate-700 text-cyan-400">
+                            <th class="text-left py-2">Class</th><th>Real Width</th><th>Typical Dist (320px)</th>
+                        </tr></thead>
+                        <tbody>
+                            <tr><td class="py-2">car</td><td>1.8 m</td><td>36 m</td></tr>
+                            <tr><td class="py-2">scooter / motorcycle</td><td>0.7 m</td><td>14 m</td></tr>
+                            <tr><td class="py-2">truck / bus</td><td>2.5 m</td><td>50 m</td></tr>
+                            <tr><td class="py-2">pedestrian</td><td>0.5 m</td><td>10 m</td></tr>
+                            <tr><td class="py-2">bicycle</td><td>0.6 m</td><td>12 m</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="text-[10px] text-slate-600 mt-2">公式: dist = (W_class * f) / w_bbox - 3 (f = 800px 校準焦距)</p>
+                </div>
+                <div class="glass-card p-8 rounded-3xl">
+                    <h4 class="text-lg font-bold text-white mb-4">威脅分級視覺化</h4>
+                    <div class="space-y-3 text-xs">
+                        <div class="flex items-center gap-3 p-3 bg-red-900/30 border border-red-500/30 rounded-xl">
+                            <span class="w-3 h-3 rounded-full bg-red-500 shrink-0"></span>
+                            <code class="text-red-300">[CRITICAL] SCOOTER 3.2m TTC 0.8s</code>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 bg-orange-900/30 border border-orange-500/30 rounded-xl">
+                            <span class="w-3 h-3 rounded-full bg-orange-500 shrink-0"></span>
+                            <code class="text-orange-300">[WARNING] CAR 8.0m TTC 1.9s</code>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 bg-yellow-900/30 border border-yellow-500/30 rounded-xl">
+                            <span class="w-3 h-3 rounded-full bg-yellow-500 shrink-0"></span>
+                            <code class="text-yellow-300">[CAUTION] TRUCK 25m TTC 2.8s</code>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 bg-slate-800/50 border border-slate-700 rounded-xl">
+                            <span class="w-3 h-3 rounded-full bg-blue-500 shrink-0"></span>
+                            <code class="text-blue-300">scooter: 42m</code>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <pre><code class="font-mono">
-# vision/fusion.py
-def classify_threat(self, det, class_name, history):
-    dist = self.estimate_distance(det.bbox)
-    ttc = self.calculate_ttc(dist, history)
-    if dist < self.danger_dist or ttc < 1.5:
-        return 'DANGEROUSLY_CLOSE', dist
-    return 'STABLE', dist
+# spatial_fusion.py -- distance & threat core
+CLASS_WIDTHS = {"car":1.8, "scooter":0.7, "truck":2.5, "pedestrian":0.5, "bicycle":0.6}
+TTC_CRITICAL, TTC_WARNING, TTC_CAUTION = 1.0, 1.5, 2.5
+
+dist = (CLASS_WIDTHS[cls] * focal) / bbox_w - 3  # per-class -3m offset
+ttc  = dist / max(rel_speed, 0.1)
+rel_speed = Kalman_EMA(prev_dist, cur_dist, dt, alpha=0.4)
+
+# Lane-position gating
+if lane_pos == "IN_LANE":
+    level = "critical" if ttc &lt; 1.0 and dist &lt; 2.0 else \
+            "warning"  if ttc &lt; 1.5 and dist &lt; 4.0 else \
+            "caution"  if ttc &lt; 2.5 and dist &lt; 8.0 else "safe"
+elif lane_pos in ("LEFT_LANE","RIGHT_LANE"):
+    level = "caution" if ttc &lt; 1.5 and dist &lt; 5.0 else "safe"
+elif dist &lt; 3.0:
+    level = "caution" if ttc &lt; 1.5 else "safe"
+
+# Edge filter: near frame boundaries -&gt; safe
+if bbox_cx &lt; 0.1 * W or bbox_cx &gt; 0.9 * W:
+    level = "safe"
+
+# New-object downgrade
+if track_age &lt; 3:
+    level = min(level, "caution")
             </code></pre>
         </section>
-
-        <!-- 3. 模型訓練與數據工程 (Model Training) -->
         <section id="training">
             <div class="flex items-center gap-4 mb-16">
                 <i data-lucide="brain-circuit" class="text-blue-400 w-10 h-10"></i>
-                <h2 class="text-4xl font-bold font-orbitron text-white uppercase tracking-tight">模型訓練與數據工程</h2>
+                <h2 class="text-4xl font-bold font-orbitron text-white uppercase tracking-tight">Model Benchmark & 數據工程</h2>
             </div>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-16">
                 <div class="space-y-10">
-                    <div class="p-8 glass-card rounded-3xl border-l-8 border-blue-500">
-                        <h3 class="text-2xl font-bold text-white mb-4">BDD100K 核心數據集</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-6">採用 Berkeley DeepDrive 數據集，包含 10 萬段高清視訊與多樣化天氣。針對 Car, Motorcycle 等類別進行 Transfer Learning。</p>
-                        <div class="grid grid-cols-2 gap-4 text-center">
-                            <div class="bg-blue-500/10 p-4 rounded-xl border border-blue-500/20"><span class="text-blue-400 font-bold block">100,000+</span><span class="text-[10px] text-slate-500">TRAINING IMAGES</span></div>
-                            <div class="bg-cyan-500/10 p-4 rounded-xl border border-cyan-500/20"><span class="text-cyan-400 font-bold block">10+</span><span class="text-[10px] text-slate-500">WEATHER TYPES</span></div>
-                        </div>
+                    <div class="p-8 glass-card rounded-3xl border-l-8 border-blue-500 overflow-x-auto">
+                        <h3 class="text-2xl font-bold text-white mb-4">Table 2 -- YOLO 模型對照</h3>
+                        <table class="w-full text-xs text-slate-400">
+                            <thead><tr class="border-b border-slate-700 text-cyan-400">
+                                <th class="text-left py-2">Model</th><th>Res</th><th>Precision</th><th>Recall</th><th>F1</th><th>mAP@50</th><th>Params</th><th>Pi 5 FPS</th>
+                            </tr></thead>
+                            <tbody>
+                                <tr><td class="py-2">YOLOv8n Base</td><td>640px</td><td>.421</td><td>.285</td><td>.340</td><td>.298</td><td>3.2M</td><td>5-8</td></tr>
+                                <tr><td class="py-2">YOLOv8n Opt</td><td>320px</td><td>.543</td><td>.326</td><td>.407</td><td>.336</td><td>3.2M</td><td>15-20</td></tr>
+                                <tr class="text-green-300 font-bold"><td class="py-2">YOLOv26n ★</td><td>320px</td><td>.561*</td><td>.338*</td><td>.422*</td><td>.349*</td><td>2.6M</td><td>20-25</td></tr>
+                            </tbody>
+                        </table>
+                        <p class="text-[10px] text-slate-600 mt-4">* Domain-adaptation projection vs fine-tuned YOLOv8n. Speed on Pi 5 CPU.</p>
                     </div>
                     <div class="p-8 glass-card rounded-3xl border-l-8 border-purple-500">
-                        <h3 class="text-2xl font-bold text-white mb-4">img2blur 特殊場景強化</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-6">為了解決 Pi 5 在夜間感光下降問題，導入 img2blur 算法強化弱光曝光補償與動態模糊魯棒性。</p>
+                        <h3 class="text-2xl font-bold text-white mb-4">Taiwan Traffic Dataset 本土化</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-4">2,078 張台灣本土路況標註圖片 + 1,560 張盲區偵測資料。Domain Adaptation 使降解析度後 Precision 不降反升 (.421→.543)。</p>
+                        <div class="grid grid-cols-3 gap-4 text-center text-xs">
+                            <div class="p-4 glass-card rounded-xl"><span class="text-cyan-400 font-bold block text-lg">2,598</span>Train</div>
+                            <div class="p-4 glass-card rounded-xl"><span class="text-blue-400 font-bold block text-lg">713</span>Valid</div>
+                            <div class="p-4 glass-card rounded-xl"><span class="text-purple-400 font-bold block text-lg">327</span>Test</div>
+                        </div>
                     </div>
                 </div>
-                <div class="bg-slate-900/50 p-8 rounded-[2.5rem] border border-slate-800">
-                    <h4 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-10 text-center">訓練超參數</h4>
-                    <div class="space-y-8">
-                        <div><div class="flex justify-between text-xs mb-2"><span>YOLOv8-nano</span><span class="text-cyan-400">98% Stable</span></div><div class="w-full h-1 bg-slate-800 rounded-full"><div class="w-[98%] h-full bg-cyan-500 shadow-[0_0_10px_#22d3ee]"></div></div></div>
-                        <div><div class="flex justify-between text-xs mb-2"><span>Transfer Learning</span><span class="text-blue-400">Active</span></div><div class="w-full h-1 bg-slate-800 rounded-full"><div class="w-full h-full bg-blue-500 shadow-[0_0_10px_#3b82f6]"></div></div></div>
-                        <div><div class="flex justify-between text-xs mb-2"><span>Quantization</span><span class="text-purple-400">Ready</span></div><div class="w-full h-1 bg-slate-800 rounded-full"><div class="w-full h-full bg-purple-500 shadow-[0_0_10px_#a855f7]"></div></div></div>
+                <div class="space-y-10">
+                    <div class="p-8 glass-card rounded-3xl border-l-8 border-green-500">
+                        <h3 class="text-2xl font-bold text-white mb-4">車道模型: LSTR vs UFLD v2</h3>
+                        <table class="w-full text-xs text-slate-400">
+                            <thead><tr class="border-b border-slate-700 text-cyan-400">
+                                <th class="text-left py-2">Property</th><th>LSTR CULane ★</th><th>UFLD v2 FP16</th>
+                            </tr></thead>
+                            <tbody>
+                                <tr><td class="py-2">Params</td><td>765K</td><td>12.0M</td></tr>
+                                <tr><td class="py-2">Inference (CPU)</td><td>~50ms</td><td>~108ms</td></tr>
+                                <tr><td class="py-2">Model Size</td><td>3.1 MB</td><td>183 MB</td></tr>
+                                <tr><td class="py-2">Pi 5 FPS (skip-2)</td><td class="text-green-300">~10.8</td><td class="text-red-400">~2.3</td></tr>
+                                <tr><td class="py-2">Taiwan Road Suitability</td><td class="text-green-300">High</td><td class="text-yellow-300">Medium</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="p-8 glass-card rounded-3xl border-l-8 border-orange-500">
+                        <h3 class="text-2xl font-bold text-white mb-4">兩影片驗證結果</h3>
+                        <table class="w-full text-xs text-slate-400">
+                            <thead><tr class="border-b border-slate-700 text-cyan-400">
+                                <th class="text-left py-2">Video</th><th>Scene</th><th>Detections</th><th>Threats</th><th>FPS</th>
+                            </tr></thead>
+                            <tbody>
+                                <tr><td class="py-2">f0ace550</td><td>Urban heavy traffic</td><td>2,676</td><td>106</td><td class="text-green-300">32.5</td></tr>
+                                <tr><td class="py-2">50c9816b</td><td>Suburban light traffic</td><td>1,682</td><td>22</td><td class="text-green-300">38.3</td></tr>
+                            </tbody>
+                        </table>
+                        <p class="text-[10px] text-slate-600 mt-4">Threat count scales with traffic density. 1280x720 input, LSTR TorchScript + skip-2.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 4. 戰術中控系統 (Console App) -->
+        <section id="demos">
+            <div class="flex items-center gap-4 mb-16">
+                <i data-lucide="film" class="text-cyan-400 w-10 h-10"></i>
+                <h2 class="text-4xl font-bold font-orbitron text-white uppercase tracking-tight">實測影片展示</h2>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="glass-card rounded-3xl overflow-hidden border border-slate-800">
+                    <div class="p-6 bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-700">
+                        <h4 class="text-lg font-bold text-white">市區重車流（f0ace550）</h4>
+                        <p class="text-xs text-slate-500">2,676 detections - 106 threats - 32.5 FPS</p>
+                    </div>
+                    <video controls preload="metadata" class="w-full aspect-video bg-black">
+                        <source src="https://joe10897.github.io/demo_export/f0ace550_result.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="glass-card rounded-3xl overflow-hidden border border-slate-800">
+                    <div class="p-6 bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-700">
+                        <h4 class="text-lg font-bold text-white">郊區輕車流（50c9816b）</h4>
+                        <p class="text-xs text-slate-500">1,682 detections - 22 threats - 38.3 FPS</p>
+                    </div>
+                    <video controls preload="metadata" class="w-full aspect-video bg-black">
+                        <source src="https://joe10897.github.io/demo_export/50c9816b_result.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+            <div class="mt-8 text-center text-xs text-slate-500">
+                <i data-lucide="info" class="w-3 h-3 inline"></i> 影片已轉換為 H.264 (avc1) 格式，支援瀏覽器直接播放。原始 MP4 約 22-29 MB。
+                <div class="mt-2 flex justify-center gap-2">
+                    <a href="https://joe10897.github.io/demo_export/SYSTEM_OVERVIEW.html" target="_blank" class="px-4 py-2 glass-card rounded-full text-cyan-400 hover:text-cyan-300 border border-cyan-500/30 text-xs transition-colors">查看完整系統概述 HTML 版</a>
+                    <a href="https://joe10897.github.io/demo_export/BENCHMARK_REPORT.md" target="_blank" class="px-4 py-2 glass-card rounded-full text-blue-400 hover:text-blue-300 border border-blue-500/30 text-xs transition-colors">Benchmark Report</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="optimization">
+            <div class="flex items-center gap-4 mb-16">
+                <i data-lucide="zap" class="text-cyan-400 w-10 h-10"></i>
+                <h2 class="text-4xl font-bold font-orbitron text-white uppercase tracking-tight">效能優化黑科技</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center mb-16">
+                <div class="h-[400px] glass-card p-10 rounded-3xl">
+                    <canvas id="fpsChartDetail"></canvas>
+                </div>
+                <div class="space-y-8">
+                    <div class="p-6 glass-card rounded-2xl border-l-4 border-green-500">
+                        <div class="flex items-center justify-between mb-2">
+                            <h5 class="font-bold text-white">Skip-2 跳幀</h5>
+                            <span class="text-xs text-green-400 font-mono">+108%</span>
+                        </div>
+                        <p class="text-sm text-slate-400">車道偵測每 3 幀執行一次，攤銷推論成本 50ms → 17ms。EMA/Coasting 讓跳幀在視覺上不可感知。</p>
+                    </div>
+                    <div class="p-6 glass-card rounded-2xl border-l-4 border-cyan-500">
+                        <div class="flex items-center justify-between mb-2">
+                            <h5 class="font-bold text-white">TorchScript Compile</h5>
+                            <span class="text-xs text-cyan-400 font-mono">+7%</span>
+                        </div>
+                        <p class="text-sm text-slate-400">載入時 jit.trace + jit.freeze (~2s)，消除 Python interpreter overhead，穩定幀間變異。</p>
+                    </div>
+                    <div class="p-6 glass-card rounded-2xl border-l-4 border-yellow-500">
+                        <div class="flex items-center justify-between mb-2">
+                            <h5 class="font-bold text-white">imgsz=256 降解析</h5>
+                            <span class="text-xs text-yellow-400 font-mono">+25% YOLO</span>
+                        </div>
+                        <p class="text-sm text-slate-400">YOLO 像素從 102,400 降至 65,536 (-36%)，推論 ~32ms → ~24ms。Pi 5 建議啟用。</p>
+                    </div>
+                    <div class="p-6 glass-card rounded-2xl border-l-4 border-purple-500">
+                        <div class="flex items-center justify-between mb-2">
+                            <h5 class="font-bold text-white">Logspace Y-Sampling</h5>
+                            <span class="text-xs text-purple-400 font-mono">更穩定</span>
+                        </div>
+                        <p class="text-sm text-slate-400">logspace 取樣 50 點（近密遠疏），匹配人類視覺透視，車道線繪製更精確。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card p-10 rounded-3xl mb-12">
+                <h3 class="text-2xl font-bold text-white mb-8 text-center">優化歷程 (Windows CPU Benchmark)</h3>
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex justify-between text-sm mb-2">
+                            <span class="text-slate-400">Step 0: Baseline (LSTR CULane PyTorch)</span>
+                            <span class="text-red-400 font-mono">15.3 FPS - 65ms</span>
+                        </div>
+                        <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
+                            <div class="w-[44%] h-full bg-red-500 rounded-full"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-2">
+                            <span class="text-slate-400">Step 1: + Skip-2 Frame</span>
+                            <span class="text-yellow-400 font-mono">31.9 FPS - 31ms</span>
+                        </div>
+                        <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
+                            <div class="w-[92%] h-full bg-yellow-500 rounded-full shadow-[0_0_10px_rgba(234,179,8,0.3)]"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-2">
+                            <span class="text-slate-400">Step 2: + TorchScript Compile</span>
+                            <span class="text-cyan-400 font-mono">34.7 FPS - 29ms</span>
+                        </div>
+                        <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
+                            <div class="w-full h-full bg-cyan-500 rounded-full shadow-[0_0_15px_#22d3ee]"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-2">
+                            <span class="text-slate-400">Step 3: + 3-Tier TTC Fusion (v2)</span>
+                            <span class="text-green-400 font-mono">32.5 FPS - 31ms</span>
+                        </div>
+                        <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
+                            <div class="w-[94%] h-full bg-green-500 rounded-full shadow-[0_0_15px_#22c55e]"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-xs">
+                    <div class="p-4 glass-card rounded-xl border border-slate-700"><span class="text-red-400 block font-bold text-lg">15.3</span>Baseline FPS</div>
+                    <div class="p-4 glass-card rounded-xl border border-slate-700"><span class="text-yellow-400 block font-bold text-lg">31.9</span>+ Skip-2</div>
+                    <div class="p-4 glass-card rounded-xl border border-slate-700"><span class="text-cyan-400 block font-bold text-lg">34.7</span>+ TorchScript</div>
+                    <div class="p-4 glass-card rounded-xl border border-slate-700"><span class="text-green-400 block font-bold text-lg">32.5</span>+ TTC v2 (stable)</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="glass-card p-8 rounded-3xl">
+                    <h4 class="text-lg font-bold text-white mb-4">最終版瓶頸分析</h4>
+                    <div class="space-y-4 text-xs">
+                        <div>
+                            <div class="flex justify-between mb-1"><span>LSTR TorchScript (amortized)</span><span class="text-cyan-400">17ms (58%)</span></div>
+                            <div class="w-full h-4 bg-slate-800 rounded-full overflow-hidden">
+                                <div class="w-[58%] h-full bg-cyan-500 rounded-full"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1"><span>YOLOv26n imgsz=320</span><span class="text-blue-400">19ms (42%)</span></div>
+                            <div class="w-full h-4 bg-slate-800 rounded-full overflow-hidden">
+                                <div class="w-[42%] h-full bg-blue-500 rounded-full"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1"><span>Overhead</span><span class="text-slate-500">~0ms</span></div>
+                            <div class="w-full h-4 bg-slate-800 rounded-full overflow-hidden">
+                                <div class="w-[2%] h-full bg-slate-600 rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-slate-600 mt-4">TOTAL: ~31ms per frame = 32.5 FPS on Windows. Pi 5 estimate: ~93ms = ~10.8 FPS (x3 slowdown)</p>
+                </div>
+                <div class="glass-card p-8 rounded-3xl">
+                    <h4 class="text-lg font-bold text-white mb-4">Pi 5 部署建議</h4>
+                    <table class="w-full text-xs text-slate-400">
+                        <thead><tr class="border-b border-slate-700 text-cyan-400">
+                            <th class="text-left py-2">Priority</th><th>Action</th><th>Est. Pi 5 FPS</th>
+                        </tr></thead>
+                        <tbody>
+                            <tr class="text-green-300"><td class="py-2">✅ Done</td><td>LSTR TS + skip-2 + TTC v2</td><td>~10.8</td></tr>
+                            <tr><td class="py-2">1</td><td>imgsz=256（minor trade-off）</td><td>~13</td></tr>
+                            <tr><td class="py-2">2</td><td>Convert CULane → ONNX INT8</td><td>~20-25</td></tr>
+                            <tr><td class="py-2">3</td><td>IMU ego-speed correction</td><td>accuracy↑</td></tr>
+                            <tr><td class="py-2">4</td><td>USB accelerator (Coral/Hailo)</td><td>25+</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
         <section id="app-console">
             <div class="flex items-center gap-4 mb-16">
                 <i data-lucide="smartphone" class="text-purple-400 w-10 h-10"></i>
@@ -244,43 +497,45 @@ def classify_threat(self, det, class_name, history):
                         <div class="p-5 glass-card rounded-xl border border-slate-800"><h6 class="text-white text-xs font-bold mb-2 flex items-center gap-2"><i data-lucide="layout-template" class="w-3 h-3 text-green-400"></i> 邊緣燈光</h6><p class="text-[10px] text-slate-500 leading-relaxed">螢幕邊緣脈衝燈光直觀呈現盲點威脅。</p></div>
                         <div class="p-5 glass-card rounded-xl border border-slate-800"><h6 class="text-white text-xs font-bold mb-2 flex items-center gap-2"><i data-lucide="phone-call" class="w-3 h-3 text-red-400"></i> E-SOS</h6><p class="text-[10px] text-slate-500 leading-relaxed">自動偵測事故傾角並觸發簡訊通報機制。</p></div>
                     </div>
+                    <div class="p-6 glass-card rounded-2xl border border-slate-800 mt-6">
+                        <h6 class="text-white text-sm font-bold mb-3 flex items-center gap-2"><i data-lucide="bluetooth" class="w-4 h-4 text-blue-400"></i> 藍牙自動配對</h6>
+                        <p class="text-xs text-slate-500 leading-relaxed">Pi 5 端運行 visor_bt_agent.py 自動配對代理人，手機首次配對後自動信任，下次靠近秒連。支援 SPP 序列通道 (bluetooth.service -C 相容模式)。</p>
+                    </div>
                 </div>
                 <div class="glass-card p-10 rounded-3xl">
                     <h4 class="text-lg font-bold text-white mb-6">後設數據分析 (Gemini AI)</h4>
-                    <p class="text-sm text-slate-400 leading-relaxed">結合 Gemini 2.5 Flash，將超速、急煞與傾角熱力圖轉化為人性化的戰術建議報告。</p>
+                    <p class="text-sm text-slate-400 leading-relaxed mb-6">結合 Gemini 2.5 Flash，將超速、急煞與傾角熱力圖轉化為人性化的戰術建議報告。</p>
+                    <div class="space-y-3 text-xs">
+                        <div class="flex items-center gap-2 p-3 bg-slate-800/50 rounded-xl"><i data-lucide="cloud" class="w-4 h-4 text-cyan-400 shrink-0"></i><span class="text-slate-400">Supabase 騎乘紀錄永久化儲存</span></div>
+                        <div class="flex items-center gap-2 p-3 bg-slate-800/50 rounded-xl"><i data-lucide="download" class="w-4 h-4 text-purple-400 shrink-0"></i><span class="text-slate-400">APK v1.1.0 已打包 (Cordova + cordova-plugin-sms)</span></div>
+                        <div class="flex items-center gap-2 p-3 bg-slate-800/50 rounded-xl"><i data-lucide="terminal" class="w-4 h-4 text-green-400 shrink-0"></i><span class="text-slate-400">即時系統日誌同步 (TerminalConsole)</span></div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- 5. 通訊矩陣 (Comm Matrix) -->
         <section id="comm">
             <div class="flex items-center gap-4 mb-16">
                 <i data-lucide="network" class="text-cyan-400 w-10 h-10"></i>
                 <h2 class="text-4xl font-bold font-orbitron text-white uppercase tracking-tight">分散式通訊矩陣</h2>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div class="p-10 glass-card rounded-3xl border-b-4 border-cyan-500"><h4 class="text-xl font-bold text-white mb-4">UDP Broadcast</h4><p class="text-xs text-slate-500">HUD 視覺零延遲同步</p></div>
-                <div class="p-10 glass-card rounded-3xl border-b-4 border-blue-500"><h4 class="text-xl font-bold text-white mb-4">WebSocket</h4><p class="text-xs text-slate-500">中控 App 雙向指令鏈</p></div>
-                <div class="p-10 glass-card rounded-3xl border-b-4 border-purple-500"><h4 class="text-xl font-bold text-white mb-4">Bluetooth SPP</h4><p class="text-xs text-slate-500">斷網環境備援通訊</p></div>
+                <div class="p-10 glass-card rounded-3xl border-b-4 border-cyan-500"><h4 class="text-xl font-bold text-white mb-4">UDP Broadcast</h4><p class="text-xs text-slate-500">HUD 視覺零延遲同步</p><span class="text-[10px] text-slate-600 mt-2 block">192.168.4.255: Pi5 → Pi Zero</span></div>
+                <div class="p-10 glass-card rounded-3xl border-b-4 border-blue-500"><h4 class="text-xl font-bold text-white mb-4">WebSocket</h4><p class="text-xs text-slate-500">中控 App 雙向指令鏈</p><span class="text-[10px] text-slate-600 mt-2 block">config/control/status channels</span></div>
+                <div class="p-10 glass-card rounded-3xl border-b-4 border-purple-500"><h4 class="text-xl font-bold text-white mb-4">Bluetooth SPP</h4><p class="text-xs text-slate-500">斷網環境備援通訊</p><span class="text-[10px] text-slate-600 mt-2 block">Auto-pairing + visor_bt_agent</span></div>
             </div>
-        </section>
-
-        <!-- 6. 效能優化 (Optimization) -->
-        <section id="optimization">
-            <div class="flex items-center gap-4 mb-16">
-                <i data-lucide="zap" class="text-cyan-400 w-10 h-10"></i>
-                <h2 class="text-4xl font-bold font-orbitron text-white uppercase tracking-tight">效能優化黑科技</h2>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-                <div class="h-[400px] glass-card p-10 rounded-3xl"><canvas id="fpsChartDetail"></canvas></div>
-                <div class="space-y-10">
-                    <div class="p-6 glass-card rounded-2xl"><h5 class="font-bold text-cyan-400 mb-2">AI 跳幀 (Frame Skipping)</h5><p class="text-sm text-slate-400">AI 每 2 幀處理一次，視覺維持 30 FPS，降低 50% CPU 佔用。</p></div>
-                    <div class="p-6 glass-card rounded-2xl"><h5 class="font-bold text-blue-400 mb-2">Asyncio 非阻塞</h5><p class="text-sm text-slate-400">確保 AI 運算不阻塞 Socket 通訊線程。</p></div>
+            <div class="mt-8 glass-card p-8 rounded-3xl">
+                <h4 class="text-lg font-bold text-white mb-4 text-center">一鍵部署流程</h4>
+                <div class="flex flex-wrap justify-center gap-4 text-xs">
+                    <div class="p-4 glass-card rounded-xl text-center"><i data-lucide="wifi" class="w-5 h-5 text-green-400 mx-auto mb-2"></i><p>SSH 連線<br><code class="text-cyan-400">pi5@pi5.local</code></p></div>
+                    <div class="flex items-center text-slate-600">→</div>
+                    <div class="p-4 glass-card rounded-xl text-center"><i data-lucide="upload" class="w-5 h-5 text-blue-400 mx-auto mb-2"></i><p>deploy.ps1<br><code class="text-cyan-400">scp scripts</code></p></div>
+                    <div class="flex items-center text-slate-600">→</div>
+                    <div class="p-4 glass-card rounded-xl text-center"><i data-lucide="play" class="w-5 h-5 text-purple-400 mx-auto mb-2"></i><p>systemctl<br><code class="text-cyan-400">visor-core</code></p></div>
                 </div>
             </div>
         </section>
 
-        <!-- 7. 未來展望與深度優化 (Future Roadmap) -->
         <section id="roadmap">
             <div class="flex items-center gap-4 mb-16">
                 <i data-lucide="trending-up" class="text-cyan-400 w-10 h-10"></i>
@@ -290,31 +545,42 @@ def classify_threat(self, det, class_name, history):
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div class="glass-card p-8 rounded-3xl border-t-2 border-cyan-500">
                     <i data-lucide="microchip" class="text-cyan-400 w-8 h-8 mb-6"></i>
-                    <h4 class="text-lg font-bold text-white mb-4">AI 運算強化</h4>
+                    <h4 class="text-lg font-bold text-white mb-4">ONNX INT8 量化</h4>
                     <p class="text-xs text-slate-500 leading-relaxed">
-                        計畫導入 OpenVINO 模型加速框架，並將 Centroid Tracker 升級為卡爾曼濾波器 (Kalman Filter)，提升物件遮擋時的追蹤穩定度。
+                        將 LSTR CULane 轉換為 ONNX + INT8 格式，預計提升 Pi 5 推論速度 2-5x (→ 20-25 FPS)，實現真正即時邊緣部署。
                     </p>
                 </div>
                 <div class="glass-card p-8 rounded-3xl border-t-2 border-blue-500">
-                    <i data-lucide="battery-charging" class="text-blue-400 w-8 h-8 mb-6"></i>
-                    <h4 class="text-lg font-bold text-white mb-4">智慧電源管理</h4>
+                    <i data-lucide="move-3d" class="text-blue-400 w-8 h-8 mb-6"></i>
+                    <h4 class="text-lg font-bold text-white mb-4">IMU 傾角校正</h4>
                     <p class="text-xs text-slate-500 leading-relaxed">
-                        連結 GPIO 與機車電門，實現自動騎乘/哨兵模式切換；並根據 CPU 溫度動態調整跳幀率，確保在夏日環境下的穩定性。
+                        導入 IMU (BNO055) 即時車身傾角數據，校正單眼距離估算誤差，並對彎道中的車道線進行視覺補償。
                     </p>
                 </div>
                 <div class="glass-card p-8 rounded-3xl border-t-2 border-purple-500">
                     <i data-lucide="zap" class="text-purple-400 w-8 h-8 mb-6"></i>
                     <h4 class="text-lg font-bold text-white mb-4">二進位協議</h4>
                     <p class="text-xs text-slate-500 leading-relaxed">
-                        通訊 Payload 將從 JSON 遷移至 Protobuf 格式，並導入 WebRTC 技術，實現 App 端近乎 0 延遲的影像串流。
+                        通訊 Payload 從 JSON 遷移至 Protobuf / CBOR 格式，搭配 WebRTC 實現 App 端低延遲影像串流。
                     </p>
                 </div>
                 <div class="glass-card p-8 rounded-3xl border-t-2 border-green-500">
-                    <i data-lucide="mic" class="text-green-400 w-8 h-8 mb-6"></i>
-                    <h4 class="text-lg font-bold text-white mb-4">全感官互動</h4>
+                    <i data-lucide="brain" class="text-green-400 w-8 h-8 mb-6"></i>
+                    <h4 class="text-lg font-bold text-white mb-4">軌跡預測</h4>
                     <p class="text-xs text-slate-500 leading-relaxed">
-                        開發語音控制模組與個人化危險路圖系統，將騎士多次急煞的地點標記為「專屬警戒彎道」，實現主動式預防。
+                        導入車輛軌跡預測模型 (Trajectory Prediction)，提前判定鄰車變換車道或切入行為，實現主動式防禦。
                     </p>
+                </div>
+            </div>
+
+            <div class="mt-12 glass-card p-10 rounded-3xl text-center">
+                <h3 class="text-2xl font-bold text-white mb-6">論文與報告進度</h3>
+                <div class="flex flex-wrap justify-center gap-8 text-xs">
+                    <div class="text-center"><div class="w-16 h-16 rounded-full bg-green-500/20 border-2 border-green-500 flex items-center justify-center mx-auto mb-2"><span class="text-green-400 font-bold text-xl">✓</span></div><span class="text-slate-400">第壹章 緒論</span></div>
+                    <div class="text-center"><div class="w-16 h-16 rounded-full bg-green-500/20 border-2 border-green-500 flex items-center justify-center mx-auto mb-2"><span class="text-green-400 font-bold text-xl">✓</span></div><span class="text-slate-400">第貳章 文獻探討</span></div>
+                    <div class="text-center"><div class="w-16 h-16 rounded-full bg-green-500/20 border-2 border-green-500 flex items-center justify-center mx-auto mb-2"><span class="text-green-400 font-bold text-xl">✓</span></div><span class="text-slate-400">第參章 研究方法</span></div>
+                    <div class="text-center"><div class="w-16 h-16 rounded-full bg-yellow-500/20 border-2 border-yellow-500 flex items-center justify-center mx-auto mb-2"><span class="text-yellow-400 font-bold text-xl">~</span></div><span class="text-slate-400">第肆章 系統設計</span></div>
+                    <div class="text-center"><div class="w-16 h-16 rounded-full bg-yellow-500/20 border-2 border-yellow-500 flex items-center justify-center mx-auto mb-2"><span class="text-yellow-400 font-bold text-xl">~</span></div><span class="text-slate-400">第伍章 問題解決</span></div>
                 </div>
             </div>
         </section>
@@ -323,22 +589,28 @@ def classify_threat(self, det, class_name, history):
 
     <footer class="py-24 border-t border-slate-900 text-center opacity-50">
         <p class="text-slate-600 text-[10px] font-mono tracking-[0.8em] uppercase">V.I.S.O.R. Technical Whitepaper &copy; 2026</p>
+        <p class="text-slate-700 text-[8px] font-mono tracking-[0.5em] mt-2">YOLOv26n + LSTR CULane + TorchScript + Spatial Fusion v2</p>
     </footer>
 
     <script>
         lucide.createIcons();
         const ctx = document.getElementById('fpsChartDetail').getContext('2d');
         new Chart(ctx, {
-            type: 'line',
+            type: 'bar',
             data: {
-                labels: ['v0.1', 'v0.5', 'v1.0', 'Optimized'],
+                labels: ['Baseline', '+ Skip-2', '+ TorchScript', '+ TTC v2'],
                 datasets: [{
                     label: 'FPS',
-                    data: [6, 12, 25, 28],
-                    borderColor: '#22d3ee',
-                    backgroundColor: 'rgba(34, 211, 238, 0.1)',
-                    fill: true,
-                    tension: 0.4
+                    data: [15.3, 31.9, 34.7, 32.5],
+                    backgroundColor: [
+                        'rgba(239, 68, 68, 0.6)',
+                        'rgba(234, 179, 8, 0.6)',
+                        'rgba(34, 211, 238, 0.6)',
+                        'rgba(34, 197, 94, 0.6)'
+                    ],
+                    borderColor: ['#ef4444', '#eab308', '#22d3ee', '#22c55e'],
+                    borderWidth: 2,
+                    borderRadius: 4
                 }]
             },
             options: {
@@ -346,7 +618,7 @@ def classify_threat(self, det, class_name, history):
                 maintainAspectRatio: false,
                 scales: {
                     x: { grid: { color: '#1e293b' }, ticks: { color: '#64748b' } },
-                    y: { grid: { color: '#1e293b' }, ticks: { color: '#64748b' } }
+                    y: { grid: { color: '#1e293b' }, ticks: { color: '#64748b' }, beginAtZero: true, max: 40 }
                 },
                 plugins: { legend: { display: false } }
             }
