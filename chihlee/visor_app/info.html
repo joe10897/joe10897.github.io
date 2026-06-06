@@ -28,6 +28,8 @@
         .neon-glow { text-shadow: 0 0 15px rgba(34, 211, 238, 0.6); }
         pre { background: #000 !important; border-radius: 12px; padding: 1.5rem; font-size: 0.7rem; border: 1px solid #1e293b; color: #22d3ee; overflow-x: auto; line-height: 1.6; }
         nav { background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        #mobile-menu { display: none; }
+        #mobile-menu.open { display: flex; }
     </style>
 </head>
 <body class="selection:bg-cyan-500 selection:text-black">
@@ -47,6 +49,19 @@
                 <a href="#comm" class="hover:text-cyan-400 transition-colors">通訊矩陣</a>
                 <a href="#roadmap" class="hover:text-cyan-400 transition-colors">未來展望</a>
             </div>
+            <button id="menu-btn" class="lg:hidden text-slate-400 hover:text-cyan-400 transition-colors" aria-label="選單">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+        <div id="mobile-menu" class="lg:hidden flex-col items-center gap-4 pb-6 text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
+            <a href="#overview" class="hover:text-cyan-400 transition-colors">系統概覽</a>
+            <a href="#vision" class="hover:text-cyan-400 transition-colors">視覺管道</a>
+            <a href="#training" class="hover:text-cyan-400 transition-colors">模型訓練</a>
+            <a href="#demos" class="hover:text-cyan-400 transition-colors">實測影片</a>
+            <a href="#optimization" class="hover:text-cyan-400 transition-colors">效能優化</a>
+            <a href="#app-console" class="hover:text-cyan-400 transition-colors">中控 App</a>
+            <a href="#comm" class="hover:text-cyan-400 transition-colors">通訊矩陣</a>
+            <a href="#roadmap" class="hover:text-cyan-400 transition-colors">未來展望</a>
         </div>
     </nav>
 
@@ -85,19 +100,21 @@
                     <div class="glass-card rounded-3xl p-8 border-t-4 border-cyan-500 h-full">
                         <h3 class="text-2xl font-bold text-white mb-4 text-center">Pipeline 架構</h3>
                         <div class="flex flex-col items-center gap-4 text-xs text-slate-400">
-                            <div class="grid grid-cols-5 gap-2 w-full text-center">
-                                <div class="p-3 glass-card rounded-xl border border-slate-700"><span class="text-cyan-400 font-bold block mb-1">Input</span>1280x720<br>@ 30 fps</div>
-                                <div class="flex items-center justify-center text-slate-600 text-2xl">→</div>
-                                <div class="p-3 glass-card rounded-xl border border-slate-700"><span class="text-blue-400 font-bold block mb-1">YOLOv26n</span>2.6M params<br>imgsz=320</div>
-                                <div class="flex items-center justify-center text-slate-600 text-2xl">→</div>
-                                <div class="p-3 glass-card rounded-xl border border-slate-700"><span class="text-green-400 font-bold block mb-1">LSTR CULane</span>TorchScript<br>765K params</div>
-                            </div>
-                            <div class="text-slate-600 text-2xl">↓</div>
-                            <div class="grid grid-cols-3 gap-2 w-full text-center">
-                                <div class="p-3 glass-card rounded-xl border border-slate-700"><span class="text-purple-400 font-bold block mb-1">Spatial Fusion v2</span>Per-class dist · EMA TTC</div>
-                                <div class="p-3 glass-card rounded-xl border border-slate-700"><span class="text-orange-400 font-bold block mb-1">3-Tier Threat</span>critical/warning/caution</div>
-                                <div class="p-3 glass-card rounded-xl border border-slate-700"><span class="text-pink-400 font-bold block mb-1">HUD Render</span>Lane carpet + 4-color</div>
-                            </div>
+            <div class="flex flex-col md:flex-row items-center gap-3 w-full text-center">
+                <div class="flex flex-wrap justify-center items-center gap-2 w-full">
+                    <div class="p-3 glass-card rounded-xl border border-slate-700 flex-1 min-w-[80px]"><span class="text-cyan-400 font-bold block mb-1 text-[10px] md:text-xs">Input</span><span class="text-[10px] md:text-xs">1280x720<br>@ 30 fps</span></div>
+                    <div class="flex items-center justify-center text-slate-600 text-xl md:text-2xl">→</div>
+                    <div class="p-3 glass-card rounded-xl border border-slate-700 flex-1 min-w-[80px]"><span class="text-blue-400 font-bold block mb-1 text-[10px] md:text-xs">YOLOv26n</span><span class="text-[10px] md:text-xs">2.6M params<br>imgsz=320</span></div>
+                    <div class="flex items-center justify-center text-slate-600 text-xl md:text-2xl">→</div>
+                    <div class="p-3 glass-card rounded-xl border border-slate-700 flex-1 min-w-[80px]"><span class="text-green-400 font-bold block mb-1 text-[10px] md:text-xs">LSTR CULane</span><span class="text-[10px] md:text-xs">TorchScript<br>765K params</span></div>
+                </div>
+            </div>
+            <div class="text-slate-600 text-2xl">↓</div>
+            <div class="flex flex-wrap justify-center items-center gap-2 w-full">
+                <div class="p-3 glass-card rounded-xl border border-slate-700 flex-1 min-w-[90px] text-center"><span class="text-purple-400 font-bold block mb-1 text-[10px] md:text-xs">Spatial Fusion v2</span><span class="text-[10px] md:text-xs">Per-class · EMA TTC</span></div>
+                <div class="p-3 glass-card rounded-xl border border-slate-700 flex-1 min-w-[90px] text-center"><span class="text-orange-400 font-bold block mb-1 text-[10px] md:text-xs">3-Tier Threat</span><span class="text-[10px] md:text-xs">crit/warn/caution</span></div>
+                <div class="p-3 glass-card rounded-xl border border-slate-700 flex-1 min-w-[90px] text-center"><span class="text-pink-400 font-bold block mb-1 text-[10px] md:text-xs">HUD Render</span><span class="text-[10px] md:text-xs">Lane + 4-color</span></div>
+            </div>
                         </div>
                     </div>
                 </div>
@@ -186,7 +203,7 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
-                <div class="glass-card p-8 rounded-3xl">
+                <div class="glass-card p-4 md:p-8 rounded-3xl overflow-x-auto">
                     <h4 class="text-lg font-bold text-white mb-4">Per-Class 真實寬度</h4>
                     <table class="w-full text-xs text-slate-400">
                         <thead><tr class="border-b border-slate-700 text-cyan-400">
@@ -359,7 +376,7 @@ if track_age &lt; 3:
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center mb-16">
-                <div class="h-[400px] glass-card p-10 rounded-3xl">
+                <div class="h-[250px] md:h-[400px] glass-card p-4 md:p-10 rounded-3xl">
                     <canvas id="fpsChartDetail"></canvas>
                 </div>
                 <div class="space-y-8">
@@ -394,8 +411,8 @@ if track_age &lt; 3:
                 </div>
             </div>
 
-            <div class="glass-card p-10 rounded-3xl mb-12">
-                <h3 class="text-2xl font-bold text-white mb-8 text-center">優化歷程 (Windows CPU Benchmark)</h3>
+            <div class="glass-card p-6 md:p-10 rounded-3xl mb-12">
+                <h3 class="text-xl md:text-2xl font-bold text-white mb-8 text-center">優化歷程 (Windows CPU Benchmark)</h3>
                 <div class="space-y-6">
                     <div>
                         <div class="flex justify-between text-sm mb-2">
@@ -521,9 +538,9 @@ if track_age &lt; 3:
                 <h2 class="text-4xl font-bold font-orbitron text-white uppercase tracking-tight">分散式通訊矩陣</h2>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div class="p-10 glass-card rounded-3xl border-b-4 border-cyan-500"><h4 class="text-xl font-bold text-white mb-4">UDP Broadcast</h4><p class="text-xs text-slate-500">HUD 視覺零延遲同步</p><span class="text-[10px] text-slate-600 mt-2 block">192.168.4.255: Pi5 → Pi Zero</span></div>
-                <div class="p-10 glass-card rounded-3xl border-b-4 border-blue-500"><h4 class="text-xl font-bold text-white mb-4">WebSocket</h4><p class="text-xs text-slate-500">中控 App 雙向指令鏈</p><span class="text-[10px] text-slate-600 mt-2 block">config/control/status channels</span></div>
-                <div class="p-10 glass-card rounded-3xl border-b-4 border-purple-500"><h4 class="text-xl font-bold text-white mb-4">Bluetooth SPP</h4><p class="text-xs text-slate-500">斷網環境備援通訊</p><span class="text-[10px] text-slate-600 mt-2 block">Auto-pairing + visor_bt_agent</span></div>
+                <div class="p-6 md:p-10 glass-card rounded-3xl border-b-4 border-cyan-500"><h4 class="text-lg md:text-xl font-bold text-white mb-4">UDP Broadcast</h4><p class="text-xs text-slate-500">HUD 視覺零延遲同步</p><span class="text-[10px] text-slate-600 mt-2 block">192.168.4.255: Pi5 → Pi Zero</span></div>
+                <div class="p-6 md:p-10 glass-card rounded-3xl border-b-4 border-blue-500"><h4 class="text-lg md:text-xl font-bold text-white mb-4">WebSocket</h4><p class="text-xs text-slate-500">中控 App 雙向指令鏈</p><span class="text-[10px] text-slate-600 mt-2 block">config/control/status channels</span></div>
+                <div class="p-6 md:p-10 glass-card rounded-3xl border-b-4 border-purple-500"><h4 class="text-lg md:text-xl font-bold text-white mb-4">Bluetooth SPP</h4><p class="text-xs text-slate-500">斷網環境備援通訊</p><span class="text-[10px] text-slate-600 mt-2 block">Auto-pairing + visor_bt_agent</span></div>
             </div>
             <div class="mt-8 glass-card p-8 rounded-3xl">
                 <h4 class="text-lg font-bold text-white mb-4 text-center">一鍵部署流程</h4>
@@ -595,6 +612,12 @@ if track_age &lt; 3:
 
     <script>
         lucide.createIcons();
+
+        // Hamburger menu toggle
+        document.getElementById('menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('open');
+        });
+
         const ctx = document.getElementById('fpsChartDetail').getContext('2d');
         new Chart(ctx, {
             type: 'bar',
