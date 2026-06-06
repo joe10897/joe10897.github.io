@@ -12,7 +12,6 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://images.unsplash.com">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500&family=Orbitron:wght@400;700&family=Noto+Sans+TC:wght@300;500;900&display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -54,7 +53,7 @@
     <header class="relative min-h-[80vh] flex items-center justify-center pt-20 overflow-hidden">
         <div class="absolute inset-0 z-0">
             <div class="absolute inset-0 bg-gradient-to-b from-transparent via-bg-dark/70 to-bg-dark z-10"></div>
-            <img src="https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2070&auto=format&fit=crop" alt="Motorcycle background" loading="lazy" class="w-full h-full object-cover opacity-25 grayscale scale-110">
+            <img src="info.png" alt="V.I.S.O.R. System" class="w-full h-full object-cover opacity-60">
         </div>
         <div class="relative z-20 text-center px-6">
             <h1 class="text-5xl md:text-7xl font-black font-orbitron mb-4 tracking-tighter text-white uppercase neon-glow leading-none">V.I.S.O.R.</h1>
@@ -69,7 +68,7 @@
                 <span class="px-4 py-2 glass-card rounded-full border-purple-500/30 text-purple-300">YOLOv26n 2.6M</span>
                 <span class="px-4 py-2 glass-card rounded-full border-green-500/30 text-green-300">LSTR CULane TS</span>
                 <span class="px-4 py-2 glass-card rounded-full border-orange-500/30 text-orange-300">Per-class -3m dist</span>
-                <span class="px-4 py-2 glass-card rounded-full border-pink-500/30 text-pink-300">Kalman EMA TTC</span>
+                <span class="px-4 py-2 glass-card rounded-full border-pink-500/30 text-pink-300">EMA TTC</span>
             </div>
         </div>
     </header>
@@ -95,7 +94,7 @@
                             </div>
                             <div class="text-slate-600 text-2xl">↓</div>
                             <div class="grid grid-cols-3 gap-2 w-full text-center">
-                                <div class="p-3 glass-card rounded-xl border border-slate-700"><span class="text-purple-400 font-bold block mb-1">Spatial Fusion v2</span>Per-class dist - Kalman TTC</div>
+                                <div class="p-3 glass-card rounded-xl border border-slate-700"><span class="text-purple-400 font-bold block mb-1">Spatial Fusion v2</span>Per-class dist · EMA TTC</div>
                                 <div class="p-3 glass-card rounded-xl border border-slate-700"><span class="text-orange-400 font-bold block mb-1">3-Tier Threat</span>critical/warning/caution</div>
                                 <div class="p-3 glass-card rounded-xl border border-slate-700"><span class="text-pink-400 font-bold block mb-1">HUD Render</span>Lane carpet + 4-color</div>
                             </div>
@@ -141,7 +140,7 @@
                 <div class="text-center p-6 glass-card rounded-2xl">
                     <i data-lucide="fingerprint" class="text-purple-500 w-8 h-8 mx-auto mb-4"></i>
                     <h5 class="font-bold text-white mb-2">Spatial Fusion v2</h5>
-                    <p class="text-xs text-slate-500">Kalman EMA Speed<br>Per-class -3m dist</p>
+                    <p class="text-xs text-slate-500">EMA Speed<br>Per-class -3m dist</p>
                 </div>
                 <div class="text-center p-6 glass-card rounded-2xl">
                     <i data-lucide="alert-triangle" class="text-orange-500 w-8 h-8 mx-auto mb-4"></i>
@@ -172,7 +171,7 @@
                         <i data-lucide="shield-alert" class="text-orange-400 w-5 h-5"></i> 距離估算 + TTC 威脅分級
                     </h4>
                     <p class="text-sm text-slate-400 leading-relaxed">
-                        基於 <strong class="text-white">per-class 真實寬度</strong> 的單眼距離估算（pinhole model），搭配 <strong class="text-white">-3m 偏移</strong>（相機至車尾中心校正）。Kalman EMA 追蹤相對速度，TTC 閾值針對機車煞車距離收緊。
+                        基於 <strong class="text-white">per-class 真實寬度</strong> 的單眼距離估算（pinhole model），搭配 <strong class="text-white">-3m 偏移</strong>（相機至車尾中心校正）。EMA 追蹤相對速度，TTC 閾值針對機車煞車距離收緊。
                     </p>
                     <div class="p-6 bg-slate-900/50 border border-slate-800 rounded-2xl">
                         <ul class="space-y-3 text-xs text-slate-500">
@@ -233,7 +232,7 @@ TTC_CRITICAL, TTC_WARNING, TTC_CAUTION = 1.0, 1.5, 2.5
 
 dist = (CLASS_WIDTHS[cls] * focal) / bbox_w - 3  # per-class -3m offset
 ttc  = dist / max(rel_speed, 0.1)
-rel_speed = Kalman_EMA(prev_dist, cur_dist, dt, alpha=0.4)
+rel_speed = EMA_speed(prev_dist, cur_dist, dt, alpha=0.4)
 
 # Lane-position gating
 if lane_pos == "IN_LANE":
