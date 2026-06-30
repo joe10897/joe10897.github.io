@@ -566,6 +566,28 @@
             color: var(--brand-teal);
         }
 
+        /* Slide 1 Title Logo */
+        .title-slide-logo {
+            font-family: var(--font-sans);
+            font-size: 64px;
+            font-weight: 700;
+            letter-spacing: 10px;
+            color: var(--brand-navy);
+            text-shadow: 0 0 40px rgba(0, 80, 136, 0.15), 0 0 80px rgba(13, 148, 136, 0.1);
+            margin-bottom: 8px;
+            user-select: none;
+        }
+        .title-slide-logo .cursor-blink {
+            display: inline-block;
+            color: var(--brand-teal);
+            font-weight: 300;
+            animation: cursorBlink 0.9s step-end infinite;
+        }
+        @keyframes cursorBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
         /* Slide 1 background animation */
         .radar-pulse-wave {
             position: absolute;
@@ -965,7 +987,7 @@
                             <span class="slide-num">02</span> Rider Safety Reality
                         </div>
                         <div class="slide-link" onclick="goToSlide(3)">
-                            <span class="slide-num">03</span> Defining Visual Blind Spots
+                            <span class="slide-num">03</span> The V.I.S.O.R. Proposal
                         </div>
                     </div>
 
@@ -973,10 +995,10 @@
                     <div class="chapter-section">
                         <div class="chapter-title">II. Literature Review & Foundation</div>
                         <div class="slide-link" onclick="goToSlide(4)">
-                            <span class="slide-num">04</span> Literature Gap Analysis
+                            <span class="slide-num">04</span> ARAS: Active Rider Assistance
                         </div>
                         <div class="slide-link" onclick="goToSlide(5)">
-                            <span class="slide-num">05</span> The Edge AI Imperative
+                            <span class="slide-num">05</span> Edge AI & YOLO Selection
                         </div>
                         <div class="slide-link" onclick="goToSlide(6)">
                             <span class="slide-num">06</span> Distributed Compute Nodes
@@ -1072,7 +1094,7 @@
 
                 <div class="slide-content-container"
                     style="justify-content: center; align-items: flex-start; position:relative; z-index:10;">
-                    <div class="title-slide-logo">V.I.S.O.R.<span>_</span></div>
+                    <div class="title-slide-logo">V.I.S.O.R.<span class="cursor-blink">_</span></div>
                     <h2
                         style="font-size: 38px; font-weight: 700; color: var(--brand-navy); margin-bottom: 10px; line-height: 1.2;">
                         Advanced Rider Assistance with Visual Intelligent Safety on Road
@@ -1120,41 +1142,50 @@
                         <div class="slide-header-logo">Paper ID: 20</div>
                     </header>
                     <div class="slide-body">
-                        <div class="grid-2col">
+                        <div class="grid-2col" style="align-items: start;">
                             <div>
-                                <p style="font-size: 18px; line-height: 1.7; margin-bottom: 20px;">
+                                <p style="font-size: 17px; line-height: 1.6; margin-bottom: 16px;">
                                     In high-density mixed traffic, motorcycle riders are the <strong>Vulnerable Road Users (VRUs)</strong>. Traffic conflicts and blind spots directly amplify injury and fatality risks.
                                 </p>
-                                <ul class="bullet-list danger">
+                                <ul class="bullet-list danger" style="font-size: 15px;">
                                     <li><strong>Asymmetrical Protection:</strong> Motorcycles lack rigid protective structural frames, causing a fatality rate up to <strong>28 times</strong> higher than passenger cars.</li>
                                     <li><strong>Environmental Blind Spots:</strong> Riders must react in split-seconds to improper lane changes, tailgating, or sudden braking.</li>
-                                    <li><strong>No Dedicated Solutions:</strong> Commercial ADAS and radars are designed for cars, being bulky and expensive, which prevents popularization on budget bikes.</li>
+                                    <li><strong>No Dedicated Solutions:</strong> Commercial ADAS and radars are designed for cars — bulky, expensive, and impossible to install on budget 125cc scooters.</li>
                                 </ul>
                             </div>
-                            <div class="graphic-wrapper"
-                                style="background: radial-gradient(circle, #fff0f3 0%, #ffffff 100%); cursor: pointer;"
-                                onclick="playWarningBeep(880, 0.15)">
-                                <i class="fa-solid fa-triangle-exclamation"
-                                    style="font-size: 64px; color: var(--alert-red); margin-bottom: 20px; animation: pulseRadar 2s infinite alternate;"></i>
-                                <h3
-                                    style="color: var(--alert-red); text-align: center; font-size: 20px; margin-bottom: 10px;">
-                                    High-Density Roadway Conflicts</h3>
-                                <p style="text-align: center; font-size: 14px;">Chaotic lanes and frequent overtaking require millisecond-level 360-degree dynamic detection to prevent blind-spot collisions.<br><strong
-                                        style="font-size:12px; color:var(--text-muted); font-weight:normal;">(Click cards to simulate active warning sounds)</strong>
-                                </p>
+                            <div style="display: flex; flex-direction: column; gap: 15px; justify-content: center;">
+                                <!-- Stat Card 1 -->
+                                <div style="background: #fff5f5; border: 1px solid #fecaca; border-left: 5px solid var(--alert-red); border-radius: 10px; padding: 16px 18px;">
+                                    <div style="font-size: 36px; font-weight: 800; color: var(--alert-red); line-height: 1;">61.74<small style="font-size: 18px;">%</small></div>
+                                    <p style="font-size: 13px; color: var(--text-secondary); margin: 4px 0 0 0; line-height: 1.3;">
+                                        of all fatal &amp; injury traffic accidents in Taiwan (2023) involve motorcycles — the <strong>highest proportion</strong> among all vehicle types.
+                                    </p>
+                                </div>
+                                <!-- Stat Card 2 -->
+                                <div style="background: #fff7ed; border: 1px solid #fed7aa; border-left: 5px solid var(--alert-amber); border-radius: 10px; padding: 16px 18px;">
+                                    <div style="font-size: 36px; font-weight: 800; color: var(--alert-amber); line-height: 1;">1 in 3</div>
+                                    <p style="font-size: 13px; color: var(--text-secondary); margin: 4px 0 0 0; line-height: 1.3;">
+                                        victims are young riders aged <strong>18 to 24</strong> — lack of experience, tailgating, and failure to notice road conditions are the leading causes.
+                                    </p>
+                                </div>
+                                <!-- Bottom note -->
+                                <div style="text-align: center; font-size: 11px; color: var(--text-muted);">
+                                    <i class="fa-solid fa-circle-exclamation" style="color: var(--alert-red);"></i>
+                                    Cars now have ADAS / Radar / AEB / BSD. Motorcycles have <strong style="color: var(--alert-red);">nothing</strong>.
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Slide 3: Motivation - Defining Visual Blind Spots (INTERACTIVE RADAR FOV) -->
+            <!-- Slide 3: Proposal - V.I.S.O.R. System Overview -->
             <section class="slide-frame" id="slide-3">
                 <div class="slide-content-container">
                     <header class="slide-header">
                         <div class="slide-header-left">
                             <span class="chapter-indicator">I. Introduction & Motivation</span>
-                            <h1 class="slide-headline">Interactive Visual Blind Spots</h1>
+                            <h1 class="slide-headline">The V.I.S.O.R. Proposal</h1>
                         </div>
                         <div class="slide-header-logo">Paper ID: 20</div>
                     </header>
@@ -1162,155 +1193,195 @@
                         <div class="grid-2col">
                             <div class="graphic-wrapper" id="radar-interactive-area"
                                 style="position: relative; cursor: crosshair;">
-                                <!-- Active Radar SVG -->
                                 <svg viewBox="0 0 400 300"
                                     style="width: 100%; height: auto; position: relative; z-index: 10;">
-                                    <!-- Concentric scanning circles -->
                                     <circle cx="200" cy="150" r="140" fill="none" stroke="rgba(13, 148, 136, 0.1)"
                                         stroke-width="1"></circle>
                                     <circle cx="200" cy="150" r="100" fill="none" stroke="rgba(13, 148, 136, 0.1)"
                                         stroke-width="1"></circle>
                                     <circle cx="200" cy="150" r="60" fill="none" stroke="rgba(13, 148, 136, 0.1)"
                                         stroke-width="1"></circle>
-
-                                    <!-- Radar Sweep Animation line -->
                                     <line x1="200" y1="150" x2="340" y2="150" id="radar-sweep-hand"
                                         stroke="rgba(13, 148, 136, 0.3)" stroke-width="2"
                                         transform="rotate(0, 200, 150)"></line>
-
-                                    <!-- Front FOV -->
                                     <path id="fov-front-path" d="M200,150 L120,60 A120,120 0 0,1 280,60 Z"
                                         fill="rgba(13, 148, 136, 0.12)" stroke="var(--brand-teal)" stroke-width="2">
                                     </path>
-                                    <!-- Rear FOV -->
                                     <path id="fov-rear-path" d="M200,150 L80,230 A160,160 0 0,0 320,230 Z"
                                         fill="rgba(13, 148, 136, 0.12)" stroke="var(--brand-teal)" stroke-width="2">
                                     </path>
-
-                                    <!-- Motorcycle Icon centered -->
                                     <g id="bike-icon">
                                         <circle cx="200" cy="150" r="22" fill="#ffffff" stroke="var(--brand-navy)"
                                             stroke-width="3"></circle>
                                         <path d="M194,142 L206,142 L203,165 L197,165 Z" fill="var(--brand-navy)"></path>
                                         <circle cx="200" cy="138" r="4" fill="var(--brand-teal)"></circle>
                                     </g>
-
-                                    <!-- Dynamically positioned Threat dot -->
                                     <circle cx="-50" cy="-50" r="8" id="threat-dot" fill="var(--alert-red)"
                                         style="transition: transform 0.05s linear; display: none;"></circle>
                                 </svg>
                                 <div
                                     style="position: absolute; bottom: 15px; left: 0; right: 0; text-align: center; font-size: 11px; font-weight: bold; color: var(--text-secondary); pointer-events: none;">
-                                    ? <span id="radar-status-text" class="text-accent">Move cursor/finger on the radar area to simulate threat vehicles.</span>
+                                    ? <span id="radar-status-text" class="text-accent">Move cursor on the radar area to simulate threat vehicles approaching.</span>
                                 </div>
                             </div>
                             <div>
-                                <h3>V.I.S.O.R. 280° Wide-Angle Perception</h3>
-                                <p>This project designs a low-cost, pure-vision, all-around active safety shield:</p>
-                                <ul class="bullet-list">
-                                    <li><strong>Dual-Direction Monitoring:</strong> Front 120° and rear 160° lenses eliminate lateral and rear blind spots.</li>
-                                    <li><strong>Dynamic Threat Zoning:</strong> Instantly identifies threat entry points, switching automatically between front and rear alarms.</li>
-                                    <li><strong>3D Spatialized Audio:</strong> Helmet audio points to the direction of threats (e.g. left rear), enabling intuitive reflexes.</li>
-                                </ul>
+                                <h3 style="font-size: 18px; color: var(--brand-navy); margin-bottom: 8px;">We propose the visually intelligent, cost-effective <span style="color: var(--brand-teal);">V.I.S.O.R.</span> system</h3>
+                                <p style="font-size: 15px; line-height: 1.6; margin-bottom: 16px;">
+                                    A low-cost, pure-vision, all-around active safety shield built for the motorcycle community — turning a passive helmet into an <strong>active electronic protection system</strong>.
+                                </p>
+                                <div style="background: var(--brand-teal-light); border-radius: 10px; padding: 14px; border: 1px solid #ccfbf1;">
+                                    <div style="font-size: 11px; font-weight: 700; color: var(--brand-teal); text-transform: uppercase; margin-bottom: 6px;">Key Design Pillars</div>
+                                    <ul class="bullet-list" style="font-size: 14px;">
+                                        <li><strong>Dual-Direction Monitoring:</strong> Front 120° + rear 160° lenses → <strong>~280°</strong> blind-spot-free coverage.</li>
+                                        <li><strong>Dynamic Threat Zoning:</strong> Instantly classifies threat entry points, auto-switching front/rear alarms based on approach vector.</li>
+                                        <li><strong>3D Spatialized Audio:</strong> Helmet speakers pinpoint threat direction — left-rear, right-rear, front — enabling intuitive reflexive response without looking.</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Slide 4: Lit Review - Traditional ADAS vs. Two-Wheeler Realities -->
+            <!-- Slide 4: ARAS Positioning & Edge AI Challenges -->
             <section class="slide-frame" id="slide-4">
                 <div class="slide-content-container">
                     <header class="slide-header">
                         <div class="slide-header-left">
                             <span class="chapter-indicator">II. Literature Review & Foundation</span>
-                            <h1 class="slide-headline">ADAS vs. Motorcycle Realities</h1>
-                        </div>
-                        <div class="slide-header-logo">Paper ID: 20</div>
-                    </header>
-                    <div class="slide-body">
-                        <p style="margin-bottom: 20px; font-size: 16px;">
-                            Why is porting car ADAS to motorcycles bound to fail? Below is a comparison of hardware, physics, and compute budgets:
-                        </p>
-                        <table class="comparison-table">
-                            <thead>
-                                <tr>
-                                    <th>Parameter</th>
-                                    <th>Traditional Car ADAS</th>
-                                    <th>Two-Wheeled Realities</th>
-                                    <th>V.I.S.O.R. Design</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>Sensor Cost</strong></td>
-                                    <td>Expensive LiDAR / radar arrays</td>
-                                    <td>Budget-sensitive. Hardware budget < $100</td>
-                                    <td class="text-accent">Dual monocular vision + Raspberry Pi</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Physical Dynamics</strong></td>
-                                    <td>Remains level; minor roll and pitch</td>
-                                    <td>Severe lean angles during cornering (up to 45° - 50°)</td>
-                                    <td class="text-accent">6-axis IMU fusion to dynamically correct ROI</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Communication</strong></td>
-                                    <td>Wired CAN Bus; no strict latency limit</td>
-                                    <td>Limited space; requires millisecond wireless sync</td>
-                                    <td class="text-accent">UDP 2.4GHz AP + BLE persistent link</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Lane Departure</strong></td>
-                                    <td>Relies on expensive manually-calibrated regression</td>
-                                    <td>Severe vibration causes regression filters to fail</td>
-                                    <td class="text-accent">Lightweight end-to-end AI lane filtering</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Slide 5: Lit Review - Why Edge AI & Pure Vision -->
-            <section class="slide-frame" id="slide-5">
-                <div class="slide-content-container">
-                    <header class="slide-header">
-                        <div class="slide-header-left">
-                            <span class="chapter-indicator">II. Literature Review & Foundation</span>
-                            <h1 class="slide-headline">The Shift to Edge AI & Pure Vision</h1>
+                            <h1 class="slide-headline">ARAS: Active Rider Assistance</h1>
                         </div>
                         <div class="slide-header-logo">Paper ID: 20</div>
                     </header>
                     <div class="slide-body">
                         <div class="grid-2col">
                             <div>
-                                <h3>Edge-Based Vision Neural Network Evolution</h3>
-                                <p>
-                                    Past onboard systems only ran simple feature matching, failing in tunnels, rain, or night. V.I.S.O.R. pursues a Pure Vision AI approach:
+                                <h3 style="font-size: 16px; color: var(--brand-navy); margin-bottom: 8px;">From Passive Protection to Active Intervention</h3>
+                                <p style="font-size: 14px; line-height: 1.6; margin-bottom: 12px;">
+                                    Unlike <strong>ABS or helmets</strong> that only protect riders <em>after</em> an accident occurs, our research positions itself as an <strong>ARAS (Advanced Rider Assistance System)</strong>. The goal is to use sensors and AI algorithms to <strong style="color: var(--brand-teal);">monitor the environment in real time and proactively intervene with warnings</strong> — preventing the accident before it happens.
                                 </p>
-                                <ul class="bullet-list">
-                                    <li><strong>Global Context Extraction:</strong> CNN/Self-Attention architecture allows the AI to infer vehicle and lane contours even when partially occluded.</li>
-                                    <li><strong>Eliminating Manual Thresholds:</strong> Discards classical filters (e.g. Canny, Sobel) requiring engineers to manually recalibrate variables under different weather.</li>
-                                    </li>
-                                    <li><strong>Robust Generalization:</strong> Trained on diverse weather, lighting, and night datasets to achieve adaptive performance across scenarios.</li>
-                                </ul>
+                                <div style="display: flex; gap: 10px; margin-bottom: 14px;">
+                                    <div style="flex:1; background: #fef2f2; border-radius: 8px; padding: 10px; text-align: center; border: 1px solid #fecaca;">
+                                        <i class="fa-solid fa-shield" style="font-size: 20px; color: var(--alert-red); margin-bottom: 4px; display: block;"></i>
+                                        <span style="font-size: 10px; color: var(--alert-red); font-weight: 700;">PASSIVE</span>
+                                        <p style="font-size: 9px; color: var(--text-muted); margin: 2px 0 0 0;">ABS / Helmet<br>Accident-only protection</p>
+                                    </div>
+                                    <div style="flex:1; background: var(--brand-teal-light); border-radius: 8px; padding: 10px; text-align: center; border: 2px solid var(--brand-teal);">
+                                        <i class="fa-solid fa-bolt" style="font-size: 20px; color: var(--brand-teal); margin-bottom: 4px; display: block;"></i>
+                                        <span style="font-size: 10px; color: var(--brand-teal); font-weight: 700;">ACTIVE</span>
+                                        <p style="font-size: 9px; color: var(--text-muted); margin: 2px 0 0 0;">ARAS (Ours)<br>Pre-crash intervention</p>
+                                    </div>
+                                </div>
+                                <h3 style="font-size: 15px; color: var(--brand-navy); margin-bottom: 6px;">The Edge AI Challenge</h3>
+                                <p style="font-size: 13px; line-height: 1.5; color: var(--text-secondary);">
+                                    Running AI vision on an edge device means two critical bottlenecks: <strong>small-object detection</strong> at distance and <strong>extremely limited compute resources</strong>. Every millisecond counts when you're moving at 60 km/h.
+                                </p>
                             </div>
-                            <div class="tech-card teal-header"
-                                style="background-color: var(--bg-primary); display: flex; flex-direction: column; justify-content: center;">
-                                <h4 style="font-size: 16px; margin-bottom: 12px; color: var(--brand-navy);"><i
-                                        class="fa-solid fa-code-branch"></i> Vision Pipeline Flow</h4>
-                                <div style="font-family: var(--font-mono); font-size: 13px; line-height: 1.8;">
-                                    <div style="color: var(--brand-teal);">[Raw Frame] (Dual Cameras)</div>
-                                    <div style="padding-left: 15px; color: var(--text-secondary);">↓ Grayscale + LAB
-                                        Space</div>
-                                    <div style="padding-left: 15px; color: var(--text-secondary);">↓ Adaptive CLAHE
-                                        Enhancer</div>
-                                    <div style="color: var(--brand-navy);">[YOLO Engine] (320px Scale Down)</div>
-                                    <div style="padding-left: 15px; color: var(--text-secondary);">↓ Fast Centroid
-                                        Tracker</div>
-                                    <div style="padding-left: 15px; color: var(--text-secondary);">↓ Monocular Geometry & TTC Estimation</div>
-                                    <div style="color: var(--alert-red);">[Multi-Threaded HMI & HUD Warnings]</div>
+                            <div>
+                                <h3 style="font-size: 15px; color: var(--brand-navy); margin-bottom: 8px;">Why Car ADAS Fails on Motorcycles</h3>
+                                <table class="comparison-table" style="font-size: 9px;">
+                                    <thead>
+                                        <tr>
+                                            <th>Parameter</th>
+                                            <th>Traditional Car ADAS</th>
+                                            <th>V.I.S.O.R. Design</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Sensor Cost</strong></td>
+                                            <td>Expensive LiDAR / radar arrays</td>
+                                            <td class="text-accent">Dual monocular vision + Raspberry Pi &lt;$100</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Physical Dynamics</strong></td>
+                                            <td>Remains level; minor roll and pitch</td>
+                                            <td class="text-accent">6-axis IMU fusion to correct 45° lean angle ROI</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Communication</strong></td>
+                                            <td>Wired CAN Bus</td>
+                                            <td class="text-accent">UDP 2.4GHz AP + BLE (&lt;15ms)</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Lane Departure</strong></td>
+                                            <td>Expensive manual-calibration regression</td>
+                                            <td class="text-accent">Lightweight end-to-end AI lane filtering</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Target User</strong></td>
+                                            <td>High-end passenger vehicles</td>
+                                            <td class="text-accent">Budget 125cc–150cc scooters</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 5: Edge Computing & YOLO Selection -->
+            <section class="slide-frame" id="slide-5">
+                <div class="slide-content-container">
+                    <header class="slide-header">
+                        <div class="slide-header-left">
+                            <span class="chapter-indicator">II. Literature Review & Foundation</span>
+                            <h1 class="slide-headline">Edge AI Computing & YOLO Selection</h1>
+                        </div>
+                        <div class="slide-header-logo">Paper ID: 20</div>
+                    </header>
+                    <div class="slide-body">
+                        <div class="grid-2col">
+                            <div>
+                                <h3 style="font-size: 16px;">Edge Computing Environment</h3>
+                                <div style="background: var(--bg-primary); border-radius: 10px; padding: 14px; border: 1px solid var(--border-light); margin-bottom: 14px;">
+                                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                        <div style="width: 40px; height: 40px; background: var(--brand-navy); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fa-solid fa-microchip" style="color: #fff; font-size: 18px;"></i>
+                                        </div>
+                                        <div>
+                                            <strong style="font-size: 14px; color: var(--brand-navy);">Raspberry Pi 5</strong>
+                                            <p style="font-size: 11px; color: var(--text-muted); margin: 0;">Broadcom BCM2712, 4× Cortex-A76 @ 2.4GHz, 8GB RAM</p>
+                                        </div>
+                                    </div>
+                                    <ul style="font-size: 12px; color: var(--text-secondary); list-style: none; padding: 0; line-height: 1.6;">
+                                        <li><i class="fa-solid fa-check-circle" style="color: var(--brand-teal); width: 16px;"></i> <strong>CPU-only</strong> — No GPU / CUDA dependency</li>
+                                        <li><i class="fa-solid fa-check-circle" style="color: var(--brand-teal); width: 16px;"></i> <strong>&lt;$100</strong> — Affordable for mass adoption</li>
+                                        <li><i class="fa-solid fa-triangle-exclamation" style="color: var(--alert-amber); width: 16px;"></i> <strong>Constraint:</strong> ~4× slower than desktop x86 CPU</li>
+                                    </ul>
+                                </div>
+
+                                <h3 style="font-size: 15px;">Why YOLOv8n → YOLOv26n?</h3>
+                                <p style="font-size: 13px; line-height: 1.5; color: var(--text-secondary); margin-bottom: 8px;">
+                                    In our initial paper draft, we adopted <strong style="color: var(--brand-navy);">YOLOv8n (Nano)</strong> — a proven, stable anchor-free detector with 3.2M parameters.
+                                </p>
+                                <ul class="bullet-list" style="font-size: 13px;">
+                                    <li><strong>Anchor-Free Detection:</strong> Eliminates anchor box hyperparameter tuning — adapts naturally to varied motorcycle viewpoints.</li>
+                                    <li><strong>Lightweight &amp; Proven:</strong> Only <strong>3.2M parameters</strong> — fits in Pi 5 memory with room for lane detection and tracking. Extensive community validation ensures stability.</li>
+                                    <li><strong>Optimized for 320px:</strong> Downscaled input reduces compute matrix by <strong>75%</strong> while preserving detection accuracy after domain-adaptation fine-tuning.</li>
+                                </ul>
+                                <div style="margin-top: 12px; background: #f0fdfa; border-left: 3px solid var(--brand-teal); border-radius: 4px; padding: 8px 10px; font-size: 12px; color: var(--text-secondary); line-height: 1.4;">
+                                    <i class="fa-solid fa-arrow-right" style="color: var(--brand-teal);"></i>
+                                    <strong>In our latest revision, we upgraded to <span style="color: var(--brand-teal);">YOLOv26n</span></strong> (2.6M params, superior mAP) — I'll explain the performance gains when we reach the results section.
+                                </div>
+                            </div>
+                            <div>
+                                <h3 style="font-size: 15px; color: var(--brand-navy); margin-bottom: 6px;">Vision Pipeline Flow</h3>
+                                <div class="tech-card teal-header" style="padding: 16px;">
+                                    <div style="font-family: var(--font-mono); font-size: 12px; line-height: 2;">
+                                        <div style="color: var(--brand-teal); font-weight: 700;">[Raw Frame] Dual Cameras</div>
+                                        <div style="padding-left: 12px; color: var(--text-secondary);">↓ Grayscale + LAB Space</div>
+                                        <div style="padding-left: 12px; color: var(--text-secondary);">↓ Adaptive CLAHE Enhancer</div>
+                                        <div style="color: var(--brand-navy); font-weight: 700;">[YOLOv26n] imgsz=320</div>
+                                        <div style="padding-left: 12px; color: var(--text-secondary);">↓ Fast Centroid Tracker</div>
+                                        <div style="padding-left: 12px; color: var(--text-secondary);">↓ Monocular Geometry & TTC</div>
+                                        <div style="color: var(--alert-red); font-weight: 700;">[HMI] HUD + Audio Warnings</div>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 12px; background: var(--brand-teal-light); border-radius: 8px; padding: 10px; font-size: 11px; line-height: 1.4; color: var(--text-secondary);">
+                                    <i class="fa-solid fa-lightbulb" style="color: var(--brand-teal);"></i>
+                                    <strong>Key insight:</strong> Classical filters (Canny, Sobel) fail in tunnels, rain, or at night. An <strong>end-to-end CNN + self-attention</strong> architecture infers contours even when objects are partially occluded — no manual threshold recalibration needed.
                                 </div>
                             </div>
                         </div>
@@ -2291,60 +2362,60 @@
 
         const speakerNotesData = {
             1: {
-                en: "Hey everyone, good morning. I'm Simon C.-Y. Wong, and I'm really excited to share what we've been working on — it's called the V.I.S.O.R. system. Short for Visual Intelligent Safety on Road. Basically, we wanted to take all that fancy active safety tech you see in high-end cars and bring it to motorcycles. Because let's be real — why should only car drivers get the good stuff? Our goal is pretty straightforward: democratize safety technology for the millions of people who ride scooters and motorcycles every single day.",
-                zh: "大家好，我是王同學。今天要跟大家分享我們做的 V.I.S.O.R. 系統。簡單說就是想把高級汽車才有主動安全技術，想辦法搬到機車上面。為什麼汽車有 ADAS，機車騎士就沒有？這就是我們想解決的問題。"
+                en: "Good morning everyone, I'm Simon C.-Y. Wong. Today I'm excited to present our work — V.I.S.O.R., short for Visual Intelligent Safety on Road. Here's the simple version: we built an AI-powered active safety system for motorcycles, running on a Raspberry Pi 5, costing under $100. The big picture? We're taking safety tech that's usually reserved for luxury cars and making it accessible for the millions of everyday riders. Our report is Paper ID 20, supervised by Professor Hsuan-Che, Yang, with co-author Chia-Hsien, Lin.",
+                zh: "各位老師、各位同學大家好，我是王同學。今天要跟大家介紹我們做的 V.I.S.O.R. 系統，全名是 Visual Intelligent Safety on Road。簡單說就是一套給機車用的 AI 主動安全系統，跑在樹莓派 5 上，成本不到一百美元。我們想把高階汽車才有的安全技術，帶給每天騎機車通勤的廣大族群。這篇論文編號 Paper ID 20，由楊炫哲老師指導，共同作者林佳賢。"
             },
             2: {
-                en: "So here's the outline — I'll walk you through five parts today. First, why we even started this project, then some background on what's out there, our approach and what makes it different, the results we got, and finally where we're going next.",
-                zh: "今天報告分五個部分。先講為什麼要做這個，然後看一下現有的技術到哪邊，再來是我們的方法跟創新在哪，接著是實際測試的結果，最後是未來可以怎麼走下去。"
+                en: "So what's the problem? Look at these numbers. In 2023, motorcycles accounted for 61.74% of all fatal and injury traffic accidents in Taiwan — that's the highest proportion among all vehicle types. Even more alarming, one out of every three victims is a young rider between 18 and 24. Why? Lack of experience, following too close, not noticing road conditions in time. On top of that, riders have no steel frame, no airbags — just a helmet. The fatality rate is 28 times higher than cars. And yet, car drivers get ADAS, radar, auto-braking, blind spot detection. Riders on 125cc scooters get nothing. Commercial systems are too expensive and too bulky. That's exactly the gap V.I.S.O.R. is built to close.",
+                zh: "先來看數據有多嚴重。2023 年，機車事故佔全台交通事故死傷的 61.74%，是所有車種裡面比例最高的。更可怕的是，每三個死者就有一個是 18 到 24 歲的年輕人。為什麼？經驗不足、跟車太近、沒注意到路況。而且騎士沒有車體保護，只有一頂安全帽，致死率是汽車的 28 倍。但你看汽車現在有 ADAS、雷達、自動煞車、盲點偵測。騎 125cc 機車的人呢？什麼都沒有。商用系統太貴、太大，根本裝不上去。這就是 V.I.S.O.R. 要填補的缺口。"
             },
             3: {
-                en: "Alright, so let's talk about the reality in Taiwan. You all know this — motorcycles are everywhere. For students and young workers between 18 and 24, it's pretty much the only affordable way to get around. I mean, a monthly gas bill is way cheaper than a metro pass, right? But here's the thing — that choice comes with some serious risks. In 2023, motorcycle accidents made up over 61% of all traffic casualties in Taiwan. And get this — one out of every three victims is between 18 and 24. Meanwhile, car drivers are getting all this fancy tech — radar, auto braking, blind spot detection. But the 125cc and 150cc riders? Nothing. It's basically two different worlds of safety, and that's just not fair. That's honestly the main reason we started building V.I.S.O.R.",
-                zh: "來看看台灣交通的現實面。大家都知道，機車到處都是。對於 18 到 24 歲的學生跟年輕人來說，因為油錢便宜，機車就是唯一選擇。但你付出的代價是什麼？2023 年，機車事故佔了全台交通事故超過六成一。每三個車禍受害者就有一個是 18 到 24 歲。你看汽車那邊，什麼自動煞車、盲點偵測，Level 2、Level 3 都有了。但騎機車的人呢？什麼都沒有。這根本就是兩個世界。所以我們才想做 V.I.S.O.R.，來填補這個安全差距。"
+                en: "So here's our proposal: we built V.I.S.O.R. — a visually intelligent, cost-effective active safety system specifically designed for motorcycles. The core idea is turning a passive helmet into an active electronic protection shield. On the left you can see the live radar demo — front 120 degrees, rear 160 degrees, nearly 280 degrees of coverage. Move your cursor around and you'll see how the system detects threats and triggers alarms in real time. Three key design pillars: dual-direction monitoring to eliminate blind spots, dynamic threat zoning that auto-classifies where the danger is coming from, and 3D spatialized audio in the helmet that literally points you toward the threat — left rear, right rear, front. You don't even need to look.",
+                zh: "這是我們的提案：V.I.S.O.R. — 一套視覺智慧、低成本的主動安全系統，專門為機車設計。核心概念是把被動的安全帽升級成主動的電子防護盾。左邊是即時雷達展示，前鏡頭 120 度、後鏡頭 160 度，加起來將近 280 度覆蓋。你移動滑鼠就可以看到系統怎麼偵測威脅、觸發警告。三個設計支柱：雙向監控消除盲點、動態威脅分區自動判斷危險來自哪個方向、還有安全帽的 3D 空間音效 — 直接讓你知道威脅在左後方、右後方還是前方，連轉頭都不用。"
             },
             4: {
-                en: "So the idea is to bridge that gap. We're calling it an Advanced Rider Assistance System — ARAS for short — but really, it's about making something affordable that actually works. We're talking Raspberry Pi 5, dual cameras, and smart software. No expensive LiDAR, no huge sensors. Just something practical that can make a real difference.",
-                zh: "所以我們就想，那就做一個騎士專用的輔助系統吧。我們叫它 ARAS。重點是成本要低，但功能要到位。用樹莓派 5 當核心，加上前後雙鏡頭，搭配 AI 軟體。不用 LiDAR，不用昂貴的感測器，就能做出實質的安全輔助。"
+                en: "Now let me explain our research positioning. This is an ARAS — an Advanced Rider Assistance System. The key difference from traditional safety? ABS and helmets only protect you after an accident happens. ARAS uses sensors and AI to monitor the environment in real time and actively intervene with warnings — preventing the accident before it happens. That's the shift from passive to active. Now, making this work on a motorcycle brings two major challenges. One: small object detection at distance — spotting a scooter 30 meters away in traffic. Two: extremely limited compute — we're running on a Raspberry Pi, not a server. Every millisecond counts at 60 km/h. The table on the right shows why car ADAS can't just be ported over — cost, dynamics, communication, vibration — everything needs a ground-up rethink for two-wheelers.",
+                zh: "這頁說明我們的研究定位。我們做的是 ARAS — 進階騎士輔助系統。跟傳統安全設備最大的差別是什麼？ABS 跟安全帽是出事之後才保護你。ARAS 是用感測器跟 AI 即時監控環境，在事故發生前就主動介入警告。這是從被動到主動的轉變。在機車上做這個有兩個大挑戰。第一：小物件遠距偵測 — 要在車流中看到 30 公尺外的機車。第二：運算資源極度有限 — 我們跑的是樹莓派，不是伺服器。時速 60 公里的時候，每毫秒都很重要。右邊的對照表解釋了為什麼汽車 ADAS 不能直接移植過來 — 成本、動態、通訊、震動，每一個面向都要從零開始為二輪重新設計。"
             },
             5: {
-                en: "Now, the tricky part is making AI work on such limited hardware. We're not running on a GPU server — this thing has to fit on a Pi. After looking at a bunch of options, we settled on YOLOv8n. Why? Because its anchor-free architecture gives us the best balance of speed and accuracy on edge devices. Plus it's lightweight enough to run without melting the board, haha.",
-                zh: "最難的地方其實是讓 AI 在這麼小的硬體上跑得順。這不是 GPU 伺服器，是樹莓派。我們試了很多模型，最後選了 YOLOv8n。因為它的 anchor-free 架構在邊緣裝置上速度跟準確度都兼顧了，不會讓樹莓派燒起來。"
+                en: "Let me introduce our edge computing environment. We're running everything on a Raspberry Pi 5 — four Cortex-A76 cores at 2.4GHz, 8GB RAM, under a hundred dollars. But no GPU, and about four times slower than a desktop CPU. So every model choice matters. In our initial paper draft, we adopted YOLOv8n — the Nano variant. It's a proven, stable choice: anchor-free detection, only 3.2 million parameters, and optimized for 320px input cutting the compute matrix by 75%. Extensive community validation gave us confidence in its reliability. But here's the thing — in our latest revision, we've actually upgraded to YOLOv26n. It's even lighter at 2.6 million parameters, and we're seeing better mAP. I'll walk through the performance comparison when we hit the results section. On the right is our vision pipeline — dual camera frames go through CLAHE enhancement, YOLOv26n at 320px, centroid tracking, monocular geometry, and finally multi-threaded HMI warnings.",
+                zh: "來看我們的邊緣運算環境。我們用樹莓派 5 — 四核 Cortex-A76 2.4GHz，8GB 記憶體，不到一百美元。但沒有 GPU，比桌上型 CPU 慢四倍，所以模型選擇非常關鍵。在論文初版中，我們採用的是 YOLOv8n — Nano 版本，這是一個經過大量社群驗證的穩定選擇：anchor-free 偵測、只有 3.2M 參數、320px 輸入讓運算矩陣砍掉 75%。但在最新版本中，我們已經升級到 YOLOv26n，參數更少只有 2.6M，mAP 反而更高。這部分的效能對比我等一下到實驗結果那頁會詳細說明。右邊是視覺管線 — 雙鏡頭影像進 CLAHE 增強，YOLOv26n 320px 推論，質心追蹤，單眼幾何測距，最後多執行緒 HMI 警告輸出。"
             },
             6: {
-                en: "But here's the thing — training an AI for Taiwan's roads is not as simple as downloading some open dataset and calling it a day. The problem is data scarcity. Most datasets out there, like BDD100K or COCO, are shot from a car's perspective on American or European roads. Taiwan's roads are completely different — think dense scooter weaving, narrow lanes, chaotic intersections. And collecting extreme weather data or accident footage from a motorcycle perspective? That's not just hard, it's dangerous. So we had to get creative.",
-                zh: "但問題來了。要訓練一個認得台灣路況的 AI，不能直接拿國外的資料集來用。像 BDD100K、COCO 這些資料集，都是從汽車視角在美國或歐洲的路上拍。台灣的路況完全不一樣 — 機車鑽來鑽去、小巷子、路口亂七八糟的。而且你要拍下雨、拍車禍畫面？騎機車去拍這個太危險了。所以我們得想新的辦法。"
+                en: "So AI inference and live camera streaming are both heavy workloads. If you try to run everything on a single Raspberry Pi, they fight for CPU and you get stuttering and lag. Our solution? Split the work across two boards. Look at this diagram — the Raspberry Pi 5 does the heavy lifting: YOLO inference, object tracking, all the AI compute. Then it broadcasts lightweight telemetry over UDP to a tiny Pi Zero 2W, which is dedicated purely to driving the HUD display. That little board fits in the helmet or on the dashboard. By decoupling compute from display, we avoid resource contention and keep latency predictable.",
+                zh: "AI 推論跟即時影像擷取這兩個都很吃資源，如果你全部塞在同一塊樹莓派上，它們會互相搶 CPU，結果就是卡頓跟延遲。我們的解法是把工作拆到兩塊板子上。你看這個架構圖 — 樹莓派 5 負責重活：YOLO 推論、物件追蹤，所有的 AI 計算。然後透過 UDP 把輕量的數據廣播給一塊 Pi Zero 2W，它只做一件事：驅動 HUD 顯示。那塊小板子可以塞在安全帽或儀表板裡面。把計算跟顯示拆開，就避免了資源競爭，延遲也變得穩定可控。"
             },
             7: {
-                en: "So what we did was build a hybrid dataset. We collected real Taiwan road footage, but we also generated synthetic data — rain, fog, motion blur, low-light noise. It lets us safely simulate scenarios we'd never be able to capture in real life. The model trains on a mix of real and synthetic, and it generalizes way better because of it.",
-                zh: "所以我們做了混合資料集。一方面實際去騎車拍台灣的路況，另一方面用 Stable Diffusion 合成各種天氣跟震動效果。這樣就能安全地模擬那些我們不可能去冒險拍的場景。兩種資料混在一起訓練，模型反而學得更全面。"
+                en: "Now this slide is really fun — you can actually click those buttons to see the data augmentation in action. Here's the problem we solved: Taiwan's roads are chaotic and unique, but all the big public datasets like BDD100K are shot from car cameras on American highways. That's useless for training a motorcycle AI in Taiwan. So we built our own dataset — 2,078 real Taiwan road images plus 1,560 blind-spot frames — and then augmented it with synthetic weather and vibration effects. Try clicking rain, vibration, or noise — you'll see the sandbox preview change in real time. This is how we safely generate training data for scenarios that would be dangerous or impossible to capture on a real bike.",
+                zh: "這頁很好玩 — 你可以點那些按鈕看資料擴充的效果。我們解決的問題是這樣：台灣的路況超級混亂又獨特，但現有的公開資料集像 BDD100K 都是從汽車視角在美國公路上拍的，拿來訓練台灣的機車 AI 根本沒用。所以我們自己建資料集 — 2,078 張台灣真實道路影像加上 1,560 張盲區畫面 — 然後用合成天氣跟震動效果擴充。你點一下暴雨、震動或噪聲按鈕，右邊的 sandbox 預覽就會即時變化。這就是我們安全產生訓練資料的方法，不需要冒生命危險去拍。"
             },
             8: {
-                en: "Now, before I go deeper into the software, let me quickly show you the hardware. The whole system costs under 100 US dollars — we specifically wanted something students could afford. The front camera gives you 120 degrees, the rear one covers 160 degrees, so together you get about 280 degrees of coverage. Almost no blind spots. And here's a cool part — we added a six-axis IMU sensor because motorcycles lean when cornering, and we need to know exactly how much.",
-                zh: "進到軟體之前先看一下硬體架構。整組系統不到一百美元 — 我們就是要學生也負擔得起。前面鏡頭 120 度視野，後面 160 度，加起來差不多 280 度，幾乎沒有死角。還有一個重點 — 我們裝了六軸 IMU 感測器。為什麼？因為機車過彎會傾斜，如果不補償這個角度，AI 會誤判路況。"
+                en: "Here's one of the trickiest parts — motorcycle dynamics. Cars stay flat, but bikes lean. A lot. Up to 45 degrees in a corner. If your camera is tilted 45 degrees to the ground, the AI thinks the road is somewhere else entirely. So we added a six-axis IMU that feeds real-time roll angle into the system. Drag the slider and watch — as the bike leans, the sky-ground horizon rotates, and simultaneously, our ROI bounding box counter-rotates to stay locked onto the actual road surface. Behind the scenes, it's Kalman-filtered sensor fusion. The result? No false alarms from normal cornering. This is something no car ADAS ever has to deal with.",
+                zh: "這是我覺得最難搞的一塊 — 機車的動態。汽車永遠是平的，但機車會壓車，過彎可以壓到 45 度。如果你的鏡頭跟著傾斜 45 度，AI 會以為路面在別的地方，完全誤判。所以我們裝了六軸 IMU，即時餵給系統當前的側傾角度。你拉一下那個滑桿就會看到 — 機車一傾斜，天地背景跟著轉，但我們 ROI 的框框反向旋轉，牢牢鎖在真實的路面上。底層用的是卡爾曼濾波器的感測器融合。結果就是：正常過彎不會觸發假警報。這個問題汽車 ADAS 根本不用煩惱。"
             },
             9: {
-                en: "So back to the data problem I mentioned earlier. Our first real contribution is this augmentation pipeline. We grab real driving footage automatically, then on top of that, we generate synthetic bad weather, accident scenarios, you name it. And because motorcycles vibrate like crazy, we added motion blur and digital noise simulation too. The result is a model that actually works in nasty conditions.",
-                zh: "回到資料的問題。我們第一個貢獻就是這個資料擴充管道。除了自動蒐集台灣本地道路的真實影像外，我們還用 Stable Diffusion 合成暴雨、大霧、甚至車禍場景。而且因為機車騎起來真的很震，還加入了動態模糊跟雜訊模擬。這樣訓練出來的模型在惡劣環境下辨識率才會好。"
+                en: "Alright, let's get into the math — but I'll keep it approachable. The core idea is monocular distance estimation using a pinhole camera model. We know the real-world width of each object class — a car is about 1.8 meters, a scooter 0.7, a truck 2.5. And we know the bounding box width in pixels. With a calibrated focal length of 800 pixels and a 3-meter offset for camera position, we can estimate distance. Check the per-class table — you can see typical detection distances: cars at 36 meters, scooters at 14. Then we smooth the relative speed with EMA, alpha equals 0.4. And on the right, the three-tier threat system: critical, warning, and caution, each with specific TTC and distance thresholds. Critical only triggers IN_LANE, caution covers all lanes. Plus edge filtering to suppress false positives near frame borders.",
+                zh: "好，我們進到數學的部分 — 我盡量講得白話一點。核心概念是用針孔相機模型的單眼測距。我們知道每種物件在真實世界的寬度 — 汽車大概 1.8 公尺，機車 0.7，卡車 2.5。然後從 bounding box 的像素寬度，搭配校準過的焦距 800 像素跟相機位置 3 公尺的偏移，就能估算距離。你看左邊那張表 — 汽車可以偵測到 36 公尺，機車 14 公尺。然後我們用 EMA，alpha 0.4，平滑化相對速度。右邊是三級威脅分級：critical、warning、caution，各自有不同的 TTC 跟距離門檻。Critical 只在 IN_LANE 觸發，caution 涵蓋所有車道。還有邊緣過濾，畫面兩側的假警報直接擋掉。"
             },
             10: {
-                en: "This part was probably the biggest engineering headache — getting everything to run fast enough on the Pi 5. When we first ran YOLOv8 on it out of the box, we got like 5 to 8 FPS. That delay is just not safe for collision avoidance — at 60 km/h, 150ms means you've already moved like 2.5 meters. So we did three things: First, dropped the input from 640 to 320 pixels. Second, compiled the model into a static graph with TorchScript and added frame skipping so we don't waste time recomputing the lane markings every single frame. Third, decoupled the camera read into its own thread so I/O doesn't block inference. Each step made a big difference.",
-                zh: "這個部分大概是最頭痛的 — 要讓所有東西在樹莓派 5 上跑得夠快。第一次直接把 YOLO 丟上去跑，只有 5 到 8 FPS，那個延遲對防撞來說根本不夠安全。所以我們做了三件事：第一，把輸入解析度從 640 降到 320。第二，用 TorchScript 靜態編譯，加上跳幀處理，不需要每幀都重算車道線。第三，把相機讀取獨立成一個執行緒，I/O 才不會卡住 AI 計算。每一步都差很多。"
+                en: "Now two more pieces that make the system reliable. First, centroid tracking — we assign unique IDs to each detected object by minimizing Euclidean distance between consecutive frames. If an object gets occluded for a few frames, we keep its track alive for up to five frames. And we use Kalman filtering to smooth the coordinates and reduce box jitter. Second, the virtual lane filter — this is crucial. In dense urban streets, parked cars along the curb would otherwise trigger constant false alarms. So we define a virtual active lane in the X-axis — roughly the middle 50% of the frame — and only evaluate collision risk inside that zone. Bottom left shows the LSTR rational function we use for lane curve fitting. It's a transformer-based model with just 765K parameters, running at 10.8 FPS on Pi 5 with skip-2 frame scheduling.",
+                zh: "再來看兩個讓系統穩定的關鍵技術。第一是質心追蹤 — 我們用歐幾里得距離最小化來在連續幀之間關聯同一個物件，給每個物件分配一個唯一的 ID。如果物件被遮擋了幾幀，我們會保留追蹤紀錄最多五幀。然後用卡爾曼濾波來平滑座標，減少框框的抖動。第二是虛擬車道過濾 — 這個超重要。在市區擁擠的道路上，路邊停一排車，如果不過濾，系統會一直叫個不停。所以我們定義了一個虛擬的活動車道，X 軸大概取中間 50%，只有在這個範圍內的物件才做碰撞評估。左下角是 LSTR 的有理函數公式，用 Transformer 架構，只有 765K 參數，在 Pi 5 上搭配 skip-2 跳幀可以跑到 10.8 FPS。"
             },
             11: {
-                en: "And the results? They actually surprised us. Look at this table — we pushed inference from 5-8 FPS all the way to 15-20 FPS, and latency is down to under 50 milliseconds. But here's the counterintuitive part — even though we cut the resolution in half to 320 pixels, the model actually got MORE accurate. Precision jumped 29%, from .421 to .543. And mAP went from .298 to .336. How? The Taiwan-specific hybrid dataset did the heavy lifting. Now take a look at the lane detection table — you can see why we chose LSTR CULane over UFLD v2. LSTR has only 765K parameters and runs at about 10.8 FPS on the Pi 5, while UFLD v2? It's 12 million params, 183 megabytes, and barely does 2.3 FPS. That's not usable on a motorcycle. More importantly, LSTR with CULane weights is specifically trained on city and curved road conditions — which is exactly what Taiwan's roads look like. Urban streets, tight corners, constant lane changes. So for Taiwan Road Suitability, LSTR scores High while UFLD v2 only gets Medium. It's really not even a contest. We basically got way better performance with a fraction of the model size.",
-                zh: "結果怎麼樣呢？老實說比我們預期的好。推理速度從 5-8 FPS 拉到 15-20 FPS，延遲降到 50 毫秒以下。最妙的是什麼你知道嗎？雖然我們把解析度砍半到 320 像素，但模型反而更準了。Precision 提升 29%，mAP@50 從 .298 漲到 .336。關鍵就是台灣在地化的混合資料集。再看車道偵測這張表，LSTR CULane 為什麼比 UFLD v2 好？LSTR 只有 765K 參數，在 Pi 5 上可以跑到約 10.8 FPS；UFLD v2 呢？一千兩百萬參數，183 MB，FPS 只有 2.3 — 根本不能用。而且 LSTR 搭配 CULane 權重就是針對市區跟彎道設計的，這完全就是台灣的道路環境。所以在台灣道路適用性上，LSTR 是 High，UFLD 只有 Medium。用更少的資源得到更好的結果，這就是我們選它的原因。"
+                en: "So what do the actual numbers look like? Let's walk through the tables. First, YOLO models: our YOLOv26n beats both stock YOLOv8n variants — .561 precision, .338 recall, .422 F1, 34.9% mAP, all with only 2.6 million parameters and 20-25 FPS. But look at the lane detection comparison — this is even more dramatic. LSTR CULane: 765K parameters, 3.1MB model, 10.8 FPS on Pi 5. UFLD v2: 12 million params, 183MB, 2.3 FPS. And crucially, Taiwan Road Suitability — LSTR scores High because CULane weights are trained on urban and curved roads, exactly matching Taiwan conditions. UFLD v2 only gets Medium. At the bottom we have real video validation — our system processed 2,676 detections at 32.5 FPS in heavy urban traffic. That's real-world proof it works.",
+                zh: "實際數字長怎樣？我們來看這幾張表。首先是 YOLO 模型對照：我們的 YOLOv26n 贏過兩個 YOLOv8n 版本 — precision .561、recall .338、F1 .422、mAP 34.9%，參數只有 2.6M，FPS 可以到 20-25。再看車道偵測這張 — 差距更誇張。LSTR CULane：765K 參數、3.1MB、Pi 5 上 10.8 FPS。UFLD v2：一千兩百萬參數、183MB、只有 2.3 FPS — 根本不能用。關鍵是台灣道路適用性 — LSTR 是 High，因為 CULane 的權重就是針對市區跟彎道訓練的，完全對應台灣路型。UFLD 只有 Medium。下面還有實際影片驗證 — 我們在重車流的市區跑出 2,676 次偵測、32.5 FPS。這是有真實影片佐證的。"
             },
             12: {
-                en: "Beyond just algorithms, we also built a whole ecosystem around it. The system fuses IMU data with vision-based distance estimation using a Kalman filter. When something triggers, it sends alerts to the HUD in the helmet and buzzes the rider through Bluetooth. Dual-channel warnings so nothing gets missed.",
-                zh: "除了演算法之外，我們也做了完整的應用系統。用卡爾曼濾波器把 IMU 的動態數據跟影像測距融合在一起。有危險的時候，會透過藍牙同時觸發安全帽的 HUD 跟蜂鳴器。雙重警告，確保騎士一定會注意到。"
+                en: "This slide shows the full system architecture. Four layers from top to bottom: perception layer with dual CSI cameras feeding MJPEG frames, then the core Pi 5 computing layer running YOLOv26n and LSTR in TorchScript, then the Pi Zero 2W HUD node receiving coordinates over UDP in under 15 milliseconds, and finally the output terminal — a tiny SSD1315 OLED with hard inversion alerts that instantly grab the rider's attention. On the right you can see the tactical app console features: HMI dashboard, E-SOS emergency system that auto-detects crashes via abnormal tilt and sends SMS with GPS, BLE for config changes without blocking Wi-Fi, and cloud sync to Supabase with Gemini 2.5 Flash generating personalized riding safety tips.",
+                zh: "這頁是完整系統架構。四層從上到下：感知層雙 CSI 鏡頭送 MJPEG 影像進來到 Pi 5 核心運算層跑 YOLOv26n 跟 LSTR TorchScript，然後透過 UDP 在 15 毫秒內把座標傳給 Pi Zero 2W 的 HUD 節點，最後是 SSD1315 OLED 輸出端，用全螢幕反轉閃爍直接抓住騎士注意力。右邊是戰術中控 App 的功能：HMI 儀表板、E-SOS 緊急求救（偵測異常傾角自動發送 GPS 簡訊）、BLE 藍牙設定不佔用 Wi-Fi、還有雲端同步到 Supabase 搭配 Gemini 2.5 Flash 產生個人化騎乘安全建議。"
             },
             13: {
-                en: "We also built a cross-platform phone app. It's not just a dashboard — it has an E-SOS feature that detects if the bike has tipped over for more than 15 seconds and automatically sends out your GPS coordinates for rescue. And we hooked up Google Gemini to analyze your riding patterns — speeding, hard braking, sharp leans — and give you personalized safety tips. Kind of like having a riding coach in your pocket.",
-                zh: "我們還做了手機 App。不只是儀表板，還有 E-SOS 緊急求救功能 — 如果系統偵測到機車傾倒超過 15 秒，會自動發送 GPS 簡訊求救。另外我們串接了 Google Gemini，它會分析騎乘數據，像是超速、急煞、壓車這些，然後給個人化的安全建議。就像是口袋裡的騎車教練。"
+                en: "This is the optimization story. On Pi 5 without a GPU, the baseline setup gave us only 5 to 8 FPS — useless for real-time safety. So we pushed hard. Step one: drop resolution from 640 to 320 pixels, cutting the compute matrix by 75%. Step two: adaptive frame skipping — we only recompute lane detection every third frame, amortizing the cost from 50ms down to 17ms per frame. Step three: TorchScript static compilation removes Python interpreter overhead. The benchmark table tells the story: baseline 15.3 FPS on Windows, adding skip-2 jumps to 31.9 FPS, TorchScript pushes to 34.7, stabilizing at 32.5 with TTC v2. The bottleneck breakdown shows LSTR takes 58% of frame time, YOLO 42%. The Pi 5 roadmap on the right: we're at 10.8 FPS now, imgsz=256 gets us to 13, ONNX INT8 quantization should reach 20-25, and a USB accelerator pushes beyond 25. That's the path to true real-time on edge.",
+                zh: "這頁是優化的故事。Pi 5 沒有 GPU，初始設定只有 5 到 8 FPS — 對即時安全來說沒意義。所以我們卯起來優化。第一步：解析度從 640 降到 320，運算矩陣砍掉 75%。第二步：自適應跳幀 — 車道偵測每三幀才重算一次，成本從 50ms 攤銷到 17ms。第三步：TorchScript 靜態編譯消除 Python 直譯器開銷。優化歷程表很清楚：Windows 上 baseline 15.3 FPS，加 skip-2 跳到 31.9，TorchScript 推到 34.7，加 TTC v2 穩定在 32.5。瓶頸分析 LSTR 佔 58%、YOLO 佔 42%。右邊 Pi 5 路線圖：現在 10.8 FPS，imgsz=256 可以到 13，ONNX INT8 量化預估 20-25，USB 加速器可以破 25。這就是邊緣端真正即時的實現路徑。"
             },
             14: {
-                en: "On the left you see the HUD interface running on the actual hardware — speed, alerts, system status. And on the right, that's our mobile app showing the same data in real time. Speed, lean angle, threat level, radar view, even system events. The phone connects to the Pi over BLE, so you get full visibility without having to look at the bike. It's designed to be glanceable while riding.",
-                zh: "左邊是實際裝在安全帽裡的 HUD 畫面 — 即時顯示速度、警告和系統狀態。右邊是我們的手機 App，同時顯示一樣的數據：速度、傾角、威脅等級、雷達視野，還有系統事件記錄。手機透過 BLE 跟樹莓派連線，騎車的時候瞄一眼就知道狀況，不用低頭看儀表。"
+                en: "Here's the live demo of both interfaces working together. On the left is the helmet HUD — showing speed, system status, and threat alerts. On the right is our VISOR mobile app, mirroring the same data in real time: speed, lean angle, threat level, a mini radar view, and live system events. Try clicking the looming warning or lane drift buttons — both interfaces react simultaneously. In a real ride, the phone connects to the Pi 5 over BLE, so you get full visibility without touching anything. The lean angle even simulates cornering dynamically. This is what the rider actually sees — instant, intuitive awareness of what's happening around them.",
+                zh: "這頁是兩個界面同時運作的現場展示。左邊是安全帽 HUD — 顯示速度、系統狀態跟威脅警告。右邊是我們的 VISOR 手機 App，即時同步一樣的數據：速度、傾角、威脅等級、迷你雷達、還有系統事件記錄。你點一下 looming 警告或車道偏移按鈕 — 兩個界面會同時反應。真實騎乘的時候，手機透過 BLE 連到 Pi 5，完全不用動手就能看到全部狀態。傾角還會動態模擬過彎。這就是騎士實際上看到的畫面 — 即時、直覺掌握周遭狀況。"
             },
             15: {
                 en: "So to wrap it up, here's what we actually achieved. First, we solved the Taiwan motorcycle data problem with a hybrid dataset approach. Second, we pushed edge computing to its limits and got low-latency protection on very cheap hardware. And third, we actually made advanced safety tech accessible — not just for luxury car owners, but for the millions of people riding scooters every day.",
