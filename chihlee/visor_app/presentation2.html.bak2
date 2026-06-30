@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 
 <head>
     <meta charset="UTF-8">
@@ -63,46 +63,6 @@
             display: flex;
             height: 100vh;
             width: 100vw;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* Fullscreen / Sidebar-hidden: true edge-to-edge fill */
-        body.sidebar-hidden {
-            background-color: #0f172a;
-        }
-        body.sidebar-hidden #app-container {
-            width: 100vw;
-        }
-        body.sidebar-hidden #presentation-workspace {
-            padding: 0;
-            width: 100vw;
-        }
-        body.sidebar-hidden .slide-frame {
-            border-radius: 0;
-            box-shadow: none;
-            border: none;
-            max-width: 100vw;
-            width: 100vw;
-            height: 100vh;
-            padding: 4vh 5vw;
-        }
-        body.sidebar-hidden .slide-frame .slide-content-container {
-            max-width: 100%;
-        }
-        body.sidebar-hidden #nav-controls {
-            bottom: 10px;
-            right: 10px;
-            opacity: 0.5;
-            transition: opacity 0.3s;
-            z-index: 200;
-        }
-        body.sidebar-hidden #nav-controls:hover {
-            opacity: 1;
-        }
-        body.sidebar-hidden #progress-bar-container {
-            opacity: 0.3;
-            z-index: 200;
         }
 
         /* Presentation Wrapper */
@@ -606,17 +566,6 @@
             color: var(--brand-teal);
         }
 
-        kbd {
-            display: inline-block;
-            font-family: var(--font-mono);
-            font-size: 9px;
-            padding: 1px 4px;
-            border: 1px solid var(--border-light);
-            border-radius: 3px;
-            background: var(--bg-primary);
-            color: var(--text-secondary);
-        }
-
         /* Slide 1 Title Logo */
         .title-slide-logo {
             font-family: var(--font-sans);
@@ -1072,38 +1021,32 @@
                             <span class="slide-num">10</span> Lane Filters & Tracking
                         </div>
                         <div class="slide-link" onclick="goToSlide(11)">
-                            <span class="slide-num">11</span> Demo Video Validation
-                        </div>
-                        <div class="slide-link" onclick="goToSlide(12)">
-                            <span class="slide-num">12</span> Multi-Protocol Routing
+                            <span class="slide-num">11</span> Multi-Protocol Routing
                         </div>
                     </div>
 
                     <!-- Section 4 -->
                     <div class="chapter-section">
                         <div class="chapter-title">IV. Validation & Benchmarks</div>
+                        <div class="slide-link" onclick="goToSlide(12)">
+                            <span class="slide-num">12</span> Model Precision mAP
+                        </div>
                         <div class="slide-link" onclick="goToSlide(13)">
-                            <span class="slide-num">13</span> Model Precision mAP
+                            <span class="slide-num">13</span> HUD Overlay & VISOR App
                         </div>
                         <div class="slide-link" onclick="goToSlide(14)">
-                            <span class="slide-num">14</span> HUD Overlay & VISOR App
-                        </div>
-                        <div class="slide-link" onclick="goToSlide(15)">
-                            <span class="slide-num">15</span> VISOR App Screenshot
-                        </div>
-                        <div class="slide-link" onclick="goToSlide(16)">
-                            <span class="slide-num">16</span> Edge Optimization & Perf
+                            <span class="slide-num">14</span> FPS & Optimization Trends
                         </div>
                     </div>
 
                     <!-- Section 5 -->
                     <div class="chapter-section">
                         <div class="chapter-title">V. Conclusion & Future Outlook</div>
-                        <div class="slide-link" onclick="goToSlide(17)">
-                            <span class="slide-num">17</span> Major Contribution
+                        <div class="slide-link" onclick="goToSlide(15)">
+                            <span class="slide-num">15</span> Major Contribution
                         </div>
-                        <div class="slide-link" onclick="goToSlide(18)">
-                            <span class="slide-num">18</span> Future Roadmap & Q&A
+                        <div class="slide-link" onclick="goToSlide(16)">
+                            <span class="slide-num">16</span> Future Roadmap & Q&A
                         </div>
                     </div>
 
@@ -1130,12 +1073,9 @@
                 </div>
             </div>
 
-            <div class="sidebar-footer" style="flex-shrink: 0; margin-top: 10px; border-top: 1px solid var(--border-light); padding-top: 8px;">
-                <p style="font-size: 10px; color: var(--text-muted); margin-bottom: 4px;">Chihlee UST</p>
-                <button onclick="toggleFullscreen()" title="Fullscreen (F11)" style="font-size: 9px; padding: 3px 8px; border: 1px solid var(--border-light); border-radius: 4px; background: white; cursor: pointer; color: var(--text-secondary); width: 100%;">
-                    <i class="fa-solid fa-expand"></i> Fullscreen (F11)
-                </button>
-                <p style="font-size: 8px; color: var(--text-muted); margin-top: 3px;"><kbd>S</kbd> toggle sidebar &nbsp;|&nbsp; <kbd>←</kbd><kbd>→</kbd> navigate</p>
+            <div class="sidebar-footer" style="flex-shrink: 0; margin-top: 10px; border-top: 1px solid var(--border-light); padding-top: 10px;">
+                <p><strong>Creative Technology Lab, Chihlee UST</strong></p>
+                <p>Creative Technology Lab</p>
             </div>
         </aside>
 
@@ -1676,7 +1616,7 @@
                                     $W_{real}$ = physical width, $f = 800\text{px}$, $d_{offset} = 3.0\text{m}$, $\alpha = 0.4$
                                 </p>
 
-                                <h4 style="font-size: 12px; margin-top: 8px; color: var(--brand-navy);">Per-Class Real Widths</h4>
+                                <h4 style="font-size: 12px; margin-top: 8px; color: var(--brand-navy);">Per-Class 真實寬度</h4>
                                 <table class="comparison-table" style="font-size: 9px; margin-top: 3px;">
                                     <thead>
                                         <tr><th>Class</th><th>Width</th><th>Typical Dist (320px)</th></tr>
@@ -1707,7 +1647,7 @@
                                 </ul>
 
                                 <div style="margin-top: 6px; background: var(--bg-primary); border-radius: 6px; padding: 5px 7px; border: 1px solid var(--border-light);">
-                                    <h4 style="font-size: 11px; color: var(--brand-navy); margin-bottom: 3px;">3-Tier Threat Classification</h4>
+                                    <h4 style="font-size: 11px; color: var(--brand-navy); margin-bottom: 3px;">3-Tier 威脅分級</h4>
                                     <table class="comparison-table" style="font-size: 9px;">
                                         <thead>
                                             <tr><th>Level</th><th>TTC</th><th>Dist</th><th>Lane Gate</th></tr>
@@ -1759,7 +1699,7 @@
                                     <li><strong>Kalman Filter Integration:</strong> Smooths out bounding box coordinates over time to reduce jitter.</li>
                                 </ul>
                                 <div style="margin-top: 8px; border-top: 1px solid var(--border-light); padding-top: 8px;">
-                                    <h4 style="font-size: 12px; color: var(--brand-navy);"><i class="fa-solid fa-route"></i> LSTR Lane Curve Model</h4>
+                                    <h4 style="font-size: 12px; color: var(--brand-navy);"><i class="fa-solid fa-route"></i> LSTR 車道曲線模型</h4>
                                     <div class="math-block" style="font-size: 11px; padding: 5px; margin: 5px 0;">
                                         $$x = \frac{c_0}{(y-c_1)^2} + \frac{c_2}{(y-c_1)} + c_3 + c_4 y - c_5$$
                                     </div>
@@ -1785,58 +1725,9 @@
                 </div>
             </section>
 
-            <!-- Slide 11: Methodology - Real-World Demo Videos -->
+            <!-- Slide 11: Methodology - Multi-Protocol Routing -->
+            <!-- Slide 11: Results & Performance Validation -->
             <section class="slide-frame" id="slide-11">
-                <div class="slide-content-container">
-                    <header class="slide-header">
-                        <div class="slide-header-left">
-                            <span class="chapter-indicator">III. Methodology & Novel Contributions</span>
-                            <h1 class="slide-headline">Real-World Video Validation</h1>
-                        </div>
-                        <div class="slide-header-logo">Paper ID: 20</div>
-                    </header>
-                    <div class="slide-body">
-                        <p style="font-size: 14px; line-height: 1.5; margin-bottom: 14px; color: var(--text-secondary);">
-                            The following real-road footage demonstrates V.I.S.O.R.'s end-to-end detection pipeline running on <strong>1280×720 dashcam video</strong> with <strong>YOLOv26n + LSTR CULane TorchScript</strong>. Bounding boxes, lane curves, distance, and threat levels are rendered in real time.
-                        </p>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px;">
-                            <!-- Video 1: Urban -->
-                            <div style="background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: 10px; overflow: hidden;">
-                                <div style="padding: 10px 14px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
-                                    <div>
-                                        <h4 style="font-size: 13px; color: var(--brand-navy); margin: 0;">f0ace550 · Urban Heavy Traffic</h4>
-                                        <p style="font-size: 10px; color: var(--text-muted); margin: 2px 0 0 0;">2,676 detections · 106 threats · 32.5 FPS</p>
-                                    </div>
-                                    <span style="font-size: 9px; background: var(--alert-red); color: #fff; padding: 2px 6px; border-radius: 3px; font-weight: 600;">DENSE</span>
-                                </div>
-                                <video controls preload="auto" muted playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block;">
-                                    <source src="https://joe10897.github.io/demo_export/f0ace550_result.mp4" type="video/mp4">
-                                </video>
-                            </div>
-                            <!-- Video 2: Suburban -->
-                            <div style="background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: 10px; overflow: hidden;">
-                                <div style="padding: 10px 14px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
-                                    <div>
-                                        <h4 style="font-size: 13px; color: var(--brand-navy); margin: 0;">50c9816b · Suburban Light Traffic</h4>
-                                        <p style="font-size: 10px; color: var(--text-muted); margin: 2px 0 0 0;">1,682 detections · 22 threats · 38.3 FPS</p>
-                                    </div>
-                                    <span style="font-size: 9px; background: var(--brand-teal); color: #fff; padding: 2px 6px; border-radius: 3px; font-weight: 600;">LIGHT</span>
-                                </div>
-                                <video controls preload="auto" muted playsinline style="width: 100%; aspect-ratio: 16/9; background: #000; display: block;">
-                                    <source src="https://joe10897.github.io/demo_export/50c9816b_result.mp4" type="video/mp4">
-                                </video>
-                            </div>
-                        </div>
-                        <div style="margin-top: 10px; text-align: center; font-size: 10px; color: var(--text-muted);">
-                            <i class="fa-solid fa-circle-info"></i> Videos in H.264 (avc1) — browser native playback. Threat count scales with traffic density.
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Slide 12: Methodology - Multi-Protocol Routing -->
-            <!-- Slide 12: Results & Performance Validation -->
-            <section class="slide-frame" id="slide-12">
                 <div class="slide-content-container">
                     <header class="slide-header">
                         <div class="slide-header-left">
@@ -1991,8 +1882,8 @@
                 </div>
             </section>
 
-            <!-- Slide 13: Hardware-Software Ecosystem -->
-            <section class="slide-frame" id="slide-13">
+            <!-- Slide 12: Hardware-Software Ecosystem -->
+            <section class="slide-frame" id="slide-12">
                 <div class="slide-content-container">
                     <header class="slide-header">
                         <div class="slide-header-left">
@@ -2089,13 +1980,13 @@
                 </div>
             </section>
 
-            <!-- Slide 16: Results - Frame Optimization Trends (LIVE STREAM SMOOTHNESS COMP) -->
-            <section class="slide-frame" id="slide-16">
+            <!-- Slide 14: Results - Frame Optimization Trends (LIVE STREAM SMOOTHNESS COMP) -->
+            <section class="slide-frame" id="slide-14">
                 <div class="slide-content-container">
                     <header class="slide-header">
                         <div class="slide-header-left">
                             <span class="chapter-indicator">IV. Results & Performance Validation</span>
-                            <h1 class="slide-headline">Edge Optimization & Performance</h1>
+                            <h1 class="slide-headline">FPS Real-time Smoothness Contrast</h1>
                         </div>
                         <div class="slide-header-logo">Paper ID: 20</div>
                     </header>
@@ -2156,49 +2047,31 @@
                                 </div>
                             </div>
                             <div>
-                                <h3 style="font-size: 15px;">Edge Optimization Techniques</h3>
+                                <h3 style="font-size: 15px;">Edge Optimization & Performance</h3>
                                 <p style="font-size: 13px; line-height: 1.4; margin-bottom: 6px;">
-                                    Because Raspberry Pi 5 lacks a dedicated GPU, every optimization is critical. Four key techniques from our pipeline:
+                                    Because Raspberry Pi 5 lacks a dedicated GPU, running native 640px inference tops out at 5 to 8 FPS.
                                 </p>
-
-                                <div style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 8px;">
-                                    <div style="display: flex; align-items: center; gap: 8px; background: var(--bg-primary); border-radius: 6px; padding: 5px 8px; border-left: 3px solid #22c55e;">
-                                        <span style="font-size: 9px; font-weight: 700; color: #22c55e; min-width: 85px;">Skip-2 跳幀</span>
-                                        <span style="font-size: 8px; color: var(--text-secondary); flex:1;">車道偵測每 3 幀執行一次，攤銷推論成本 50ms→17ms</span>
-                                        <span style="font-size: 12px; font-weight: 700; color: #22c55e;">+108%</span>
-                                    </div>
-                                    <div style="display: flex; align-items: center; gap: 8px; background: var(--bg-primary); border-radius: 6px; padding: 5px 8px; border-left: 3px solid #22d3ee;">
-                                        <span style="font-size: 9px; font-weight: 700; color: #22d3ee; min-width: 85px;">TorchScript</span>
-                                        <span style="font-size: 8px; color: var(--text-secondary); flex:1;">jit.trace + jit.freeze 消除 Python overhead，穩定幀間變異</span>
-                                        <span style="font-size: 12px; font-weight: 700; color: #22d3ee;">+7%</span>
-                                    </div>
-                                    <div style="display: flex; align-items: center; gap: 8px; background: var(--bg-primary); border-radius: 6px; padding: 5px 8px; border-left: 3px solid #eab308;">
-                                        <span style="font-size: 9px; font-weight: 700; color: #eab308; min-width: 85px;">imgsz=256</span>
-                                        <span style="font-size: 8px; color: var(--text-secondary); flex:1;">YOLO 像素 102,400→65,536 (-36%)，推論 ~32ms→~24ms</span>
-                                        <span style="font-size: 12px; font-weight: 700; color: #eab308;">+25%</span>
-                                    </div>
-                                    <div style="display: flex; align-items: center; gap: 8px; background: var(--bg-primary); border-radius: 6px; padding: 5px 8px; border-left: 3px solid #a855f7;">
-                                        <span style="font-size: 9px; font-weight: 700; color: #a855f7; min-width: 85px;">Logspace Y</span>
-                                        <span style="font-size: 8px; color: var(--text-secondary); flex:1;">logspace 取樣 50 點（近密遠疏），匹配人類視覺透視</span>
-                                        <span style="font-size: 10px; font-weight: 600; color: #a855f7;">更穩定</span>
-                                    </div>
-                                </div>
-
-                                <div style="background: var(--bg-primary); border-radius: 6px; padding: 5px 7px; border: 1px solid var(--border-light);">
-                                    <h4 style="font-size: 10px; color: var(--brand-navy); margin-bottom: 3px;"><i class="fa-solid fa-chart-simple"></i> Optimization Progress (Windows CPU Benchmark)</h4>
+                                <ul class="bullet-list" style="font-size: 12px;">
+                                    <li><strong>320px Resolution Downscaling:</strong> Reduces compute matrix by 75%.</li>
+                                    <li><strong>Adaptive Frame Skipping:</strong> Skips redundant background/lane updates to free CPU while keeping tracking smooth.</li>
+                                    <li><strong>Result:</strong> Inference speed surges to <strong>15-20 FPS</strong>, satisfying real-time safety system requirements.
+                                    </li>
+                                </ul>
+                                <div style="margin-top: 8px; background: var(--bg-primary); border-radius: 6px; padding: 5px 7px; border: 1px solid var(--border-light);">
+                                    <h4 style="font-size: 10px; color: var(--brand-navy); margin-bottom: 3px;"><i class="fa-solid fa-chart-simple"></i> 優化歷程 (Windows CPU Benchmark)</h4>
                                     <table class="comparison-table" style="font-size: 8px;">
                                         <thead><tr><th>Step</th><th>FPS</th><th>Latency</th><th>Gain</th></tr></thead>
                                         <tbody>
                                             <tr><td>Baseline (LSTR PyTorch)</td><td style="color:var(--alert-red);">15.3</td><td>65ms</td><td>—</td></tr>
-                                            <tr><td>+ Skip-2 Frame</td><td style="color:#eab308;">31.9</td><td>31ms</td><td>+108%</td></tr>
-                                            <tr><td>+ TorchScript Compile</td><td style="color:#22d3ee;">34.7</td><td>29ms</td><td>+7%</td></tr>
+                                            <tr><td>+ Skip-2 Frame</td><td style="color:var(--alert-amber);">31.9</td><td>31ms</td><td>+108%</td></tr>
+                                            <tr><td>+ TorchScript Compile</td><td style="color:#22d3ee;">34.7</td><td>29ms</td><td>+9%</td></tr>
                                             <tr><td>+ TTC Fusion v2</td><td style="color:#22c55e;">32.5</td><td>31ms</td><td>stable</td></tr>
                                         </tbody>
                                     </table>
                                 </div>
                                 <div style="margin-top: 5px; display: flex; gap: 6px;">
                                     <div style="flex:1; background: var(--bg-primary); border-radius: 6px; padding: 4px 6px; border: 1px solid var(--border-light);">
-                                        <h4 style="font-size: 9px; color: var(--brand-navy); margin-bottom: 2px;">Bottleneck Analysis</h4>
+                                        <h4 style="font-size: 9px; color: var(--brand-navy); margin-bottom: 2px;">瓶頸分析</h4>
                                         <div style="font-size: 8px;">
                                             <div style="display:flex; justify-content:space-between; margin-bottom:1px;"><span>LSTR TS</span><span style="color:#22d3ee;">17ms (58%)</span></div>
                                             <div style="height:4px; background:var(--border-light); border-radius:2px; margin-bottom:2px;"><div style="width:58%; height:100%; background:#22d3ee; border-radius:2px;"></div></div>
@@ -2207,7 +2080,7 @@
                                         </div>
                                     </div>
                                     <div style="flex:1; background: var(--bg-primary); border-radius: 6px; padding: 4px 6px; border: 1px solid var(--border-light);">
-                                        <h4 style="font-size: 9px; color: var(--brand-navy); margin-bottom: 2px;">Pi 5 Deployment Roadmap</h4>
+                                        <h4 style="font-size: 9px; color: var(--brand-navy); margin-bottom: 2px;">Pi 5 部署路線</h4>
                                         <table class="comparison-table" style="font-size: 7px;">
                                             <thead><tr><th>Pri</th><th>Action</th><th>FPS</th></tr></thead>
                                             <tbody>
@@ -2225,8 +2098,8 @@
                 </div>
             </section>
 
-            <!-- Slide 14: Results - HUD Overlay & Real Log (FULL INTERACTIVE SIMULATOR) -->
-            <section class="slide-frame" id="slide-14">
+            <!-- Slide 13: Results - HUD Overlay & Real Log (FULL INTERACTIVE SIMULATOR) -->
+            <section class="slide-frame" id="slide-13">
                 <div class="slide-content-container">
                     <header class="slide-header">
                         <div class="slide-header-left">
@@ -2332,56 +2205,8 @@
                 </div>
             </section>
 
-            <!-- Slide 15: Results - VISOR App Screenshot -->
+            <!-- Slide 15: Conclusion - Major Contribution -->
             <section class="slide-frame" id="slide-15">
-                <div class="slide-content-container">
-                    <header class="slide-header">
-                        <div class="slide-header-left">
-                            <span class="chapter-indicator">IV. Results & Performance Validation</span>
-                            <h1 class="slide-headline">VISOR Mobile App Interface</h1>
-                        </div>
-                        <div class="slide-header-logo">Paper ID: 20</div>
-                    </header>
-                    <div class="slide-body" style="align-items: center;">
-                        <div style="display: flex; gap: 25px; align-items: center; height: 100%;">
-                            <div style="flex: 1; text-align: center;">
-                                <img src="img/visor_app_screenshot.jpeg" alt="VISOR App Screenshot"
-                                    style="max-height: 420px; max-width: 100%; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); object-fit: contain;">
-                            </div>
-                            <div style="width: 300px; flex-shrink: 0;">
-                                <h3 style="font-size: 16px; color: var(--brand-navy); margin-bottom: 6px;">Cross-Platform Tactical Console</h3>
-                                <p style="font-size: 12px; line-height: 1.5; color: var(--text-secondary); margin-bottom: 10px;">
-                                    We developed a cross-platform mobile app (Cordova — Android &amp; iOS) that serves as the rider's command center. It displays a <strong>real-time dashboard</strong> with speed, lean angle, and directional threat levels — all synced from the Pi 5 core over BLE and Wi-Fi.
-                                </p>
-
-                                <!-- E-SOS Feature Card -->
-                                <div style="background: #fef2f2; border-left: 4px solid var(--alert-red); border-radius: 6px; padding: 8px 10px; margin-bottom: 8px;">
-                                    <h4 style="font-size: 12px; color: var(--alert-red); margin-bottom: 3px;"><i class="fa-solid fa-life-ring"></i> E-SOS Emergency Rescue</h4>
-                                    <p style="font-size: 11px; color: var(--text-secondary); line-height: 1.4; margin: 0;">
-                                        If the system detects an <strong>abnormal motorcycle tilt exceeding 15 seconds</strong>, it automatically transmits an emergency SMS containing the rider's <strong>GPS coordinates</strong> to pre-set emergency contacts. No rider action needed — fully autonomous crash response.
-                                    </p>
-                                </div>
-
-                                <!-- Gemini AI Feature Card -->
-                                <div style="background: #f5f3ff; border-left: 4px solid #a855f7; border-radius: 6px; padding: 8px 10px; margin-bottom: 8px;">
-                                    <h4 style="font-size: 12px; color: #a855f7; margin-bottom: 3px;"><i class="fa-solid fa-brain"></i> Gemini 2.5 Flash AI Analysis</h4>
-                                    <p style="font-size: 11px; color: var(--text-secondary); line-height: 1.4; margin: 0;">
-                                        Integrated with <strong>Google Gemini</strong>, the system analyzes historical riding data — speeding events, hard braking, dangerous lean angles — and <strong>auto-generates personalized AI safety recommendations</strong> tailored to each rider's behavior patterns.
-                                    </p>
-                                </div>
-
-                                <ul class="bullet-list" style="font-size: 11px;">
-                                    <li><strong>BLE Auto-Pairing:</strong> visor_bt_agent.py — pair once, auto-connect every ride.</li>
-                                    <li><strong>Supabase Cloud Sync:</strong> Telemetry permanently stored, with real-time TerminalConsole log streaming.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Slide 17: Conclusion - Major Contribution -->
-            <section class="slide-frame" id="slide-17">
                 <div class="slide-content-container">
                     <header class="slide-header">
                         <div class="slide-header-left">
@@ -2421,8 +2246,8 @@
                 </div>
             </section>
 
-            <!-- Slide 18: Future Outlook & Q&A -->
-            <section class="slide-frame" id="slide-18">
+            <!-- Slide 16: Future Outlook & Q&A -->
+            <section class="slide-frame" id="slide-16">
                 <div class="slide-content-container"
                     style="justify-content: center; align-items: center; text-align: center;">
                     <h1 style="font-size: 42px; color: var(--brand-navy); margin-bottom: 20px;">
@@ -2458,7 +2283,7 @@
 
                     <p
                         style="margin-top: 40px; font-size: 14px; color: var(--text-muted); font-family: var(--font-mono);">
-                        V.I.S.O.R. System — Paper ID: 20
+                        V.I.S.O.R. System (Paper ID: 20) | Creative Technology Lab
                     </p>
                 </div>
             </section>
@@ -2482,7 +2307,7 @@
 
     <script>
         let currentSlide = 1;
-        const totalSlides = 18;
+        const totalSlides = 16;
         let audioCtx = null;
 
         // Slide specific intervals/animation timers
@@ -2577,34 +2402,26 @@
                 zh: "再來看兩個讓系統穩定的關鍵技術。第一是質心追蹤 — 我們用歐幾里得距離最小化來在連續幀之間關聯同一個物件，給每個物件分配一個唯一的 ID。如果物件被遮擋了幾幀，我們會保留追蹤紀錄最多五幀。然後用卡爾曼濾波來平滑座標，減少框框的抖動。第二是虛擬車道過濾 — 這個超重要。在市區擁擠的道路上，路邊停一排車，如果不過濾，系統會一直叫個不停。所以我們定義了一個虛擬的活動車道，X 軸大概取中間 50%，只有在這個範圍內的物件才做碰撞評估。左下角是 LSTR 的有理函數公式，用 Transformer 架構，只有 765K 參數，在 Pi 5 上搭配 skip-2 跳幀可以跑到 10.8 FPS。"
             },
             11: {
-                en: "Before we jump into the benchmark numbers, let me actually show you the system working on real footage. These are two real dashcam videos we recorded on Taiwan roads — not synthetic, not simulated. On the left, video f0ace550: dense urban traffic in the city. Over 2,600 detections, 106 threat events, running at 32.5 FPS. Watch the bounding boxes, lane curves, and distance labels — that's our full YOLOv26n + LSTR pipeline running in real time. On the right, video 50c9816b: lighter suburban traffic — 1,682 detections, 22 threats, and even faster at 38.3 FPS. Notice how the system handles different traffic densities and road types. This is the end-to-end output that proves the pipeline actually works outside the lab.",
-                zh: "在進到數據比較之前，我先讓大家看一下系統在真實影片上的表現。這是兩段我們在台灣道路上實際拍的行車記錄器畫面 — 不是合成，不是模擬。左邊是 f0ace550：市區重車流，超過 2,600 次偵測、106 次威脅事件，跑在 32.5 FPS。你看畫面上的 bounding box、車道線、距離標示 — 那就是我們 YOLOv26n 加 LSTR 的完整管線即時輸出。右邊是 50c9816b：郊區輕車流，1,682 次偵測、22 次威脅，更快跑到 38.3 FPS。注意看系統怎麼應對不同車流密度和道路類型。這就是端到端的實際輸出，證明管線在實驗室外面真的能跑。"
-            },
-            12: {
                 en: "So what do the actual numbers look like? Let's walk through the tables. First, YOLO models: our YOLOv26n beats both stock YOLOv8n variants — .561 precision, .338 recall, .422 F1, 34.9% mAP, all with only 2.6 million parameters and 20-25 FPS. But look at the lane detection comparison — this is even more dramatic. LSTR CULane: 765K parameters, 3.1MB model, 10.8 FPS on Pi 5. UFLD v2: 12 million params, 183MB, 2.3 FPS. And crucially, Taiwan Road Suitability — LSTR scores High because CULane weights are trained on urban and curved roads, exactly matching Taiwan conditions. UFLD v2 only gets Medium. At the bottom we have real video validation — our system processed 2,676 detections at 32.5 FPS in heavy urban traffic. That's real-world proof it works.",
                 zh: "實際數字長怎樣？我們來看這幾張表。首先是 YOLO 模型對照：我們的 YOLOv26n 贏過兩個 YOLOv8n 版本 — precision .561、recall .338、F1 .422、mAP 34.9%，參數只有 2.6M，FPS 可以到 20-25。再看車道偵測這張 — 差距更誇張。LSTR CULane：765K 參數、3.1MB、Pi 5 上 10.8 FPS。UFLD v2：一千兩百萬參數、183MB、只有 2.3 FPS — 根本不能用。關鍵是台灣道路適用性 — LSTR 是 High，因為 CULane 的權重就是針對市區跟彎道訓練的，完全對應台灣路型。UFLD 只有 Medium。下面還有實際影片驗證 — 我們在重車流的市區跑出 2,676 次偵測、32.5 FPS。這是有真實影片佐證的。"
             },
-            13: {
+            12: {
                 en: "This slide shows the full system architecture. Four layers from top to bottom: perception layer with dual CSI cameras feeding MJPEG frames, then the core Pi 5 computing layer running YOLOv26n and LSTR in TorchScript, then the Pi Zero 2W HUD node receiving coordinates over UDP in under 15 milliseconds, and finally the output terminal — a tiny SSD1315 OLED with hard inversion alerts that instantly grab the rider's attention. On the right you can see the tactical app console features: HMI dashboard, E-SOS emergency system that auto-detects crashes via abnormal tilt and sends SMS with GPS, BLE for config changes without blocking Wi-Fi, and cloud sync to Supabase with Gemini 2.5 Flash generating personalized riding safety tips.",
                 zh: "這頁是完整系統架構。四層從上到下：感知層雙 CSI 鏡頭送 MJPEG 影像進來到 Pi 5 核心運算層跑 YOLOv26n 跟 LSTR TorchScript，然後透過 UDP 在 15 毫秒內把座標傳給 Pi Zero 2W 的 HUD 節點，最後是 SSD1315 OLED 輸出端，用全螢幕反轉閃爍直接抓住騎士注意力。右邊是戰術中控 App 的功能：HMI 儀表板、E-SOS 緊急求救（偵測異常傾角自動發送 GPS 簡訊）、BLE 藍牙設定不佔用 Wi-Fi、還有雲端同步到 Supabase 搭配 Gemini 2.5 Flash 產生個人化騎乘安全建議。"
             },
-            14: {
+            13: {
                 en: "Here's the live demo of both interfaces working together. On the left is the helmet HUD — showing speed, system status, and threat alerts. On the right is our VISOR mobile app, mirroring the same data in real time: speed, lean angle, threat level, a mini radar view, and live system events. Try clicking the looming warning or lane drift buttons — both interfaces react simultaneously. In a real ride, the phone connects to the Pi 5 over BLE, so you get full visibility without touching anything. The lean angle even simulates cornering dynamically. This is what the rider actually sees — instant, intuitive awareness of what's happening around them.",
                 zh: "這頁是兩個界面同時運作的現場展示。左邊是安全帽 HUD — 顯示速度、系統狀態跟威脅警告。右邊是我們的 VISOR 手機 App，即時同步一樣的數據：速度、傾角、威脅等級、迷你雷達、還有系統事件記錄。你點一下 looming 警告或車道偏移按鈕 — 兩個界面會同時反應。真實騎乘的時候，手機透過 BLE 連到 Pi 5，完全不用動手就能看到全部狀態。傾角還會動態模擬過彎。這就是騎士實際上看到的畫面 — 即時、直覺掌握周遭狀況。"
             },
+            14: {
+                en: "This is the optimization story. On Pi 5 without a GPU, the baseline setup gave us only 5 to 8 FPS — useless for real-time safety. So we pushed hard. Step one: drop resolution from 640 to 320 pixels, cutting the compute matrix by 75%. Step two: adaptive frame skipping — we only recompute lane detection every third frame, amortizing the cost from 50ms down to 17ms per frame. Step three: TorchScript static compilation removes Python interpreter overhead. The benchmark table tells the story: baseline 15.3 FPS on Windows, adding skip-2 jumps to 31.9 FPS, TorchScript pushes to 34.7, stabilizing at 32.5 with TTC v2. The bottleneck breakdown shows LSTR takes 58% of frame time, YOLO 42%. The Pi 5 roadmap on the right: we're at 10.8 FPS now, imgsz=256 gets us to 13, ONNX INT8 quantization should reach 20-25, and a USB accelerator pushes beyond 25. That's the path to true real-time on edge.",
+                zh: "這頁是優化的故事。Pi 5 沒有 GPU，初始設定只有 5 到 8 FPS — 對即時安全來說沒意義。所以我們卯起來優化。第一步：解析度從 640 降到 320，運算矩陣砍掉 75%。第二步：自適應跳幀 — 車道偵測每三幀才重算一次，成本從 50ms 攤銷到 17ms。第三步：TorchScript 靜態編譯消除 Python 直譯器開銷。優化歷程表很清楚：Windows 上 baseline 15.3 FPS，加 skip-2 跳到 31.9，TorchScript 推到 34.7，加 TTC v2 穩定在 32.5。瓶頸分析 LSTR 佔 58%、YOLO 佔 42%。右邊 Pi 5 路線圖：現在 10.8 FPS，imgsz=256 可以到 13，ONNX INT8 量化預估 20-25，USB 加速器可以破 25。這就是邊緣端真正即時的實現路徑。"
+            },
             15: {
-                en: "Here's the actual VISOR app. We built a cross-platform mobile app — Cordova, so it runs on both Android and iOS. This is a real screenshot, not a mockup. Three things I want to highlight. First — the live dashboard. Real-time speed, lean angle, radar scanner — all fed from the Pi 5 over BLE. Second, and this is really important — E-SOS. If the system detects the bike has tipped over and stayed down for more than 15 seconds, it automatically fires off an SMS with the rider's GPS coordinates. No button to press, no confirmation needed. Purely autonomous. Third — we integrated Google Gemini 2.5 Flash. It analyzes each rider's history: where do they speed? Where do they brake hard? Where do they lean dangerously? And it generates personalized AI safety recommendations. So it's not just a real-time warning system — it's a long-term safety coach.",
-                zh: "這頁是真實的 VISOR App 畫面。我們開發了跨平台手機 App，用 Cordova，Android 和 iOS 都能跑。這是實際截圖。三個重點。第一，即時儀表板 — 速度、傾角、雷達掃描，全部從 Pi 5 透過 BLE 即時傳過來。第二，最重要的一點 — E-SOS 緊急求救。系統如果偵測到機車傾倒超過 15 秒，它會自動發送包含 GPS 座標的簡訊給緊急聯絡人。不用按按鈕、不用確認，全自動。第三，我們整合了 Google Gemini 2.5 Flash。它會分析每位騎士的歷史數據：哪裡超速？哪裡急煞？哪裡壓車太危險？然後生成個人化的 AI 安全建議。所以它不只是即時警告系統，更是一個長期安全教練。"
-            },
-            16: {
-                en: "This is the optimization story — the 'black magic' that makes it all run on a Pi. Four techniques, each with measurable gains. First: Skip-2 frame scheduling — lane detection only runs every third frame, amortizing the cost from 50ms down to 17ms. That alone gives us a 108% FPS boost. Second: TorchScript static compilation removes Python interpreter overhead — another 7%. Third: dropping YOLO input to imgsz=256 cuts pixels by 36%, giving YOLO a 25% speedup. Fourth: Logspace Y-sampling for lane curve points — dense near, sparse far, matching human perspective. The benchmark table shows the full trajectory: 15.3 FPS baseline to 34.7 at peak, stabilizing at 32.5. The bottleneck on the right shows LSTR at 58% of frame time — that's our prime target for future ONNX INT8 quantization. We're at 10.8 FPS on Pi 5 now, aiming for 20-25 with ONNX and 25+ with a USB accelerator.",
-                zh: "這頁是優化的故事 — 讓一切在樹莓派上跑得動的「黑科技」。四個技術，每個都有數據佐證。第一：Skip-2 跳幀，車道偵測每三幀跑一次，成本從 50ms 攤銷到 17ms，單這一項就帶來 108% 的 FPS 提升。第二：TorchScript 靜態編譯，消除 Python 直譯器開銷，再賺 7%。第三：YOLO 輸入降到 imgsz=256，像素砍 36%，YOLO 快 25%。第四：Logspace Y 取樣，近密遠疏，跟人眼透視一致，車道線更精準。優化歷程表很清楚：baseline 15.3 FPS，最高到 34.7，穩定在 32.5。右邊瓶頸分析 LSTR 佔 58%，那是我們下一階段 ONNX INT8 量化的主要目標。Pi 5 現在 10.8 FPS，ONNX 預估 20-25，USB 加速器可以破 25。"
-            },
-            17: {
                 en: "So to wrap it up, here's what we actually achieved. First, we solved the Taiwan motorcycle data problem with a hybrid dataset approach. Second, we pushed edge computing to its limits and got low-latency protection on very cheap hardware. And third, we actually made advanced safety tech accessible — not just for luxury car owners, but for the millions of people riding scooters every day.",
                 zh: "總結一下我們的三個貢獻。第一，用混合資料集解決了台灣機車視角資料缺乏的問題。第二，把邊緣運算推到極限，在超便宜的硬體上做到了低延遲防護。第三，真的把高級安全技術變便宜了 — 不再只有高級車車主才有，每天騎機車通勤的人也用得起。"
             },
-            18: {
+            16: {
                 en: "Looking ahead, we want to push this further. Quantization, pruning, maybe TensorRT or OpenVINO. Better models, better accuracy. Also need to sort out the cooling for outdoor use — Taiwan summers are brutal. And we're exploring V2X integration. That's all from me. Thanks for listening — happy to take any questions.",
                 zh: "未來方向的話，我們想繼續優化。量化、剪枝這些技術試一試，導入 TensorRT 或 OpenVINO 看能不能再推高 FPS。散熱也是個問題 — 台灣夏天真的太熱了。還有 V2X 車聯網的整合。以上就是我的報告，謝謝大家，有問題歡迎提出。"
             }
@@ -2688,17 +2505,6 @@
                     console.warn('MathJax typeset error:', err);
                 });
             }
-
-            // Auto-play / pause demo videos on slide 11
-            const videos = document.querySelectorAll('.slide-frame video');
-            videos.forEach(v => {
-                if (slideIndex === 11) {
-                    v.currentTime = 0;
-                    v.play().catch(() => {});
-                } else {
-                    v.pause();
-                }
-            });
         }
 
         function nextSlide() {
@@ -2728,12 +2534,12 @@
                 startSlide7AutoLoop();
             } else if (slideIndex === 8) {
                 startSlide8AutoLoop();
-            } else if (slideIndex === 12) {
+            } else if (slideIndex === 11) {
                 switchPrecisionModel('visor');
                 startSlide11AutoLoop();
-            } else if (slideIndex === 14) {
+            } else if (slideIndex === 13) {
                 startSlide14AutoLoop();
-            } else if (slideIndex === 16) {
+            } else if (slideIndex === 14) {
                 // Reset and start FPS simulation
                 initFpsSimulation();
                 toggleFpsSimulation(); // auto-trigger play
@@ -2741,99 +2547,21 @@
         }
 
         // Bind Keyboard Arrows & Shortcuts
-        let sidebarWasHidden = false;
-
-        function updateBodyClass() {
-            const sidebar = document.getElementById('sidebar');
-            if (sidebar && sidebar.style.display === 'none') {
-                document.body.classList.add('sidebar-hidden');
-            } else {
-                document.body.classList.remove('sidebar-hidden');
-            }
-        }
-
-        function toggleFullscreen() {
-            const sidebar = document.getElementById('sidebar');
-            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                // Enter fullscreen
-                const el = document.documentElement;
-                if (el.requestFullscreen) {
-                    el.requestFullscreen();
-                } else if (el.webkitRequestFullscreen) {
-                    el.webkitRequestFullscreen();
-                }
-                // Auto-hide sidebar for max display
-                if (sidebar && sidebar.style.display !== 'none') {
-                    sidebar.style.display = 'none';
-                    sidebarWasHidden = false;
-                }
-                updateBodyClass();
-            } else {
-                // Exit fullscreen
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                }
-                // Restore sidebar only if it wasn't manually hidden before
-                if (sidebar && !sidebarWasHidden) {
-                    sidebar.style.display = 'flex';
-                }
-                updateBodyClass();
-            }
-        }
-
-        // Listen for native fullscreen changes (e.g. user presses browser Esc)
-        document.addEventListener('fullscreenchange', () => {
-            const sidebar = document.getElementById('sidebar');
-            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                if (sidebar && !sidebarWasHidden) {
-                    sidebar.style.display = 'flex';
-                }
-                updateBodyClass();
-            }
-        });
-        document.addEventListener('webkitfullscreenchange', () => {
-            const sidebar = document.getElementById('sidebar');
-            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                if (sidebar && !sidebarWasHidden) {
-                    sidebar.style.display = 'flex';
-                }
-                updateBodyClass();
-            }
-        });
-
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
                 nextSlide();
             } else if (e.key === 'ArrowLeft') {
                 prevSlide();
             } else if (e.key.toLowerCase() === 's') {
-                // Toggle entire sidebar visibility
-                e.preventDefault();
-                const sidebar = document.getElementById('sidebar');
-                if (sidebar) {
-                    if (sidebar.style.display === 'none') {
-                        sidebar.style.display = 'flex';
-                        sidebarWasHidden = false;
+                // Toggle speaker notes visibility
+                const panel = document.getElementById('speaker-notes-panel');
+                if (panel) {
+                    if (panel.style.display === 'none') {
+                        panel.style.display = 'flex';
                     } else {
-                        sidebar.style.display = 'none';
-                        sidebarWasHidden = true;
+                        panel.style.display = 'none';
                     }
-                    updateBodyClass();
                 }
-            } else if (e.key === 'F11' || (e.key.toLowerCase() === 's' && e.ctrlKey === false && e.shiftKey === false && e.altKey === false && e.metaKey === false)) {
-                // F11 handled below; don't double-process S
-                // (S is caught above, F11 falls through to toggleFullscreen)
-            }
-        });
-
-        // Separate F11 handler (must use keydown, some browsers intercept F11)
-        document.addEventListener('keydown', function f11Handler(e) {
-            if (e.key === 'F11') {
-                e.preventDefault();
-                e.stopPropagation();
-                toggleFullscreen();
             }
         });
 
@@ -2872,7 +2600,7 @@
                 fovFront.setAttribute('stroke', 'var(--brand-teal)');
                 fovRear.setAttribute('fill', 'rgba(13, 148, 136, 0.12)');
                 fovRear.setAttribute('stroke', 'var(--brand-teal)');
-                radarStatus.innerHTML = "Radar scanning normal. Move cursor to simulate threat vehicles.";
+                radarStatus.innerHTML = "Radar scanning normal. Move mouse/finger to simulate threat vehicles.";
             }
         }
 
@@ -2909,7 +2637,7 @@
                     fovFront.setAttribute('stroke', 'var(--alert-red)');
                     fovRear.setAttribute('fill', 'rgba(13, 148, 136, 0.12)');
                     fovRear.setAttribute('stroke', 'var(--brand-teal)');
-                    radarStatus.innerHTML = "?? <span style='color:var(--alert-red)'>FRONT THREAT DETECTED — Active Ranging</span>";
+                    radarStatus.innerHTML = "?? <span style='color:var(--alert-red)'>前方威脅！主動安全車載測距中 (自動導航模擬)</span>";
 
                     if (Math.random() < 0.1) playWarningBeep(1000, 0.08);
 
@@ -2917,7 +2645,7 @@
                     // Clear state
                     threatDot.style.display = 'none';
                     resetRadarIndicators();
-                    radarStatus.innerHTML = "Front clear — no immediate collision risk.";
+                    radarStatus.innerHTML = "環境淨空，前向安全無即時撞擊危險。";
 
                 } else if (state === 2) {
                     // Rear Threat Approaching (Blind Spot)
@@ -2931,7 +2659,7 @@
                     fovRear.setAttribute('stroke', 'var(--alert-red)');
                     fovFront.setAttribute('fill', 'rgba(13, 148, 136, 0.12)');
                     fovFront.setAttribute('stroke', 'var(--brand-teal)');
-                    radarStatus.innerHTML = "? <span style='color:var(--alert-red)'>REAR BLIND SPOT — Looming alarm triggered</span>";
+                    radarStatus.innerHTML = "? <span style='color:var(--alert-red)'>後方右側盲區逼車！Looming 演算法警報中</span>";
 
                     if (Math.random() < 0.1) playWarningBeep(660, 0.1);
 
@@ -2939,7 +2667,7 @@
                     // Clear state
                     threatDot.style.display = 'none';
                     resetRadarIndicators();
-                    radarStatus.innerHTML = "Rear blind spot zone — monitoring.";
+                    radarStatus.innerHTML = "環境淨空，後向死角區監控中。";
                 }
 
                 slideAnimFrames['radar'] = requestAnimationFrame(animateRadarThreat);
@@ -2985,7 +2713,7 @@
                     fovFront.setAttribute('stroke', 'var(--alert-red)');
                     fovRear.setAttribute('fill', 'rgba(13, 148, 136, 0.12)');
                     fovRear.setAttribute('stroke', 'var(--brand-teal)');
-                    radarStatus.innerHTML = "?? <span style='color:var(--alert-red)'>FRONT THREAT — Active ranging...</span>";
+                    radarStatus.innerHTML = "?? <span style='color:var(--alert-red)'>前方威脅！主動安全測距中...</span>";
                     playWarningBeep(1000, 0.1);
                 } else if (angleDeg >= 30 && angleDeg <= 150 && distance < 160) {
                     // Rear Threat detected!
@@ -2993,7 +2721,7 @@
                     fovRear.setAttribute('stroke', 'var(--alert-red)');
                     fovFront.setAttribute('fill', 'rgba(13, 148, 136, 0.12)');
                     fovFront.setAttribute('stroke', 'var(--brand-teal)');
-                    radarStatus.innerHTML = "? <span style='color:var(--alert-red)'>REAR BLIND SPOT THREAT — Looming triggered</span>";
+                    radarStatus.innerHTML = "? <span style='color:var(--alert-red)'>後方死角逼車警告！Looming 觸發</span>";
                     playWarningBeep(660, 0.15);
                 } else {
                     resetRadarIndicators();
@@ -3044,25 +2772,25 @@
             if (type === 'normal') {
                 const btn = document.getElementById('btn-aug-normal');
                 if (btn) btn.classList.add('active');
-                desc.innerHTML = "Real Taiwan dashcam footage at 1 fps — baseline road geometry capture.";
+                desc.innerHTML = "當前狀態：真實擷取的 1 fps 行車記錄器畫面，用於建立台灣本土道路的基本幾何。";
             } else if (type === 'rain') {
                 const btn = document.getElementById('btn-aug-rain');
                 if (btn) btn.classList.add('active');
                 sandbox.classList.add('rain-effect');
                 sandbox.style.filter = "contrast(1.2) brightness(0.65) saturate(0.5)";
-                desc.innerHTML = "<strong>Stable Diffusion</strong> synthetic rain & fog — reconstructing clear scenes into heavy weather for climate robustness.";
+                desc.innerHTML = "當前狀態：透過 <strong>Stable Diffusion 對抗網路</strong>，一鍵將原本晴朗的畫面重構成豪雨與大霧效果，豐富氣候模型。";
             } else if (type === 'vibrate') {
                 const btn = document.getElementById('btn-aug-shake');
                 if (btn) btn.classList.add('active');
                 sandbox.style.filter = "blur(4px)";
-                desc.innerHTML = "<strong>OpenCV Motion Blur kernel</strong> — simulating high-frequency vibration on uneven road surfaces.";
+                desc.innerHTML = "當前狀態：透過 <strong>OpenCV 動態模糊矩陣 (Motion Blur)</strong>，模擬機車在不平坦路面產生的高頻震顫。";
             } else if (type === 'noise') {
                 const btn = document.getElementById('btn-aug-noise');
                 if (btn) btn.classList.add('active');
                 sandbox.style.filter = "brightness(0.5)";
                 noiseLayer.style.background = "repeating-radial-gradient(#000 0%, transparent 10%)";
                 noiseLayer.style.opacity = "0.3";
-                desc.innerHTML = "Low-light sensor noise injection — pre-adapting the model for nighttime generalization.";
+                desc.innerHTML = "當前狀態：模擬弱光行車或感光元件噪訊，以提早訓練模型去適應夜間雜訊泛化。";
             }
         }
 
@@ -3096,7 +2824,7 @@
                     leanValLabel.innerHTML = "0° (Straight Riding)";
                     leanValLabel.style.color = "var(--brand-teal)";
                 } else {
-                    leanValLabel.innerHTML = `${value}° (Cornering — auto-simulating lean)`;
+                    leanValLabel.innerHTML = `${value}° (過彎傾斜中 - 自動模擬)`;
                     leanValLabel.style.color = "var(--alert-red)";
                 }
             }
@@ -3135,7 +2863,7 @@
             const lblAvg = document.getElementById('val-avg');
 
             // Buttons resets
-            document.querySelectorAll('#slide-12 .precision-tabs button').forEach(btn => btn.className = 'interactive-btn secondary');
+            document.querySelectorAll('#slide-11 .precision-tabs button').forEach(btn => btn.className = 'interactive-btn secondary');
 
             let data = {};
             if (model === 'visor') {
