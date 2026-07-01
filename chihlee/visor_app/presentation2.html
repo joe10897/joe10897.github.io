@@ -3014,13 +3014,20 @@
                             updateViewer(d.s);
                         }
                     })
-                    .catch(() => {});
+                    .catch(() => {
+                        // fallback to localStorage if server unavailable
+                        const saved = localStorage.getItem('visor_current_slide');
+                        if (saved && parseInt(saved) !== lastSlide) {
+                            lastSlide = parseInt(saved);
+                            updateViewer(lastSlide);
+                        }
+                    });
             }
-            // initial load
+            // try server first, fallback to localStorage
+            const saved = localStorage.getItem('visor_current_slide');
+            if (saved) updateViewer(parseInt(saved));
             pollServer();
-            // poll every second
             setInterval(pollServer, 1000);
-            // also listen for same-browser localStorage sync
             window.addEventListener('storage', (e) => {
                 if (e.key === 'visor_current_slide') updateViewer(parseInt(e.newValue));
             });
