@@ -2323,6 +2323,8 @@
             triggerSlideAnimations(slideIndex);
             document.getElementById('slide-counter').textContent = `${slideIndex} / ${totalSlides}`;
             localStorage.setItem('visor_current_slide', slideIndex);
+            // server-side cross-device sync
+            try { fetch('sync.php?slide=' + slideIndex, {cache: 'no-cache'}); } catch(e) {}
 
             // Re-typeset MathJax on the newly visible slide (formulas cannot render while hidden)
             if (window.MathJax && window.MathJax.typesetPromise) {
@@ -3002,8 +3004,23 @@
                 }
                 if (slideNum) slideNum.textContent = slide;
             }
-            const saved = localStorage.getItem('visor_current_slide');
-            if (saved) updateViewer(parseInt(saved));
+            let lastSlide = 0;
+            function pollServer() {
+                fetch('sync.php?t=' + Date.now(), {cache: 'no-cache'})
+                    .then(r => r.json())
+                    .then(d => {
+                        if (d.s !== lastSlide) {
+                            lastSlide = d.s;
+                            updateViewer(d.s);
+                        }
+                    })
+                    .catch(() => {});
+            }
+            // initial load
+            pollServer();
+            // poll every second
+            setInterval(pollServer, 1000);
+            // also listen for same-browser localStorage sync
             window.addEventListener('storage', (e) => {
                 if (e.key === 'visor_current_slide') updateViewer(parseInt(e.newValue));
             });
