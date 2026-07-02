@@ -113,6 +113,34 @@
             opacity: 0.3;
             z-index: 200;
         }
+
+        /* Notes-only mode (?notes=1): hide slides, show notes full-width */
+        body.notes-only #presentation-workspace {
+            display: none;
+        }
+        body.notes-only #sidebar {
+            width: 100vw;
+            max-width: 100vw;
+            padding: 30px 40px;
+        }
+        body.notes-only #speaker-notes-panel {
+            height: auto;
+            flex-grow: 1;
+            min-height: 0;
+        }
+        body.notes-only #notes-content {
+            font-size: 16px;
+            line-height: 1.7;
+        }
+        body.notes-only .chapter-tree {
+            display: none;
+        }
+        body.notes-only .nav-btn {
+            display: none;
+        }
+        body.notes-only #progress-bar-container {
+            display: none;
+        }
         body.sidebar-hidden #sidebar {
             display: none;
         }
@@ -1112,21 +1140,18 @@
                             <span class="slide-num">09</span> Benchmarks & Optimization
                         </div>
                         <div class="slide-link" onclick="goToSlide(10)">
-                            <span class="slide-num">10</span> HUD Overlay & VISOR App
-                        </div>
-                        <div class="slide-link" onclick="goToSlide(11)">
-                            <span class="slide-num">11</span> VISOR App Screenshot
+                            <span class="slide-num">10</span> VISOR App Screenshot
                         </div>
                     </div>
 
                     <!-- Section 5 -->
                     <div class="chapter-section">
                         <div class="chapter-title">V. Conclusion & Future Outlook</div>
-                        <div class="slide-link" onclick="goToSlide(12)">
-                            <span class="slide-num">12</span> Major Contribution
+                        <div class="slide-link" onclick="goToSlide(11)">
+                            <span class="slide-num">11</span> Major Contribution
                         </div>
-                        <div class="slide-link" onclick="goToSlide(13)">
-                            <span class="slide-num">13</span> Future Roadmap & Q&A
+                        <div class="slide-link" onclick="goToSlide(12)">
+                            <span class="slide-num">12</span> Future Roadmap & Q&A
                         </div>
                     </div>
 
@@ -1148,7 +1173,7 @@
                         <button onclick="zoomNotes(-1)" title="Smaller font" style="font-size: 10px; padding: 2px 4px; border: 1px solid var(--border-light); border-radius: 3px; background: white; cursor: pointer;"><i class="fa-solid fa-minus"></i></button>
                     </div>
                 </div>
-                <div id="notes-content" style="font-size: 12px; line-height: 1.5; color: var(--text-secondary); overflow-y: auto; flex-grow: 1; padding-right: 5px; background: var(--bg-primary); padding: 8px; border-radius: 6px; border: 1px solid var(--border-light);">
+                <div id="notes-content" style="font-size: 12px; line-height: 1.5; color: var(--text-secondary); overflow-y: auto; flex-grow: 1; min-height: 0; padding-right: 5px; background: var(--bg-primary); padding: 8px; border-radius: 6px; border: 1px solid var(--border-light);">
                     <!-- Dynamically updated by JS -->
                 </div>
             </div>
@@ -1317,7 +1342,7 @@
                                     <ul class="bullet-list" style="font-size: 14px;">
                                         <li><strong>Dual-Direction Monitoring:</strong> Front 120° + rear 160° lenses → <strong>~280°</strong> blind-spot-free coverage.</li>
                                         <li><strong>Dynamic Threat Zoning:</strong> Instantly classifies threat entry points, auto-switching front/rear alarms based on approach vector.</li>
-                                        <li><strong>3D Spatialized Audio:</strong> Helmet speakers pinpoint threat direction — left-rear, right-rear, front — enabling intuitive reflexive response without looking.</li>
+                                        <li><strong>Intuitive HUD + Buzzer Alert:</strong> Complex road computation data is distilled into <strong>minimalist dynamic visual blinking</strong> on the helmet HUD and <strong>audio buzzer tones</strong> — delivering early warning without increasing the rider's cognitive load, preserving precious mental resources for road judgment.</li>
                                     </ul>
                                 </div>
                             </div>
@@ -1388,7 +1413,7 @@
                             </div>
                             <div>
                                 <h3 style="font-size: 14px; margin-bottom: 5px;">Why Car ADAS Fails on Motorcycles</h3>
-                                <table class="comparison-table" style="font-size: 8px;">
+                                <table class="comparison-table" style="font-size: 11px;">
                                     <thead>
                                         <tr>
                                             <th>Parameter</th>
@@ -1620,7 +1645,7 @@
                                 <div class="math-block" style="font-size: 11px; padding: 4px 6px; margin-top: 2px;">
                                     $$TTC = \frac{d^{(t)}}{\max(v_{rel}^{(t)}, 0.1)}$$
                                 </div>
-                                <table class="comparison-table" style="font-size: 8px; margin: 4px 0;">
+                                <table class="comparison-table" style="font-size: 11px; margin: 4px 0;">
                                     <thead>
                                         <tr><th>Class</th><th>Width</th><th>Dist @320px</th></tr>
                                     </thead>
@@ -1632,7 +1657,7 @@
                                 </table>
                                 <div style="margin-top: 4px; background: var(--bg-primary); border-radius: 4px; padding: 4px 6px; border: 1px solid var(--border-light);">
                                     <h4 style="font-size: 10px; margin-bottom: 2px;">3-Tier Threat</h4>
-                                    <table class="comparison-table" style="font-size: 8px;">
+                                    <table class="comparison-table" style="font-size: 11px;">
                                         <thead><tr><th>Level</th><th>TTC</th><th>Dist</th></tr></thead>
                                         <tbody>
                                             <tr><td style="color:var(--alert-red);">CRITICAL</td><td>&lt;1.0s</td><td>&lt;2.0m</td></tr>
@@ -1793,7 +1818,7 @@
                                     </div>
                                     <div style="flex:1; background: var(--bg-primary); border-radius: 6px; padding: 4px 6px; border: 1px solid var(--border-light);">
                                         <h4 style="font-size: 9px; color: var(--brand-navy); margin-bottom: 1px;">Pi 5 Roadmap</h4>
-                                        <table class="comparison-table" style="font-size: 7px;">
+                                        <table class="comparison-table" style="font-size: 10px;">
                                             <thead><tr><th>Pri</th><th>Action</th><th>FPS</th></tr></thead>
                                             <tbody>
                                                 <tr><td style="color:#22c55e;">✓</td><td>Current</td><td>~10.8</td></tr>
@@ -1808,7 +1833,7 @@
                             <div style="display: flex; flex-direction: column; gap: 8px;">
                                 <div class="tech-card accent-header" style="padding: 8px;">
                                     <h3 style="font-size: 11px; margin-bottom: 2px;"><i class="fa-solid fa-microchip"></i> YOLO Models</h3>
-                                    <table class="comparison-table" style="font-size: 8px; white-space: nowrap;">
+                                    <table class="comparison-table" style="font-size: 11px; white-space: nowrap;">
                                         <thead><tr><th>Model</th><th>Prec</th><th>Rec</th><th>mAP</th><th>FPS</th></tr></thead>
                                         <tbody>
                                             <tr><td>YOLOv8n Base</td><td>.421</td><td>.285</td><td>29.8%</td><td>5-8</td></tr>
@@ -1819,7 +1844,7 @@
                                 </div>
                                 <div class="tech-card accent-header" style="padding: 8px;">
                                     <h3 style="font-size: 11px; margin-bottom: 2px;"><i class="fa-solid fa-road"></i> Lane Detection</h3>
-                                    <table class="comparison-table" style="font-size: 8px;">
+                                    <table class="comparison-table" style="font-size: 11px;">
                                         <thead><tr><th>Model</th><th>Params</th><th>Size</th><th>Pi 5 FPS</th></tr></thead>
                                         <tbody>
                                             <tr><td><strong>LSTR (Ours)</strong></td><td><strong>765K</strong></td><td><strong>3.1MB</strong></td><td><strong>~10.8</strong></td></tr>
@@ -1829,7 +1854,7 @@
                                 </div>
                                 <div class="tech-card accent-header" style="padding: 8px;">
                                     <h3 style="font-size: 11px; margin-bottom: 2px;"><i class="fa-solid fa-circle-check"></i> Video Validation</h3>
-                                    <table class="comparison-table" style="font-size: 8px;">
+                                    <table class="comparison-table" style="font-size: 11px;">
                                         <thead><tr><th>Video</th><th>Scene</th><th>Detections</th><th>FPS</th></tr></thead>
                                         <tbody>
                                             <tr><td>f0ace550</td><td>Urban Heavy</td><td>2,676</td><td class="text-accent">32.5</td></tr>
@@ -1851,139 +1876,9 @@
 
 
             <!-- Slide 14: Results - HUD Overlay & Real Log (FULL INTERACTIVE SIMULATOR) -->
-            <section class="slide-frame" id="slide-10">
-                <div class="slide-content-container">
-                    <header class="slide-header">
-                        <div class="slide-header-left">
-                            <span class="chapter-indicator">IV. Results & Performance Validation</span>
-                            <h1 class="slide-headline">Tactical HUD Overlay & VISOR App</h1>
-                        </div>
-                        <div class="slide-header-logo">Paper ID: 20</div>
-                    </header>
-                    <div class="slide-body">
-                        <div class="grid-2col" style="gap: 16px;">
-                            <div style="display:flex; flex-direction:column; gap:8px;">
-                                <h3 style="font-size:15px; color:var(--brand-navy); margin:0;"><i class="fa-solid fa-helmet-safety" style="color:var(--brand-teal);"></i> Helmet-Mounted HUD Interface</h3>
-                                <p style="font-size:12px; color:var(--text-secondary); margin:0; line-height:1.4;">
-                                    SSD1315 OLED (128×64) — real-time speed &amp; threat with <strong>hard full-screen inversion</strong> that instantly grabs peripheral vision without looking down.
-                                </p>
-                                <!-- Virtual HUD Glass Screen -->
-                                <div class="hud-screen" id="hud-glass-screen">
-                                    <div class="hud-indicator-circle" id="hud-circle">
-                                        <span style="font-size:10px; color:var(--text-muted)">SPEED</span>
-                                        <span style="font-size:28px; font-weight:bold; color:#fff;"
-                                            id="hud-speed-val">60</span>
-                                        <span style="font-size:10px; color:var(--text-muted)">KM/H</span>
-                                    </div>
-                                    <!-- Alerts side panels -->
-                                    <div id="hud-alert-overlay"
-                                        style="position: absolute; inset:0; background: transparent; pointer-events: none; transition: all 0.3s ease; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 20px;">
-                                        <span id="hud-alert-text"
-                                            style="color:var(--brand-teal); font-weight: bold; background: rgba(0,0,0,0.8); padding: 4px 12px; border-radius: 4px; border:1px solid var(--brand-teal);">SYSTEM
-                                            READY</span>
-                                    </div>
-                                </div>
-                                <!-- Simulation Control buttons -->
-                                <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                                    <button class="interactive-btn" id="btn-trigger-looming"
-                                        onclick="triggerSimulatorThreat('looming', true)">
-                                        <i class="fa-solid fa-car"></i> Looming Warning (Rear)
-                                    </button>
-                                    <button class="interactive-btn" id="btn-trigger-drift"
-                                        onclick="triggerSimulatorThreat('lane_drift', true)">
-                                        <i class="fa-solid fa-road-barrier"></i> Lane Drift Warning
-                                    </button>
-                                    <button class="interactive-btn secondary"
-                                        onclick="triggerSimulatorThreat('reset', true)">
-                                        <i class="fa-solid fa-arrows-rotate"></i> Reset System
-                                    </button>
-                                </div>
-                                <!-- Feature cards -->
-                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-                                    <div style="background:var(--bg-primary); border:1px solid var(--border-light); border-radius:6px; padding:6px 8px;">
-                                        <div style="font-size:11px; font-weight:700; color:var(--brand-teal);"><i class="fa-solid fa-eye"></i> OLED Inversion Alert</div>
-                                        <p style="font-size:10px; color:var(--text-secondary); margin:2px 0 0 0;">Entire screen inverts (white↔black) on threat — instant recognition without reading.</p>
-                                    </div>
-                                    <div style="background:var(--bg-primary); border:1px solid var(--border-light); border-radius:6px; padding:6px 8px;">
-                                        <div style="font-size:11px; font-weight:700; color:#a855f7;"><i class="fa-solid fa-ear-listen"></i> 3D Spatial Audio</div>
-                                        <p style="font-size:10px; color:var(--text-secondary); margin:2px 0 0 0;">Helmet speakers emit directional beeps — left, right, or front — enabling reflexive response.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="display:flex; flex-direction:column; gap:8px;">
-                                <h3 style="font-size:15px; color:var(--brand-navy); margin:0;"><i class="fa-solid fa-mobile-screen-button" style="color:var(--brand-teal);"></i> VISOR Mobile Console</h3>
-                                <p style="font-size:12px; color:var(--text-secondary); margin:0; line-height:1.4;">
-                                    Cross-platform app (Cordova) mirrors HUD data via BLE — speed, lean angle, threat level, radar view, and live system event log.
-                                </p>
-                                <div class="visor-phone-frame">
-                                    <div class="phone-status-bar">
-                                        <span>9:41</span>
-                                        <span><i class="fa-solid fa-signal"></i> <i class="fa-solid fa-wifi"></i> <i class="fa-solid fa-battery-three-quarters"></i></span>
-                                    </div>
-                                    <div class="phone-app-header">
-                                        <span class="phone-app-logo">V.I.S.O.R.</span>
-                                        <span class="phone-app-badge">CONNECTED</span>
-                                    </div>
-                                    <div class="phone-content">
-                                        <div class="phone-gauge-row">
-                                            <div class="phone-gauge-item">
-                                                <span class="phone-gauge-label">SPEED</span>
-                                                <span class="phone-gauge-value" id="phone-speed-val">60</span>
-                                                <span class="phone-gauge-unit">km/h</span>
-                                            </div>
-                                            <div class="phone-gauge-item">
-                                                <span class="phone-gauge-label">LEAN</span>
-                                                <span class="phone-gauge-value" id="phone-lean-val">0</span>
-                                                <span class="phone-gauge-unit">deg</span>
-                                            </div>
-                                            <div class="phone-gauge-item">
-                                                <span class="phone-gauge-label">THREAT</span>
-                                                <span class="phone-gauge-value" id="phone-threat-val" style="color: var(--brand-teal);">SAFE</span>
-                                                <span class="phone-gauge-unit">status</span>
-                                            </div>
-                                        </div>
-                                        <div class="phone-radar-section">
-                                            <div class="phone-radar-mini">
-                                                <div class="phone-radar-dot" id="phone-radar-dot"></div>
-                                                <svg viewBox="0 0 80 60" style="width:100%;height:100%;">
-                                                    <circle cx="40" cy="30" r="25" fill="none" stroke="rgba(13,148,136,0.15)" stroke-width="0.5"/>
-                                                    <circle cx="40" cy="30" r="15" fill="none" stroke="rgba(13,148,136,0.15)" stroke-width="0.5"/>
-                                                    <path d="M40,30 L25,8 A28,28 0 0,1 55,8 Z" fill="rgba(13,148,136,0.08)" stroke="var(--brand-teal)" stroke-width="1"/>
-                                                    <path d="M40,30 L18,52 A40,40 0 0,0 62,52 Z" fill="rgba(13,148,136,0.08)" stroke="var(--brand-teal)" stroke-width="1"/>
-                                                    <circle cx="40" cy="30" r="5" fill="#fff" stroke="var(--brand-navy)" stroke-width="1.5"/>
-                                                </svg>
-                                            </div>
-                                            <div class="phone-radar-info">
-                                                <div style="font-size:9px; color:var(--text-secondary);">Front: <span style="color:var(--brand-teal);">Clear</span></div>
-                                                <div style="font-size:9px; color:var(--text-secondary);">Rear: <span style="color:var(--brand-teal);">Clear</span></div>
-                                                <div style="font-size:9px; color:var(--text-secondary);">BLE: <span style="color:var(--brand-teal);">Paired</span></div>
-                                            </div>
-                                        </div>
-                                        <div class="phone-events-list" id="phone-events">
-                                            <div class="phone-event phone-event-ok">System Ready</div>
-                                            <div class="phone-event phone-event-ok">IMU Calibrated 0.0°</div>
-                                            <div class="phone-event phone-event-info">AI: Car (86%) 12m</div>
-                                        </div>
-                                    </div>
-                                    <div class="phone-nav-bar">
-                                        <span class="phone-nav-item active"><i class="fa-solid fa-gauge-high"></i> Dash</span>
-                                        <span class="phone-nav-item"><i class="fa-solid fa-map"></i> Route</span>
-                                        <span class="phone-nav-item"><i class="fa-solid fa-gear"></i> Config</span>
-                                        <span class="phone-nav-item"><i class="fa-solid fa-cloud"></i> Sync</span>
-                                    </div>
-                                </div>
-                                <div style="background:#f0fdfa; border:1px solid #ccfbf1; border-radius:6px; padding:5px 10px; font-size:10px; color:var(--text-secondary); line-height:1.5;">
-                                    <i class="fa-solid fa-arrow-right" style="color:var(--brand-teal);"></i>
-                                    <strong>Data Flow:</strong> Pi 5 <span style="color:var(--brand-teal); font-weight:600;">BLE</span> &rarr; Phone &nbsp;|&nbsp; Pi 5 <span style="color:var(--brand-teal); font-weight:600;">UDP</span> &rarr; HUD &lt;15ms
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             <!-- Slide 15: Results - VISOR App Screenshot -->
-            <section class="slide-frame" id="slide-11">
+            <section class="slide-frame" id="slide-10">
                 <div class="slide-content-container">
                     <header class="slide-header">
                         <div class="slide-header-left">
@@ -2031,7 +1926,7 @@
             </section>
 
             <!-- Slide 17: Conclusion - Major Contribution -->
-            <section class="slide-frame" id="slide-12">
+            <section class="slide-frame" id="slide-11">
                 <div class="slide-content-container">
                     <header class="slide-header">
                         <div class="slide-header-left">
@@ -2072,7 +1967,7 @@
             </section>
 
             <!-- Slide 18: Future Outlook & Q&A -->
-            <section class="slide-frame" id="slide-13">
+            <section class="slide-frame" id="slide-12">
                 <div class="slide-content-container"
                     style="justify-content: center; align-items: center; text-align: center;">
                     <h1 style="font-size: 42px; color: var(--brand-navy); margin-bottom: 20px;">
@@ -2142,7 +2037,7 @@
 
     <script>
         let currentSlide = 1;
-        const totalSlides = 13;
+        const totalSlides = 12;
         let audioCtx = null;
 
         // Slide specific intervals/animation timers
@@ -2205,48 +2100,44 @@
                 zh: "[⏱ 60s] 2023 年台灣機車事故佔死傷 61.74%。18–24 歲騎士死亡佔 22.1%、受傷佔 34.7%。機車致死率為汽車 28 倍。汽車有 ADAS，機車什麼都沒有——這就是 V.I.S.O.R. 要解決的問題。"
             },
             3: {
-                en: "[⏱ ~90s] To solve this problem, here is our proposal: V.I.S.O.R. — a pure-vision, low-cost active safety shield. The core idea is simple: we want to transform a passive helmet into an active, electronic protection system. [停頓]\n\nOur system is built on three core design pillars. [手勢：指向架構圖]\n\nFirst, dual-direction monitoring. As you can see, we mount a one-twenty-degree wide-angle lens on the front, and a one-sixty-degree fisheye lens on the rear. Together, they provide nearly two-eighty degrees of coverage, leaving practically no blind spots.\n\nSecond, dynamic threat zoning. Instead of just scanning blindly, the system classifies threat locations in real time. It automatically switches between front and rear alarm modes based on the threat's approach vector.\n\nFinally, three-D spatialized audio. We integrated speakers inside the helmet that can pinpoint the exact direction of danger — whether it's left-rear, right-rear, or straight ahead. This allows riders to react instantly, [加重語氣] without ever turning their heads.\n\n❓ INTERACTIVE: Move your cursor over the radar display on the left to simulate approaching vehicles.",
-                zh: "[⏱ 90s] V.I.S.O.R. 三支柱：280° 雙向監控（前 120° + 後 160°）、動態威脅分區、3D 空間音效。❓ 移動滑鼠操作雷達互動展示。"
+                en: "Here is our proposal: V.I.S.O.R. — a pure-vision, low-cost active safety shield for motorcycles.\n\nOur system stands on three pillars. [手勢指向架構圖]\n\nFirst, dual-direction monitoring. With a one-twenty-degree front lens and a one-sixty-degree rear lens, we get nearly two-eighty degrees of coverage, eliminating blind spots.\n\nSecond, dynamic threat zoning. The system classifies threat locations in real time, auto-switching between front and rear alarm modes based on danger.\n\nThird, our minimalist H-M-I. We use a helmet H-U-D and a buzzer. Crucially, we do not dump raw data on the rider. Complex computation is distilled into simple blinking patterns and audio tones. This minimizes cognitive load, keeping the rider's focus entirely on the road.",
+                zh: "提案：V.I.S.O.R. — 純視覺低成本主動安全系統。三大支柱：280° 雙向監控、動態威脅分區、安全帽 HUD + 蜂鳴器極簡警示（不增加認知負荷）。"
             },
             4: {
-                en: "[⏱ ~90s] This slide brings three tightly connected ideas together.\n\nFirst, what exactly is ARAS? It stands for Advanced Rider Assistance System. The key difference from traditional safety is simple: while helmets and ABS are passive — meaning they protect you after a crash — ARAS is active. It uses sensors and AI to monitor the environment in real time, intervening with warnings before an accident even happens. It's a fundamental shift from passive to active safety.\n\nSecond, why can't we just port car ADAS over to a motorcycle? If you look at the comparison table on the left, it tells the story across five dimensions.\n\nCost: Cars can afford expensive LiDAR and radar arrays; we must rely on affordable monocular cameras.\n\nDynamics: Cars stay flat, but motorcycles lean up to 45 degrees, tilting the camera with them.\n\nNetwork: Cars use wired CAN Bus, whereas we require wireless UDP and Bluetooth.\nWith completely different lane detection and target users, everything needs a ground-up rethink for two-wheelers.\n\nThis brings us to the third point: our hardware implementation. We chose the Raspberry Pi 5, powered by a quad-core Cortex-A76 processor with 8 gigabytes of RAM. But here is the catch — it has no GPU. It's a CPU-only environment, which is about four times slower than a desktop x86 processor.\n\nTherefore, model selection becomes critical. We selected YOLOv8-Nano, an anchor-free detector with only 3.2 million parameters. By optimizing the input resolution down to 320 pixels, we cut the compute matrix by 75 percent. On the Pi 5, this optimization successfully delivers 15 to 20 FPS, fully meeting the millisecond-level response required for motorcycle safety.",
-                zh: "[⏱ 90s] ARAS 主動 vs 被動。汽車 ADAS 五維度不適用機車（成本、動態、通訊、車道、使用者）。Raspberry Pi 5 CPU-only，YOLOv8n 3.2M 參數，320px 輸入，15-20 FPS。"
+                en: "We position this as active assistance — intervening before a crash, not after.\n\nCar A-D-A-S cannot be ported over. The cost, lean dynamics, vibration, and communication are completely different for two-wheelers.\n\nTo keep it affordable, we run on a sub-one-hundred-dollar Raspberry Pi five. Crucially, this is a C-P-U-only environment with no G-P-U.\n\nTherefore, we deployed a lightweight Yo-lo-v-eight-nano model with three point two million parameters. By downscaling the input to three-twenty pixels, we successfully deliver fifteen to twenty F-P-S, meeting the millisecond-level response required for rider safety.",
+                zh: "從被動防護到主動介入。汽車 ADAS 無法直接移植（成本、傾角、震動、通訊皆不同）。Raspberry Pi 5 CPU-only，YOLOv8n 3.2M 參數，320px，15-20 FPS。"
             },
             5: {
-                en: "[⏱ ~45s] However, achieving high FPS is only half the battle. In practice, we ran into a massive hardware bottleneck. [停頓]\n\nAI inference and live camera streaming are both heavy CPU workloads. If we try to run everything on a single Raspberry Pi, they fight for resources, leading to severe stuttering and lag. And as we know, at highway speeds, that delay could be fatal. [嚴肅語氣]\n\nOur solution is a compute-display decoupling architecture, splitting these tasks across two separate boards.\n\nThe Raspberry Pi 5 on the left acts as the core brain. It handles the heavy lifting: dual video stream acquisition, YOLOv8-Nano inference, and centroid tracking. Once it processes a frame, instead of sending the heavy video, it broadcasts lightweight telemetry — just the object coordinates and threat levels — over UDP.\n\nMeanwhile, the Pi Zero 2W on the right is dedicated to just one job: receiving those UDP packets and driving the HUD display inside the helmet. Because it doesn't run any AI, its CPU load is practically zero, ensuring the display updates are buttery smooth.\n\nBy decoupling computation from display, we guarantee that critical safety warnings are never delayed by CPU congestion.",
-                zh: "[⏱ 45s] 計算與顯示解耦：Pi 5 處理 AI 運算 → UDP 廣播 → Pi Zero 2W 驅動 HUD。避免資源競爭，確保預警即時送達。"
+                en: "However, A-I inference and video streaming fight heavily for C-P-U resources. Our solution is to decouple compute from display using two separate boards.\n\nThe Raspberry Pi mini-computer acts as the core brain. It handles the heavy A-I workloads and tracking, then broadcasts lightweight coordinates over U-D-P.\n\nThe Pi Zero two-W has only one job: receiving those packets and driving the H-U-D. Because it runs no A-I, its C-P-U load is zero.\n\nThis eliminates resource contention, guaranteeing that critical safety warnings are never delayed by C-P-U congestion.",
+                zh: "計算與顯示解耦：Pi 5 跑 AI → UDP 廣播座標 → Pi Zero 2W 驅動 HUD。避免資源競爭。"
             },
             6: {
-                en: "[⏱ ~90s] This slide is special, because it combines two interactive demonstrations. [對觀眾微笑]\n\nLet's start with the left side — data augmentation. Collecting motorcycle-perspective road data in Taiwan is extremely challenging. The largest public datasets — like BDD100K or COCO — are filmed entirely from a car's perspective on foreign roads. They are practically useless for training a motorcycle AI in Taiwan. To solve this, we built our own dataset, capturing over thirty-six hundred images including real Taiwanese roads and blind-spot frames.\n\nBut that still wasn't enough. We obviously cannot risk our lives filming in torrential rain, dense fog, or pitch-black night. Therefore, we developed an automated augmentation pipeline using OpenCV to simulate rain, vibration, and low light. We even leveraged Stable Diffusion to generate synthetic extreme-weather scenes. This allowed us to safely train our model for harsh, real-world conditions.\n\n[動作：動手操作簡報上的互動按鈕] Feel free to click the 'Rain & Fog', 'Vibration', and 'Low-light' buttons to see how the sandbox preview adapts in real time. [稍微停頓兩秒展示畫面]\n\nNow, let's move to the right side — our IMU-driven Dynamic ROI. [停頓] When a motorcycle corners, it leans up to forty-five degrees. Because the camera tilts with the bike, the AI gets confused into thinking the horizon has shifted, which completely misplaces the road plane.\n\nTo counteract this, we integrated an MPU6050 six-axis IMU. The system uses a Kalman filter to compute the real-time roll angle, and then automatically counter-rotates the ROI detection box. This ensures our detection stays locked onto the actual road surface, [加重語氣] no matter how hard the bike leans.\n\n❓ DRAG: Pull the Roll Angle slider to see the motorcycle tilt and the ROI counter-rotate in real time.",
-                zh: "[⏱ 90s] 左：自建 3,638 張台灣機車視角資料集 + 合成擴增。❓ 點擊按鈕操作 Sandbox。右：MPU6050 六軸 IMU + 卡爾曼濾波，45° 過彎 ROI 反向旋轉補償。❓ 拉滑桿看機車傾斜與 ROI 校正。"
+                en: "This slide shows our two core solutions for real-world deployment.\n\nOn the left — data augmentation. Public datasets don't match motorcycles, so we built our own with thirty-six thirty-eight images: fifty-seven percent local road photos, and forty-three percent blind-spot frames. To train safely for extreme conditions, we used Open-C-V and Stable Diffusion to simulate rain, low light, and handlebar vibration.\n\n[動作：快點一個按鈕展示] You can click the buttons to see the preview adapt in real time.\n\nOn the right — our I-M-U-driven Dynamic R-O-I. When a bike leans up to forty-five degrees, the tilted camera confuses the A-I. To fix this, we use an M-P-U sixty-fifty sensor and a Kalman filter to calculate the roll angle, automatically counter-rotating the detection box to stay perfectly locked onto the road.",
+                zh: "雙互動展示。左：台灣機車資料集 3,638 張 + OpenCV/Stable Diffusion 合成擴增。右：MPU6050 IMU + 卡爾曼濾波，過彎傾斜 45° 時 ROI 反向旋轉補償。可操作按鈕與滑桿。"
             },
             7: {
-                en: "[⏱ ~75s] Now let me walk through the core algorithms — I'll keep it approachable. [對觀眾微笑，語氣放輕鬆]\n\nOn the left — monocular distance estimation. We use the pinhole camera model with similar triangles. We know the real-world width of each object class: a car is approximately one point eight meters wide, a scooter zero point seven, a truck two point five, and a pedestrian zero point five. [停頓，換氣] Combine that with a calibrated focal length of eight hundred pixels and the bounding box width in pixels, and we can estimate distance.\n\nThe formula is simple: distance equals real width times focal length divided by pixel width, minus a three-meter camera offset. [手勢：指向左方公式] From distance, we derive relative speed using Exponential Moving Average smoothing — with an alpha of zero point four. Then we compute TTC, time to collision: which is distance divided by relative speed.\n\n[流暢轉場，手勢指向右方] On the right — our three-tier threat classification system.\n\nFirst, CRITICAL: TTC under one point zero second, distance under two meters, triggered only when the object is in-lane. Second, WARNING: TTC under one point five seconds, distance under four meters. And third, CAUTION: TTC under two point five seconds, distance under eight meters, covering adjacent lanes as well. [停頓] Crucially, these thresholds are tighter than the ISO 15623 standard for passenger cars — we had to tighten them to account for motorcycle braking distance.\n\n[流暢轉場，手勢指向下方] Moving below — let's look at lane detection. We use LSTR, a Transformer-based lightweight model with just seven hundred and sixty-five thousand parameters and a model size of three point one megabytes. Why LSTR? Because its CULane weights were trained on urban and curved roads — a perfect match for Taiwan's road geometry. Compare that to UFLD version two: twelve million parameters, one hundred and eighty-three megabytes, which is severely unsuitable for edge deployment.\n\nPlus, we added a virtual lane filter: we only consider objects within the X-axis range of twenty-five to seventy-five percent of the frame width. This means parked vehicles on the curb are automatically excluded. Finally, EMA smoothing plus a fifteen-frame coasting mechanism ensures lane curves stay stable, even through intersections and crosswalks.",
-                zh: "[⏱ 75s] 單眼測距：每類真實寬度 × 焦距 ÷ 像素寬度 − 3m。TTC 三級威脅：CRITICAL <1s/2m、WARNING <1.5s/4m、CAUTION <2.5s/8m。LSTR 765K 參數 3.1MB + 虛擬車道過濾。"
+                en: "Here is our core logic.\n\nFirst, distance estimation. We use a pinhole camera model where distance equals real-world width, times an eight-hundred-pixel focal length, divided by pixel width, minus a three-meter offset. Relative speed is smoothed using E-M-A with an alpha of zero point four to calculate T-T-C.\n\nSecond, threat classification. We define three tiers based on T-T-C: Critical under one second, Warning under one point five, and Caution under two point five seconds. These thresholds are tighter than car standards to fit motorcycle braking distances.\n\nThird, lane detection. We deployed the L-S-T-R model, which uses just seven hundred and sixty-five thousand parameters and three point one megabytes, optimized for urban curves. A virtual lane filter automatically ignores parked vehicles near the frame edges.",
+                zh: "單眼測距公式。EMA 平滑 α=0.4。三級 TTC（機車專用嚴格閾值）。LSTR 765K CULane + 虛擬車道過濾路邊停車。"
             },
             8: {
-                en: "[⏱ ~60s] Before we dive into the benchmark numbers, let me show you the system actually working on real footage. [對觀眾微笑] These are two dashcam videos we recorded on Taiwanese roads — not synthetic, not simulated. This is our full YOLOv8-Nano plus LSTR pipeline running end to end.\n\n[手勢：指向左方螢幕] On the left — video f0ace550: dense urban traffic in the city. You can see bounding boxes, lane curves, distance labels, and threat levels, all rendered in real time. [停頓，換氣] This clip generated two thousand six hundred and seventy-six total detections, and one hundred and six threat events. The system maintained a steady thirty-two point five FPS throughout.\n\n[手勢：指向右方螢幕] On the right — video 50c9816b: suburban light traffic. This one shows one thousand six hundred and eighty-two detections, twenty-two threat events, and it runs even faster at thirty-eight point three FPS.\n\n[語氣放慢，強調重點] Notice a key point here: in the dense urban scene, despite heavy traffic and complex road geometry, the system tracks every object, determines lane membership, and only triggers warnings when genuine collision risk exists. [停頓] The threat count scales proportionally with traffic density — more cars simply means more threats. But it is highly selective and precise, without spamming false alarms.",
-                zh: "[⏱ 60s] 真實影片：市區 f0ace550（2,676 次偵測、106 威脅、32.5 FPS）、郊區 50c9816b（1,682 次偵測、22 威脅、38.3 FPS）。威脅數量與車流密度合理對應。"
+                en: "Here is our full pipeline running end-to-end on real Taiwanese roads.\n\nOn the left, in dense urban traffic, the system handles heavy congestion, generating over twenty-six hundred detections and one hundred threat events at a steady thirty-two point five F-P-S.\n\nOn the right, in suburban light traffic, it logs sixteen hundred detections and runs even faster at thirty-eight point three F-P-S.\n\nThe key takeaway is precision: threat counts scale naturally with traffic density, meaning the system only triggers warnings for genuine collision risks without spamming false alarms.",
+                zh: "真實台灣行車記錄器。f0ace550 市區 2,676 次偵測 32.5 FPS。50c9816b 郊區 1,682 次偵測 38.3 FPS。"
             },
             9: {
-                en: "[⏱ ~90s] Alright, let's look at the numbers. [語氣轉為嚴謹、有自信] This slide combines benchmarks and optimization — because they were developed iteratively together.\n\n[手勢：指向左方圖表] On the left — our precision comparison with interactive tabs. Our V.I.S.O.R. pipeline achieves **ninety-four point two percent** mAP in daytime clear conditions, **eighty-six point five percent** at nighttime urban, **eighty-one point one percent** in heavy rain and mist, and **eighty-eight point three percent** under camera vibration — averaging **eighty-seven point five percent** overall.\n\n[停頓，換氣] These results are built on our custom Taiwan Traffic Dataset: two thousand seventy-eight local road images plus one thousand five hundred sixty blind-spot frames, split into two thousand five hundred ninety-eight training, seven hundred and thirteen validation, and three hundred and twenty-seven test images. Domain-adaptation fine-tuning alone gave us a **ten point four percent** boost in vibration robustness and a **twelve point one percent** improvement in weather accuracy.\n\n[動作：動手切換簡報左方的 YOLOv8n 與 YOLOv5s 按鈕] I will toggle the YOLOv8-Nano and YOLOv5-S buttons on the left, so you can see how the bar chart values change in real time. [停頓一秒展示畫面，接著手勢指向右方表格]\n\nOn the right — we have three comparison tables.\n\nFirst, YOLO detection models: our YOLOv8-Nano Opt at three-twenty pixels achieves **zero point five-four-three** precision, **thirty-three point six percent** mAP, and fifteen to twenty FPS on the Pi 5. Compare this to the base YOLOv8-Nano at six-forty pixels: which only gets **zero point four-two-one** precision, **twenty-nine point eight percent** mAP, and a sluggish five to eight FPS.\n\nSecond, lane detection models. LSTR CULane — with seven hundred and sixty-five thousand parameters, just three point one megabytes, and ten point eight FPS on the Pi 5 — has **High** suitability for Taiwanese roads. Compare that to UFLD version two: twelve million parameters, one hundred and eighty-three megabytes, and only two point three FPS on the Pi 5. That is essentially unusable for real-time deployment. [停頓]\n\nThird, you can see our video validation table at the bottom.\n\n[語氣轉為高昂，準備收尾] Now, the optimization techniques that made all this possible. We implemented four key methods:\n\nOne — **Skip-two frame scheduling**: lane detection runs every third frame instead of every frame. This alone gave us a **one hundred and eight percent** FPS boost — from fifteen point three to thirty-one point nine.\n\nTwo — **TorchScript static compilation**: which gives us another **seven percent** by removing Python interpreter overhead.\n\nThree — **Reducing YOLO input to imgsz two-fifty-six**: resulting in **thirty-six percent** fewer pixels and twenty-five percent faster YOLO inference.\n\nAnd four — **Logspace Y-sampling for lane curves**: keeping it dense near the camera and sparse at the vanishing point — matching human visual perspective.\n\nThe final result? [加重語氣，自信微笑] A stable, consistent, and safe **thirty-two point five FPS**.",
-                zh: "[⏱ 90s] 精度對比：mAP 平均 87.5%。YOLOv8n Opt .543 precision / 33.6% mAP / 15-20 FPS。LSTR 765K 3.1MB vs UFLD 12M 183MB。四項優化：Skip-2 +108%、TorchScript +7%、imgsz=256 +25%、Logspace Y。"
+                en: "Our pipeline achieves an average of eighty-seven point five percent M-A-P across all conditions.\n\nOur optimized Yo-lo-v-eight-nano delivers fifteen to twenty F-P-S. For lane detection, L-S-T-R is sixty times smaller and four point seven times faster than U-F-L-D, making it ideal for the Pi.\n\nTo reach our final thirty-two point five F-P-S, we applied four optimizations: Skip-two frame scheduling for a one hundred and eight percent speedup, TorchScript compilation, reducing input size to two-fifty-six, and Log-space Y-sampling for lane curves.",
+                zh: "mAP 平均 87.5%。YOLOv8n Opt .543 precision / 33.6% mAP。LSTR 3.1MB vs UFLD 183MB。四項優化：Skip-2 +108%、TorchScript +7%、imgsz=256 +25%、Logspace Y。穩定 32.5 FPS。"
             },
             10: {
-                en: "[⏱ ~75s] This is our most engaging demonstration — showing two interfaces working together in real time. [微笑，環視全場]\n\n[手勢：指向螢幕左方] On the left — we have the helmet-mounted HUD simulator. It uses a **zero point ninety-six inch**, SSD1315 OLED display, running at one-twenty-eight by sixty-four pixels. The interface is deliberately minimalist — showing just speed and system status.\n\nBut when a critical threat is detected, something striking happens: **[停頓，提高語調]** the entire screen inverts. Black becomes white, and white becomes black, flashing at **zero point four second** intervals.\n\nImportantly, this isn't slow software rendering. It is a hardware-level, full-screen inversion command, written directly to the OLED controller. The visual stimulus is so strong that the rider can easily detect it through peripheral vision alone — meaning **there is no need to look down, and no need to read anything.**\n\n[手勢：指向螢幕右方] Now, on the right — we have our VISOR Mobile Console. This is a cross-platform app built with React, and packaged using Apache Cordova as an Android APK. It connects to the Pi 5 over Bluetooth BLE, and mirrors all real-time data: including speed, lean angle, threat level, a mini radar view, and a scrolling system event log.\n\n[動作：動手點擊畫面上對應的按鈕進行展示]\n\n[點擊 Looming Warning] As I click the 'Looming Warning' button, notice how the HUD instantly inverts and flashes, the speed jumps to eighty-two, and the phone simultaneously shows a red threat alert.\n\n[點擊 Reset] I will click 'Reset' to restore normal operation.\n\n[點擊 Lane Drift Warning] Now, let's try 'Lane Drift Warning' to see the amber alert variant. [停頓一秒展示畫面]\n\n[手勢：指向畫面下方] Finally, the Data Flow bar at the bottom shows our communication architecture.\n\nThe Pi 5 broadcasts coordinates and threat levels over UDP to the HUD with **under fifteen milliseconds** of latency. Simultaneously, it syncs data to the phone over BLE. Crucially, using Bluetooth leaves the phone's 4G or 5G mobile data connection completely free — allowing riders to use navigation and cloud services without any interruption.",
-                zh: "[⏱ 75s] 左：安全帽 HUD（SSD1315 OLED，硬體全螢幕反轉閃爍）。右：VISOR Mobile Console（React + Cordova，BLE 即時同步）。❓ 點擊 Looming Warning / Lane Drift / Reset 操作互動展示。"
+                en: "This is a real screenshot of our mobile application, featuring three key highlights:\n\nFirst, the live dashboard. It streams real-time speed, lean angle, and radar telemetry from the Pi five over B-L-E with zero rider interaction.\n\nSecond, our E-S-O-S rescue system. If a crash is detected and the rider remains motionless for fifteen seconds, it automatically sends an S-M-S with G-P-S coordinates to emergency contacts.\n\nThird, Gemini A-I analysis. It reviews riding history to generate personalized safety reports. Visor evolves from a real-time warning tool into a long-term safety coach.",
+                zh: "VISOR App 截圖。三大功能：BLE 即時儀表板、E-SOS（傾倒 15s → GPS 簡訊）、Gemini 2.5 Flash 個人化安全建議。"
             },
             11: {
-                en: "[⏱ ~45s] This is a real screenshot of the VISOR app — not a mockup. It is actually running on a smartphone, connected to the Pi 5. [語氣肯定、自信]\n\nThere are three things I want to highlight on this interface.\n\n[手勢：指向簡報的儀表板區塊] **First — the live dashboard.** It streams speed, lean angle, a radar scanner, and front and rear status from the Pi 5 over BLE in real time. [停頓] Zero rider interaction is needed. The phone just sits safely in your pocket or on a handlebar mount.\n\n[語氣轉為嚴肅、沉穩，手勢指向緊急救援功能] **Second — and this is critically important — our E-SOS emergency rescue system.**\n\nIf the six-axis IMU detects that the motorcycle has tipped over, and remains motionless for more than **fifteen seconds** — indicating the rider may be unconscious — the system automatically sends an SMS with the GPS coordinates to pre-set emergency contacts. [停頓，一字一頓地說] No button to press. No confirmation needed. It is fully autonomous. Our goal here is to extend the system from 'risk prevention' to **securing the golden rescue window**.\n\n[語氣轉回專業、前瞻，手勢指向分析報告] **Third — Gemini 2.5 Flash AI analysis.**\n\nThe system accumulates each rider's long-term behavioral data — tracking where they speed, where they brake hard, or where they lean dangerously — and generates a personalized safety recommendation report. [對觀眾微笑] Therefore, V.I.S.O.R. is not just a real-time warning system — it becomes a long-term riding safety coach.",
-                zh: "[⏱ 45s] VISOR App 三大功能：即時儀表板（BLE 同步）、E-SOS 自動求救（傾倒 15s → GPS 簡訊）、Gemini 2.5 Flash 騎乘行為分析。"
+                en: "To wrap up, our work delivers three key contributions.\n\nFirst, a Taiwan-specific hybrid dataset that successfully overcomes domain shift for local motorcycle environments.\n\nSecond, deep edge optimizations that push the C-P-U-only Raspberry Pi five to a smooth fifteen to twenty F-P-S.\n\nThird, the democratization of advanced safety. The total hardware cost is under one hundred dollars, proving that transportation equity can be put into practice.\n\n[停頓，直接切換到最後一頁未來方向與 Q&A]",
+                zh: "三項貢獻：台灣混合資料集、邊緣運算極限優化（15-20 FPS）、安全技術平民化（總成本 < $100）。實現交通平權。"
             },
             12: {
-                en: "[⏱ ~45s] To wrap up, let me share our three core contributions. [對觀眾微笑，語氣沉穩且充滿自信]\n\n[手勢：指向第一點] **First — we built a Taiwan-specific hybrid dataset pipeline.**\n\nBy combining the BDD100K international dataset as a knowledge baseline, with two thousand seventy-eight locally captured motorcycle dashcam images and fifteen sixty blind-spot frames, and then augmenting them through pixel-level physical degradation and synthetic image generation, [停頓，換氣] we effectively overcame the domain shift problem that plagues motorcycle AI research.\n\n[手勢：指向第二點] **Second — we pushed edge computing to its absolute limits.**\n\nOn a sub-one-hundred-dollar Raspberry Pi 5 — running CPU-only with no GPU — and handling YOLOv8-Nano plus LSTR lane detection simultaneously, we applied three parallel optimizations: resolution-adaptive downscaling from six-forty to three-twenty pixels, hardware stream decoupling via MJPEG over CSI, and a multi-threaded asynchronous architecture. [語氣高昂] The result? Inference jumped from five to eight FPS to a stable **fifteen to twenty FPS**, fully meeting the millisecond-level response requirements for motorcycle safety.\n\n[眼神環視全場教授，語氣轉為誠懇且有力] **Third — and most importantly — we made advanced safety technology truly affordable.**\n\nFeatures that were previously exclusive to high-end luxury cars — like blind-spot detection, collision warning, emergency response, and AI-powered behavioral analysis — now run on a platform with a total hardware cost of **under twelve thousand four hundred NT dollars**.\n\n[最後一擊，放慢語速，一字一頓] This is not just a technical milestone. It is a major step toward **transportation equity** — making our roads safer for everyone, not just those who can afford expensive cars.\n\nThank you very much for your time. I am now open to any questions.",
-                zh: "[⏱ 45s] 三項貢獻：1) 台灣混合資料集克服 domain shift；2) 邊緣運算優化（5-8 → 15-20 FPS）；3) 低成本實現高階安全技術（硬體總成本 < NT$12,400）。"
-            },
-            13: {
-                en: "[⏱ ~90s] To close, let's look at our most important future direction — the **YOLOv26-Nano** model upgrade. [停頓]\n\nCurrently, we are running YOLOv8-Nano at three point two million parameters. The upcoming YOLOv26-Nano is even lighter — with just **two point six million parameters**.\n\nDespite having fewer parameters, we project it will deliver **higher accuracy**, pushing our mAP to thirty-four point nine percent, and delivering a faster **twenty to twenty-five FPS** on the Pi 5. This will be the core enhancement for our next stage.\n\n[對觀眾微笑，語氣轉為歡迎]\n\nThank you very much for your time. I am now very happy to take any questions.",
-                zh: "[⏱ 90s] YOLOv26n 升級（2.6M 參數，mAP 34.9%，20-25 FPS）。謝謝，歡迎提問。"
+                en: "Looking ahead, our next step is upgrading to the Yo-lo-v-twenty-six-nano model.\n\nBy dropping parameters to just two point six million, it reduces computation while boosting accuracy to thirty-four point nine percent M-A-P and increasing speed to twenty to twenty-five F-P-S on the Pi five.\n\nThank you very much for your time. I am now happy to take any questions. [對觀眾微笑，微微鞠躬]",
+                zh: "未來方向：YOLOv26n、ONNX INT8 量化、USB 加速器、V2X。謝謝，歡迎提問。"
             }
         };
 
@@ -2375,7 +2266,7 @@
             } else if (slideIndex === 9) {
                 switchPrecisionModel('visor');
                 startSlideBenchmarkAutoLoop();
-            } else if (slideIndex === 10) {
+            } else if (slideIndex === 12) {
                 startSlide14AutoLoop();
             }
         }
@@ -2971,6 +2862,10 @@
             resetRadarIndicators();
             updateSpeakerNotes(1); toggleNotesLang('en'); // Set Slide 1 notes and trigger EN active style
             startSlide3AutoLoop(); // Start default page 1 simulation components
+            // Notes-only mode: keep sidebar visible
+            if (window.location.search.includes('notes=1')) {
+                return;
+            }
             // Start with sidebar hidden for fullscreen presentation mode
             const sidebar = document.getElementById('sidebar');
             if (sidebar) {
@@ -2979,58 +2874,52 @@
             }
         };
 
-        // Presenter Notes viewer mode: open ?notes=1 in another window
-        if (window.location.search.includes('notes=1')) {
-            document.body.innerHTML = `
-                <div id="notes-viewer" style="padding:20px;font-family:${getComputedStyle(document.documentElement).getPropertyValue('--font-sans').trim() || 'sans-serif'};">
-                    <div style="max-width:800px;margin:0 auto;">
-                        <h2 style="font-size:18px;color:#005088;margin-bottom:10px;">?? V.I.S.O.R. Presenter Notes</h2>
-                        <p style="font-size:12px;color:#94a3b8;margin-bottom:20px;">Auto-syncing with main presentation window. Press <kbd style="padding:2px 6px;border:1px solid #e2e8f0;border-radius:3px;font-size:11px;">F11</kbd> for fullscreen.</p>
-                        <div id="notes-viewer-content" style="font-size:16px;line-height:1.6;color:#1e293b;background:#f8fafc;padding:16px;border-radius:8px;border:1px solid #e2e8f0;min-height:200px;">
-                            Waiting for slide change...
-                        </div>
-                        <div style="margin-top:10px;font-size:12px;color:#94a3b8;">
-                            Slide: <span id="notes-viewer-slide">-</span> / 13
-                        </div>
-                    </div>
-                </div>
-            `;
-            function updateViewer(slide) {
-                const data = speakerNotesData[slide];
-                const container = document.getElementById('notes-viewer-content');
-                const slideNum = document.getElementById('notes-viewer-slide');
-                if (container && data) {
-                    container.innerHTML = `<div style="margin-bottom:12px;font-weight:500;">${data.zh.replace(/\n/g, '<br>')}</div><div style="font-style:italic;color:#475569;border-top:1px dashed #e2e8f0;padding-top:10px;">${data.en.replace(/\n/g, '<br>')}</div>`;
+        // === Cross-window slide sync via BroadcastChannel (fallback: localStorage) ===
+        const syncChannel = (() => {
+            try { return new BroadcastChannel('visor_slides'); }
+            catch(e) { return null; }
+        })();
+
+        function broadcastSlide(slideIndex) {
+            localStorage.setItem('visor_current_slide', slideIndex);
+            if (syncChannel) {
+                syncChannel.postMessage({ slide: slideIndex });
+            }
+        }
+
+        // Listen for slide changes from other windows
+        if (syncChannel) {
+            syncChannel.addEventListener('message', (e) => {
+                if (e.data && typeof e.data.slide === 'number') {
+                    if (e.data.slide !== currentSlide) {
+                        goToSlide(e.data.slide);
+                    }
                 }
-                if (slideNum) slideNum.textContent = slide;
-            }
-            let lastSlide = 0;
-            function pollServer() {
-                fetch('sync.php?t=' + Date.now(), {cache: 'no-cache'})
-                    .then(r => r.json())
-                    .then(d => {
-                        if (d.s !== lastSlide) {
-                            lastSlide = d.s;
-                            updateViewer(d.s);
-                        }
-                    })
-                    .catch(() => {
-                        // fallback to localStorage if server unavailable
-                        const saved = localStorage.getItem('visor_current_slide');
-                        if (saved && parseInt(saved) !== lastSlide) {
-                            lastSlide = parseInt(saved);
-                            updateViewer(lastSlide);
-                        }
-                    });
-            }
-            // try server first, fallback to localStorage
-            const saved = localStorage.getItem('visor_current_slide');
-            if (saved) updateViewer(parseInt(saved));
-            pollServer();
-            setInterval(pollServer, 1000);
-            window.addEventListener('storage', (e) => {
-                if (e.key === 'visor_current_slide') updateViewer(parseInt(e.newValue));
             });
+        }
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'visor_current_slide') {
+                const s = parseInt(e.newValue);
+                if (s && s !== currentSlide) goToSlide(s);
+            }
+        });
+
+        // Broadcast on slide change
+        const origGoToSlide = goToSlide;
+        goToSlide = function(idx) {
+            origGoToSlide(idx);
+            broadcastSlide(idx);
+        };
+
+        // === Presenter Notes-only mode: open ?notes=1 in another window ===
+        if (window.location.search.includes('notes=1')) {
+            document.body.classList.add('notes-only');
+            // Show sidebar (notes panel)
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                sidebar.style.display = 'flex';
+                updateBodyClass();
+            }
         }
     </script>
 
