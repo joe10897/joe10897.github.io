@@ -159,16 +159,73 @@
         body.sidebar-hidden .slide-frame .slide-body th {
             font-size: 0.85em !important;
         }
-        /* Slide 11 — right sidebar text reduction */
-        body.sidebar-hidden #slide-11 .slide-body p,
-        body.sidebar-hidden #slide-11 .slide-body li {
-            font-size: 0.6em !important;
+        /* Slide 11 — fill space, make content bigger */
+        body.sidebar-hidden #slide-11 .slide-content-container {
+            height: auto !important;
+            max-height: 90vh !important;
         }
-        body.sidebar-hidden #slide-11 .slide-body h3 {
-            font-size: 0.75em !important;
+        body.sidebar-hidden #slide-11 .slide-body {
+            flex: 1 1 auto !important;
+            display: flex !important;
+            align-items: stretch !important;
         }
-        body.sidebar-hidden #slide-11 .slide-body h4 {
-            font-size: 0.6em !important;
+        body.sidebar-hidden #slide-11 .grid-3col {
+            gap: 14px !important;
+            height: 100% !important;
+            align-items: stretch !important;
+        }
+        body.sidebar-hidden #slide-11 .tech-card {
+            padding: 18px 20px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+        }
+        body.sidebar-hidden #slide-11 .tech-card h3 {
+            font-size: clamp(20px, 2.2vw, 26px) !important;
+            margin-bottom: 12px !important;
+        }
+        body.sidebar-hidden #slide-11 .tech-card p {
+            font-size: clamp(15px, 1.6vw, 19px) !important;
+            line-height: 1.5 !important;
+        }
+        body.sidebar-hidden #slide-11 .tech-card i {
+            font-size: 52px !important;
+            margin-bottom: 8px !important;
+        }
+        body.sidebar-hidden #slide-11 .tech-card div[style*="font-size: 32px"] {
+            font-size: 52px !important;
+        }
+        /* Slide 10 — VISOR App: fill space, enlarge content */
+        body.sidebar-hidden #slide-10 .slide-content-container {
+            height: auto !important;
+            max-height: 92vh !important;
+        }
+        body.sidebar-hidden #slide-10 .slide-body {
+            flex: 1 1 auto !important;
+        }
+        body.sidebar-hidden #slide-10 .slide-body > div {
+            gap: 12px !important;
+        }
+        body.sidebar-hidden #slide-10 .slide-body img {
+            max-height: 42vh !important;
+        }
+        body.sidebar-hidden #slide-10 .slide-body p,
+        body.sidebar-hidden #slide-10 .slide-body li {
+            font-size: clamp(14px, 1.4vw, 18px) !important;
+        }
+        body.sidebar-hidden #slide-10 .slide-body h4 {
+            font-size: clamp(15px, 1.5vw, 20px) !important;
+        }
+        body.sidebar-hidden #slide-10 .slide-body .visor-app-card,
+        body.sidebar-hidden #slide-10 .slide-body > div > div[style*="grid-template-columns"] > div {
+            padding: 10px 14px !important;
+        }
+        body.sidebar-hidden #slide-10 .slide-body .visor-app-card p,
+        body.sidebar-hidden #slide-10 .slide-body > div > div[style*="grid-template-columns"] > div p {
+            font-size: clamp(12px, 1.2vw, 15px) !important;
+        }
+        body.sidebar-hidden #slide-10 .slide-body > div > p:last-child {
+            font-size: clamp(13px, 1.3vw, 17px) !important;
         }
 
         /* Presentation Wrapper */
@@ -1076,6 +1133,253 @@
             font-size: 12px;
             margin-bottom: 2px;
         }
+
+        /* === Slide 2: Stat Card Pulse & Counter Animations === */
+        @keyframes pulseRedGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.35); border-color: #fecaca; }
+            50% { box-shadow: 0 0 24px 10px rgba(239, 68, 68, 0.12); border-color: rgba(239, 68, 68, 0.4); }
+        }
+        @keyframes pulseAmberGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.35); border-color: #fed7aa; }
+            50% { box-shadow: 0 0 24px 10px rgba(245, 158, 11, 0.12); border-color: rgba(245, 158, 11, 0.4); }
+        }
+        @keyframes statNumberScale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.07); }
+        }
+        .stat-card--red {
+            animation: pulseRedGlow 2s ease-in-out infinite;
+        }
+        .stat-card--amber {
+            animation: pulseAmberGlow 2s ease-in-out infinite;
+        }
+        .stat-card--red .stat-number,
+        .stat-card--amber .stat-number {
+            display: inline-block;
+            animation: statNumberScale 2s ease-in-out infinite;
+        }
+
+        /* Slide 2 bar chart grow */
+        @keyframes barGrow {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
+        @keyframes scalePop {
+            0% { transform: scale(0); opacity: 0; }
+            60% { transform: scale(1.25); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .s2-pop {
+            animation: scalePop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        #slide-2 .stat-number.s2-pop {
+            animation: scalePop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        .s2-bar {
+            transform-origin: left center;
+            transform: scaleX(0);
+        }
+        .s2-bar.animate {
+            animation: barGrow 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .s2-bar.animate:nth-child(1) { animation-delay: 0.6s; }
+        .s2-bar.animate:nth-child(3) { animation-delay: 0.9s; }
+        .s2-bar-label {
+            opacity: 0;
+        }
+        .s2-bar-label.visible {
+            opacity: 1;
+        }
+        .s2-bar-label.visible.delay-1 { transition: opacity 0.35s; transition-delay: 0.6s; }
+        .s2-bar-label.visible.delay-2 { transition: opacity 0.35s; transition-delay: 1s; }
+
+        /* === Slide 1 — Title entrance === */
+        @keyframes s1FadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .s1-entrance { animation: s1FadeUp 0.65s ease-out both; }
+        .s1-entrance.s1-d1 { animation-delay: 0.1s; }
+        .s1-entrance.s1-d2 { animation-delay: 0.25s; }
+        .s1-entrance.s1-d3 { animation-delay: 0.4s; }
+
+        /* === Slide 3 — Key Design Pillars stagger === */
+        @keyframes s3PillarIn {
+            from { opacity: 0; transform: translateX(16px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        #slide-3 .bullet-list li.s3-pillar { opacity: 0; }
+        #slide-3 .bullet-list li.s3-pillar.animate { animation: s3PillarIn 0.45s ease-out both; }
+        #slide-3 .bullet-list li.s3-pillar.animate:nth-child(1) { animation-delay: 0.1s; }
+        #slide-3 .bullet-list li.s3-pillar.animate:nth-child(2) { animation-delay: 0.35s; }
+        #slide-3 .bullet-list li.s3-pillar.animate:nth-child(3) { animation-delay: 0.6s; }
+
+        /* === Slide 4 — Pipeline & Table animations === */
+        @keyframes s4PipelineIn {
+            from { opacity: 0; transform: translateX(10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        #slide-4 .s4-pipeline-step { opacity: 0; }
+        #slide-4 .s4-pipeline-step.animate { animation: s4PipelineIn 0.35s ease-out both; }
+        #slide-4 .s4-pipeline-step.animate:nth-child(1) { animation-delay: 0s; }
+        #slide-4 .s4-pipeline-step.animate:nth-child(2) { animation-delay: 0.08s; }
+        #slide-4 .s4-pipeline-step.animate:nth-child(3) { animation-delay: 0.16s; }
+        #slide-4 .s4-pipeline-step.animate:nth-child(4) { animation-delay: 0.24s; }
+        #slide-4 .s4-pipeline-step.animate:nth-child(5) { animation-delay: 0.32s; }
+        #slide-4 .s4-pipeline-step.animate:nth-child(6) { animation-delay: 0.4s; }
+        #slide-4 .s4-pipeline-step.animate:nth-child(7) { animation-delay: 0.48s; }
+
+        @keyframes s4TableRowIn {
+            from { opacity: 0; transform: translateX(-6px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        #slide-4 .s4-table-row { opacity: 0; }
+        #slide-4 .s4-table-row.animate { animation: s4TableRowIn 0.3s ease-out both; }
+        #slide-4 .s4-table-row.animate:nth-child(1) { animation-delay: 0.6s; }
+        #slide-4 .s4-table-row.animate:nth-child(2) { animation-delay: 0.7s; }
+        #slide-4 .s4-table-row.animate:nth-child(3) { animation-delay: 0.8s; }
+        #slide-4 .s4-table-row.animate:nth-child(4) { animation-delay: 0.9s; }
+        #slide-4 .s4-table-row.animate:nth-child(5) { animation-delay: 1.0s; }
+
+        /* Toggle flash for Passive→Active */
+        @keyframes s4ToggleFlash {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.4); }
+            50% { box-shadow: 0 0 12px 4px rgba(22, 163, 74, 0.15); }
+        }
+        #slide-4 .s4-active-box.animate { animation: s4ToggleFlash 1.5s ease-in-out 2; }
+
+        /* === Slide 5 — Data packet & CPU bars === */
+        @keyframes s5PacketFlow {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.9; }
+            45% { transform: translate(120px, 0) scale(0.6); opacity: 0.5; }
+            55% { transform: translate(120px, 0) scale(0.6); opacity: 0.5; }
+            100% { transform: translate(240px, 0) scale(1); opacity: 0.9; }
+        }
+        .s5-packet { animation: s5PacketFlow 2.2s ease-in-out infinite; }
+        .s5-packet:nth-child(1) { animation-delay: 0s; }
+        .s5-packet:nth-child(2) { animation-delay: 0.7s; }
+        .s5-packet:nth-child(3) { animation-delay: 1.4s; }
+
+        @keyframes s5CpuBarGrow {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
+        .s5-cpu-bar { transform-origin: left center; transform: scaleX(0); }
+        .s5-cpu-bar.animate { animation: s5CpuBarGrow 0.8s ease-out forwards; }
+
+        /* === Slide 7 — Formula highlight & TTC stagger === */
+        @keyframes s7FormulaGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.3); }
+            50% { box-shadow: 0 0 10px 4px rgba(13, 148, 136, 0.12); }
+        }
+        .s7-formula.animate { animation: s7FormulaGlow 2s ease-in-out 3; }
+
+        @keyframes s7TtcRowIn {
+            from { opacity: 0; transform: translateX(-6px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        #slide-7 .s7-ttc-row { opacity: 0; }
+        #slide-7 .s7-ttc-row.animate { animation: s7TtcRowIn 0.35s ease-out both; }
+        #slide-7 .s7-ttc-row.animate:nth-child(1) { animation-delay: 0.2s; }
+        #slide-7 .s7-ttc-row.animate:nth-child(2) { animation-delay: 0.4s; }
+        #slide-7 .s7-ttc-row.animate:nth-child(3) { animation-delay: 0.6s; }
+
+        /* === Slide 8 — Video card pulse + stats counter === */
+        @keyframes s8VideoPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.3); }
+            50% { box-shadow: 0 0 14px 5px rgba(239, 68, 68, 0.1); }
+        }
+        .s8-video-card.pulse { animation: s8VideoPulse 2.2s ease-in-out infinite; }
+
+        @keyframes s8StatPop {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .s8-stat-pop { animation: s8StatPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+        .s8-stat-pop:nth-child(1) { animation-delay: 0.3s; }
+        .s8-stat-pop:nth-child(2) { animation-delay: 0.5s; }
+
+        /* === Slide 9 — Bar chart grow + FPS counter + opt highlight === */
+        @keyframes s9BarGrow {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
+        #slide-9 .s9-bar { transform-origin: left center; transform: scaleX(0); }
+        #slide-9 .s9-bar.animate { animation: s9BarGrow 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+        @keyframes s9FpsPop {
+            0% { transform: scale(0.4); opacity: 0; }
+            60% { transform: scale(1.18); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .s9-fps-pop { animation: s9FpsPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+
+        @keyframes s9OptGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.25); }
+            50% { box-shadow: 0 0 10px 3px rgba(13, 148, 136, 0.12); }
+        }
+        #slide-9 .s9-opt-box.animate { animation: s9OptGlow 1.2s ease-in-out 2; }
+
+        /* === Slide 10 — Screenshot reveal + card stagger + SOS pulse === */
+        @keyframes s10ImgReveal {
+            from { opacity: 0; transform: scale(0.92) translateY(12px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        #slide-10 .s10-img { opacity: 0; }
+        #slide-10 .s10-img.animate { animation: s10ImgReveal 0.65s ease-out both; }
+
+        @keyframes s10CardIn {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        #slide-10 .s10-card { opacity: 0; }
+        #slide-10 .s10-card.animate { animation: s10CardIn 0.4s ease-out both; }
+        #slide-10 .s10-card.animate:nth-child(1) { animation-delay: 0.3s; }
+        #slide-10 .s10-card.animate:nth-child(2) { animation-delay: 0.5s; }
+        #slide-10 .s10-card.animate:nth-child(3) { animation-delay: 0.7s; }
+
+        @keyframes s10SosPulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.45); }
+            50% { opacity: 1; box-shadow: 0 0 16px 5px rgba(239, 68, 68, 0.18); }
+        }
+        #slide-10 .s10-sos-card.animate {
+            animation: s10CardIn 0.4s ease-out both, s10SosPulse 1.5s ease-in-out 0.7s infinite;
+        }
+
+        /* === Slide 11 — Card stagger + icon bounce === */
+        @keyframes s11CardIn {
+            from { opacity: 0; transform: translateY(18px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        #slide-11 .s11-card.animate { animation: s11CardIn 0.45s ease-out both; }
+        #slide-11 .s11-card.animate:nth-child(1) { animation-delay: 0.1s; }
+        #slide-11 .s11-card.animate:nth-child(2) { animation-delay: 0.3s; }
+        #slide-11 .s11-card.animate:nth-child(3) { animation-delay: 0.5s; }
+
+        @keyframes s11IconBounce {
+            0%, 100% { transform: scale(1); }
+            40% { transform: scale(1.25); }
+            70% { transform: scale(0.95); }
+        }
+        #slide-11 .s11-card.animate i.fa-solid { animation: s11IconBounce 0.6s ease-out both; }
+        #slide-11 .s11-card.animate:nth-child(2) i.fa-solid { animation-delay: 0.2s; }
+        #slide-11 .s11-card.animate:nth-child(3) i.fa-solid { animation-delay: 0.4s; }
+
+        /* === Slide 12 — Thank you pop + future glow === */
+        @keyframes s12ThanksPop {
+            0% { transform: scale(0.2); opacity: 0; }
+            65% { transform: scale(1.12); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        #slide-12 .s12-thanks { animation: s12ThanksPop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+        #slide-12 .s12-thanks.s12-d1 { animation-delay: 0.1s; }
+        #slide-12 .s12-thanks.s12-d2 { animation-delay: 0.35s; }
+
+        @keyframes s12FutureGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.3); }
+            50% { box-shadow: 0 0 16px 5px rgba(250, 204, 21, 0.12); }
+        }
+        #slide-12 .s12-future-box { animation: s12FutureGlow 2s ease-in-out infinite; }
     </style>
 </head>
 
@@ -1202,12 +1506,12 @@
 
                 <div class="slide-content-container"
                     style="justify-content: center; align-items: flex-start; position:relative; z-index:10;">
-                    <div class="title-slide-logo">V.I.S.O.R.<span class="cursor-blink">_</span></div>
+                    <div class="title-slide-logo s1-entrance s1-d1">V.I.S.O.R.<span class="cursor-blink">_</span></div>
                     <h2
-                        style="font-size: 38px; font-weight: 700; color: var(--brand-navy); margin-bottom: 10px; line-height: 1.2;">
+                        style="font-size: 38px; font-weight: 700; color: var(--brand-navy); margin-bottom: 10px; line-height: 1.2;" class="s1-entrance s1-d2">
                         Advanced Rider Assistance with Visual Intelligent Safety on Road
                     </h2>
-                    <p style="font-size: 20px; color: var(--brand-teal); font-weight: 600; margin-bottom: 40px;">
+                    <p style="font-size: 20px; color: var(--brand-teal); font-weight: 600; margin-bottom: 40px;" class="s1-entrance s1-d3">
                         AI-Powered Rider Assistance: Active Safety Innovation & Edge Inference
                     </p>
 
@@ -1260,26 +1564,56 @@
                                     <li><strong>Environmental Blind Spots:</strong> Riders must react in split-seconds to improper lane changes, tailgating, or sudden braking.</li>
                                     <li><strong>No Dedicated Solutions:</strong> Commercial ADAS and radars are designed for cars — bulky, expensive, and impossible to install on budget 125cc scooters.</li>
                                 </ul>
+                                <!-- 14.4M Motorcycle Badge -->
+                                <div style="background: linear-gradient(135deg, #eff6ff, #dbeafe); border: 1px solid #93c5fd; border-radius: 8px; padding: 8px 14px; display: flex; align-items: center; gap: 12px; margin-top: 12px;">
+                                    <div style="font-size: 26px; font-weight: 800; color: #2563eb; line-height: 1; white-space: nowrap;">14.4<span style="font-size: 15px;">M</span></div>
+                                    <div style="font-size: 11px; color: #475569; line-height: 1.4;">motorcycles registered in Taiwan — the <strong>highest density</strong> in the world (≈600 / km²)</div>
+                                </div>
                             </div>
-                            <div style="display: flex; flex-direction: column; gap: 15px; justify-content: center;">
+                            <div style="display: flex; flex-direction: column; gap: 12px; justify-content: center;">
                                 <!-- Stat Card 1 -->
-                                <div style="background: #fff5f5; border: 1px solid #fecaca; border-left: 5px solid var(--alert-red); border-radius: 10px; padding: 16px 18px;">
-                                    <div style="font-size: 36px; font-weight: 800; color: var(--alert-red); line-height: 1;">61.74<small style="font-size: 18px;">%</small></div>
+                                <div class="stat-card--red" style="background: #fff5f5; border: 1px solid #fecaca; border-left: 5px solid var(--alert-red); border-radius: 10px; padding: 14px 18px;">
+                                    <div style="font-size: 36px; font-weight: 800; color: var(--alert-red); line-height: 1;">
+                                        <span class="stat-number" id="s2-counter-1" data-target="61.74" data-decimals="2">0</span><small style="font-size: 18px;">%</small>
+                                    </div>
                                     <p style="font-size: 13px; color: var(--text-secondary); margin: 4px 0 0 0; line-height: 1.3;">
                                         of all fatal &amp; injury traffic accidents in Taiwan (2023) involve motorcycles — the <strong>highest proportion</strong> among all vehicle types.
                                     </p>
                                 </div>
                                 <!-- Stat Card 2 -->
-                                <div style="background: #fff7ed; border: 1px solid #fed7aa; border-left: 5px solid var(--alert-amber); border-radius: 10px; padding: 16px 18px;">
-                                    <div style="font-size: 36px; font-weight: 800; color: var(--alert-amber); line-height: 1;">1 in 3</div>
+                                <div class="stat-card--amber" style="background: #fff7ed; border: 1px solid #fed7aa; border-left: 5px solid var(--alert-amber); border-radius: 10px; padding: 14px 18px;">
+                                    <div style="font-size: 36px; font-weight: 800; color: var(--alert-amber); line-height: 1;">
+                                        <span class="stat-number" id="s2-counter-2" style="display: inline-block;">1 in 3</span>
+                                    </div>
                                     <p style="font-size: 13px; color: var(--text-secondary); margin: 4px 0 0 0; line-height: 1.3;">
                                         victims are young riders aged <strong>18 to 24</strong> — lack of experience, tailgating, and failure to notice road conditions are the leading causes.
                                     </p>
                                 </div>
-                                <!-- Bottom note -->
-                                <div style="text-align: center; font-size: 11px; color: var(--text-muted);">
-                                    <i class="fa-solid fa-circle-exclamation" style="color: var(--alert-red);"></i>
-                                    Cars now have ADAS / Radar / AEB / BSD. Motorcycles have <strong style="color: var(--alert-red);">nothing</strong>.
+                                <!-- SVG Bar Chart: Fatality Rate 28× -->
+                                <div style="background: #fff; border: 1px solid var(--border-light); border-radius: 8px; padding: 10px 14px;">
+                                    <div style="font-size: 11px; font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                        <i class="fa-solid fa-chart-bar" style="color: var(--alert-red);"></i> Fatality Rate Comparison
+                                    </div>
+                                    <svg viewBox="0 0 280 64" style="width: 100%; height: auto; display: block;">
+                                        <rect class="s2-bar" y="4" width="260" height="22" rx="4" fill="var(--alert-red)" opacity="0.85"/>
+                                        <text class="s2-bar-label delay-1" x="8" y="19" font-size="11" fill="#fff" font-weight="700">Motorcycle: 28×</text>
+                                        <rect class="s2-bar" y="36" width="9" height="22" rx="4" fill="#94a3b8" opacity="0.7"/>
+                                        <text class="s2-bar-label delay-2" x="13" y="51" font-size="10" fill="var(--text-secondary)" font-weight="600">Passenger Car: 1×</text>
+                                    </svg>
+                                </div>
+                                <!-- Cost Comparison -->
+                                <div style="display: grid; grid-template-columns: 1fr 32px 1fr; gap: 4px; align-items: stretch;">
+                                    <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; padding: 6px 10px; text-align: center;">
+                                        <div style="font-size: 9px; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 2px;"><i class="fa-solid fa-car"></i> Car ADAS</div>
+                                        <div style="font-size: 15px; font-weight: 800; color: var(--alert-red); line-height: 1.1;">&gt;$2,000</div>
+                                        <div style="font-size: 8px; color: #b91c1c; line-height: 1.2;">Radar · AEB · BSD · bulky</div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: var(--text-muted);">vs</div>
+                                    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 6px 10px; text-align: center;">
+                                        <div style="font-size: 9px; font-weight: 700; color: #16a34a; text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 2px;"><i class="fa-solid fa-motorcycle"></i> V.I.S.O.R.</div>
+                                        <div style="font-size: 15px; font-weight: 800; color: #16a34a; line-height: 1.1;">&lt;$100</div>
+                                        <div style="font-size: 8px; color: #15803d; line-height: 1.2;">Camera · AI · helmet-mount</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1340,9 +1674,9 @@
                                 <div style="background: var(--brand-teal-light); border-radius: 10px; padding: 14px; border: 1px solid #ccfbf1;">
                                     <div style="font-size: 11px; font-weight: 700; color: var(--brand-teal); text-transform: uppercase; margin-bottom: 6px;">Key Design Pillars</div>
                                     <ul class="bullet-list" style="font-size: 14px;">
-                                        <li><strong>Dual-Direction Monitoring:</strong> Front 120° + rear 160° lenses → <strong>~280°</strong> blind-spot-free coverage.</li>
-                                        <li><strong>Dynamic Threat Zoning:</strong> Instantly classifies threat entry points, auto-switching front/rear alarms based on approach vector.</li>
-                                        <li><strong>Intuitive HUD + Buzzer Alert:</strong> Complex road computation data is distilled into <strong>minimalist dynamic visual blinking</strong> on the helmet HUD and <strong>audio buzzer tones</strong> — delivering early warning without increasing the rider's cognitive load, preserving precious mental resources for road judgment.</li>
+                                        <li class="s3-pillar"><strong>Dual-Direction Monitoring:</strong> Front 120° + rear 160° lenses → <strong>~280°</strong> blind-spot-free coverage.</li>
+                                        <li class="s3-pillar"><strong>Dynamic Threat Zoning:</strong> Instantly classifies threat entry points, auto-switching front/rear alarms based on approach vector.</li>
+                                        <li class="s3-pillar"><strong>Intuitive HUD + Buzzer Alert:</strong> Complex road computation data is distilled into <strong>minimalist dynamic visual blinking</strong> on the helmet HUD and <strong>audio buzzer tones</strong> — delivering early warning without increasing the rider's cognitive load, preserving precious mental resources for road judgment.</li>
                                     </ul>
                                 </div>
                             </div>
@@ -1372,7 +1706,7 @@
                                         <span style="font-size: 9px; color: var(--alert-red); font-weight: 700;">PASSIVE</span>
                                         <p style="font-size: 8px; color: var(--text-muted); margin: 0;">ABS / Helmet<br>Accident-only</p>
                                     </div>
-                                    <div style="flex:1; background: var(--brand-teal-light); border-radius: 6px; padding: 8px; text-align: center; border: 2px solid var(--brand-teal);">
+                                    <div style="flex:1; background: var(--brand-teal-light); border-radius: 6px; padding: 8px; text-align: center; border: 2px solid var(--brand-teal);" class="s4-active-box">
                                         <i class="fa-solid fa-bolt" style="font-size: 16px; color: var(--brand-teal); margin-bottom: 2px; display: block;"></i>
                                         <span style="font-size: 9px; color: var(--brand-teal); font-weight: 700;">ACTIVE</span>
                                         <p style="font-size: 8px; color: var(--text-muted); margin: 0;">ARAS (Ours)<br>Pre-crash</p>
@@ -1422,27 +1756,27 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
+                                        <tr class="s4-table-row">
                                             <td><strong>Cost</strong></td>
                                             <td>Expensive LiDAR/radar</td>
                                             <td class="text-accent">Dual camera + Pi &lt;$100</td>
                                         </tr>
-                                        <tr>
+                                        <tr class="s4-table-row">
                                             <td><strong>Dynamics</strong></td>
                                             <td>Minor roll/pitch</td>
                                             <td class="text-accent">6‑axis IMU corrects 45° lean</td>
                                         </tr>
-                                        <tr>
+                                        <tr class="s4-table-row">
                                             <td><strong>Network</strong></td>
                                             <td>Wired CAN Bus</td>
                                             <td class="text-accent">UDP + BLE &lt;15ms</td>
                                         </tr>
-                                        <tr>
+                                        <tr class="s4-table-row">
                                             <td><strong>Lane</strong></td>
                                             <td>Manual calibration</td>
                                             <td class="text-accent">End-to-end AI lane filter</td>
                                         </tr>
-                                        <tr>
+                                        <tr class="s4-table-row">
                                             <td><strong>User</strong></td>
                                             <td>High-end cars</td>
                                             <td class="text-accent">125cc–150cc scooters</td>
@@ -1451,15 +1785,15 @@
                                 </table>
 
                                 <h3 style="font-size: 14px; margin: 8px 0 4px;">Vision Pipeline Flow</h3>
-                                <div class="tech-card teal-header" style="padding: 16px;">
+                                 <div class="tech-card teal-header" style="padding: 16px;">
                                     <div style="font-family: var(--font-mono); font-size: 12px; line-height: 2;">
-                                        <div style="color: var(--brand-teal); font-weight: 700;">[Raw Frame] Dual Cameras</div>
-                                        <div style="padding-left: 12px; color: var(--text-secondary);">↓ Grayscale + LAB Space</div>
-                                        <div style="padding-left: 12px; color: var(--text-secondary);">↓ Adaptive CLAHE Enhancer</div>
-                                        <div style="color: var(--brand-navy); font-weight: 700;">[YOLOv8n] imgsz=320</div>
-                                        <div style="padding-left: 12px; color: var(--text-secondary);">↓ Fast Centroid Tracker</div>
-                                        <div style="padding-left: 12px; color: var(--text-secondary);">↓ Monocular Geometry & TTC</div>
-                                        <div style="color: var(--alert-red); font-weight: 700;">[HMI] HUD + Audio Warnings</div>
+                                        <div class="s4-pipeline-step" style="color: var(--brand-teal); font-weight: 700;">[Raw Frame] Dual Cameras</div>
+                                        <div class="s4-pipeline-step" style="padding-left: 12px; color: var(--text-secondary);">↓ Grayscale + LAB Space</div>
+                                        <div class="s4-pipeline-step" style="padding-left: 12px; color: var(--text-secondary);">↓ Adaptive CLAHE Enhancer</div>
+                                        <div class="s4-pipeline-step" style="color: var(--brand-navy); font-weight: 700;">[YOLOv8n] imgsz=320</div>
+                                        <div class="s4-pipeline-step" style="padding-left: 12px; color: var(--text-secondary);">↓ Fast Centroid Tracker</div>
+                                        <div class="s4-pipeline-step" style="padding-left: 12px; color: var(--text-secondary);">↓ Monocular Geometry &amp; TTC</div>
+                                        <div class="s4-pipeline-step" style="color: var(--alert-red); font-weight: 700;">[HMI] HUD + Audio Warnings</div>
                                     </div>
                                 </div>
                                 <div style="margin-top: 12px; background: var(--brand-teal-light); border-radius: 8px; padding: 10px; font-size: 11px; line-height: 1.4; color: var(--text-secondary);">
@@ -1499,6 +1833,11 @@
                                         fill="var(--text-secondary)" text-anchor="middle">Centroid Tracking</text>
                                     <text x="90" y="195" font-family="sans-serif" font-size="11"
                                         fill="var(--text-secondary)" text-anchor="middle">WebSocket Server</text>
+
+                                    <!-- Animated Data Packets -->
+                                    <circle class="s5-packet" cx="170" cy="140" r="5" fill="var(--brand-teal)" opacity="0.85"/>
+                                    <circle class="s5-packet" cx="170" cy="155" r="5" fill="var(--brand-teal)" opacity="0.85"/>
+                                    <circle class="s5-packet" cx="170" cy="170" r="5" fill="var(--brand-teal)" opacity="0.85"/>
 
                                     <!-- Arrow with text -->
                                     <line x1="170" y1="145" x2="270" y2="145" stroke="var(--brand-teal)"
@@ -1639,10 +1978,10 @@
                                 <p style="font-size: 11px; line-height: 1.4;">
                                     Geometric similar triangle projection + EMA filter:
                                 </p>
-                                <div class="math-block" style="font-size: 11px; padding: 4px 6px;">
+                                <div class="math-block s7-formula" style="font-size: 11px; padding: 4px 6px;">
                                     $$d^{(t)} = \max\left(0, \frac{W_{real} \times f}{w_{bbox}^{(t)}} - 3\right)$$
                                 </div>
-                                <div class="math-block" style="font-size: 11px; padding: 4px 6px; margin-top: 2px;">
+                                <div class="math-block s7-formula" style="font-size: 11px; padding: 4px 6px; margin-top: 2px;">
                                     $$TTC = \frac{d^{(t)}}{\max(v_{rel}^{(t)}, 0.1)}$$
                                 </div>
                                 <table class="comparison-table" style="font-size: 11px; margin: 4px 0;">
@@ -1660,9 +1999,9 @@
                                     <table class="comparison-table" style="font-size: 11px;">
                                         <thead><tr><th>Level</th><th>TTC</th><th>Dist</th></tr></thead>
                                         <tbody>
-                                            <tr><td style="color:var(--alert-red);">CRITICAL</td><td>&lt;1.0s</td><td>&lt;2.0m</td></tr>
-                                            <tr><td style="color:var(--alert-amber);">WARNING</td><td>&lt;1.5s</td><td>&lt;4.0m</td></tr>
-                                            <tr><td style="color:#ca8a04;">CAUTION</td><td>&lt;2.5s</td><td>&lt;8.0m</td></tr>
+                                            <tr class="s7-ttc-row"><td style="color:var(--alert-red);">CRITICAL</td><td>&lt;1.0s</td><td>&lt;2.0m</td></tr>
+                                            <tr class="s7-ttc-row"><td style="color:var(--alert-amber);">WARNING</td><td>&lt;1.5s</td><td>&lt;4.0m</td></tr>
+                                            <tr class="s7-ttc-row"><td style="color:#ca8a04;">CAUTION</td><td>&lt;2.5s</td><td>&lt;8.0m</td></tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -1710,11 +2049,11 @@
                         </p>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px;">
                             <!-- Video 1: Urban -->
-                            <div style="background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: 10px; overflow: hidden;">
+                            <div style="background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: 10px; overflow: hidden;" class="s8-video-card">
                                 <div style="padding: 10px 14px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
                                     <div>
                                         <h4 style="font-size: 13px; color: var(--brand-navy); margin: 0;">f0ace550 · Urban Heavy Traffic</h4>
-                                        <p style="font-size: 10px; color: var(--text-muted); margin: 2px 0 0 0;">2,676 detections · 106 threats · 32.5 FPS</p>
+                                        <p style="font-size: 10px; color: var(--text-muted); margin: 2px 0 0 0;"><span class="s8-stat-pop">2,676</span> detections · <span class="s8-stat-pop">106</span> threats · 32.5 FPS</p>
                                     </div>
                                     <span style="font-size: 9px; background: var(--alert-red); color: #fff; padding: 2px 6px; border-radius: 3px; font-weight: 600;">DENSE</span>
                                 </div>
@@ -1723,11 +2062,11 @@
                                 </video>
                             </div>
                             <!-- Video 2: Suburban -->
-                            <div style="background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: 10px; overflow: hidden;">
+                            <div style="background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: 10px; overflow: hidden;" class="s8-video-card">
                                 <div style="padding: 10px 14px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
                                     <div>
                                         <h4 style="font-size: 13px; color: var(--brand-navy); margin: 0;">50c9816b · Suburban Light Traffic</h4>
-                                        <p style="font-size: 10px; color: var(--text-muted); margin: 2px 0 0 0;">1,682 detections · 22 threats · 38.3 FPS</p>
+                                        <p style="font-size: 10px; color: var(--text-muted); margin: 2px 0 0 0;"><span class="s8-stat-pop">1,682</span> detections · <span class="s8-stat-pop">22</span> threats · 38.3 FPS</p>
                                     </div>
                                     <span style="font-size: 9px; background: var(--brand-teal); color: #fff; padding: 2px 6px; border-radius: 3px; font-weight: 600;">LIGHT</span>
                                 </div>
@@ -1768,39 +2107,44 @@
 
                                 <div class="custom-bar-chart" style="margin-top: 10px;">
                                     <div class="chart-row">
-                                        <span class="row-label">Daytime</span>
-                                        <div class="row-bar-container">
-                                            <div class="row-bar-fill" id="bar-clear" data-width="94.2%"></div>
+                                        <span class="row-label" style="font-size:10px;font-weight:600;min-width:55px;">Daytime</span>
+                                        <div style="flex:1;display:flex;flex-direction:column;gap:1px;">
+                                            <div style="display:flex;align-items:center;gap:4px;"><div style="height:6px;background:var(--brand-teal);border-radius:2px;width:94.2%;flex:none;"></div><span style="font-size:8px;font-weight:600;min-width:30px;">94.2%</span><span style="font-size:7px;color:var(--text-muted);">VISOR</span></div>
+                                            <div style="display:flex;align-items:center;gap:4px;"><div style="height:6px;background:var(--brand-blue);border-radius:2px;width:89.1%;flex:none;"></div><span style="font-size:8px;font-weight:600;min-width:30px;">89.1%</span><span style="font-size:7px;color:var(--text-muted);">v8n</span></div>
+                                            <div style="display:flex;align-items:center;gap:4px;"><div style="height:6px;background:var(--border-light);border-radius:2px;width:82.5%;flex:none;"></div><span style="font-size:8px;font-weight:600;min-width:30px;">82.5%</span><span style="font-size:7px;color:var(--text-muted);">v5s</span></div>
                                         </div>
-                                        <span class="row-value" id="val-clear">94.2%</span>
                                     </div>
-                                    <div class="chart-row">
-                                        <span class="row-label">Nighttime</span>
-                                        <div class="row-bar-container">
-                                            <div class="row-bar-fill" id="bar-night" data-width="86.5%"></div>
+                                    <div class="chart-row" style="margin-top:3px;">
+                                        <span class="row-label" style="font-size:10px;font-weight:600;min-width:55px;">Night</span>
+                                        <div style="flex:1;display:flex;flex-direction:column;gap:1px;">
+                                            <div style="display:flex;align-items:center;gap:4px;"><div style="height:6px;background:var(--brand-teal);border-radius:2px;width:86.5%;flex:none;"></div><span style="font-size:8px;font-weight:600;min-width:30px;">86.5%</span><span style="font-size:7px;color:var(--text-muted);">VISOR</span></div>
+                                            <div style="display:flex;align-items:center;gap:4px;"><div style="height:6px;background:var(--brand-blue);border-radius:2px;width:74.4%;flex:none;"></div><span style="font-size:8px;font-weight:600;min-width:30px;">74.4%</span><span style="font-size:7px;color:var(--text-muted);">v8n</span></div>
+                                            <div style="display:flex;align-items:center;gap:4px;"><div style="height:6px;background:var(--border-light);border-radius:2px;width:65.1%;flex:none;"></div><span style="font-size:8px;font-weight:600;min-width:30px;">65.1%</span><span style="font-size:7px;color:var(--text-muted);">v5s</span></div>
                                         </div>
-                                        <span class="row-value" id="val-night">86.5%</span>
                                     </div>
-                                    <div class="chart-row">
-                                        <span class="row-label">Rain / Mist</span>
-                                        <div class="row-bar-container">
-                                            <div class="row-bar-fill" id="bar-rain" data-width="81.1%"></div>
+                                    <div class="chart-row" style="margin-top:3px;">
+                                        <span class="row-label" style="font-size:10px;font-weight:600;min-width:55px;">Rain</span>
+                                        <div style="flex:1;display:flex;flex-direction:column;gap:1px;">
+                                            <div style="display:flex;align-items:center;gap:4px;"><div style="height:6px;background:var(--brand-teal);border-radius:2px;width:81.1%;flex:none;"></div><span style="font-size:8px;font-weight:600;min-width:30px;">81.1%</span><span style="font-size:7px;color:var(--text-muted);">VISOR</span></div>
+                                            <div style="display:flex;align-items:center;gap:4px;"><div style="height:6px;background:var(--brand-blue);border-radius:2px;width:69%;flex:none;"></div><span style="font-size:8px;font-weight:600;min-width:30px;">69.0%</span><span style="font-size:7px;color:var(--text-muted);">v8n</span></div>
+                                            <div style="display:flex;align-items:center;gap:4px;"><div style="height:6px;background:var(--border-light);border-radius:2px;width:58.3%;flex:none;"></div><span style="font-size:8px;font-weight:600;min-width:30px;">58.3%</span><span style="font-size:7px;color:var(--text-muted);">v5s</span></div>
                                         </div>
-                                        <span class="row-value" id="val-rain">81.1%</span>
                                     </div>
-                                    <div class="chart-row">
-                                        <span class="row-label">Vibration</span>
-                                        <div class="row-bar-container">
-                                            <div class="row-bar-fill" id="bar-vibe" data-width="88.3%"></div>
+                                    <div class="chart-row" style="margin-top:3px;">
+                                        <span class="row-label" style="font-size:10px;font-weight:600;min-width:55px;">Vibrate</span>
+                                        <div style="flex:1;display:flex;flex-direction:column;gap:1px;">
+                                            <div style="display:flex;align-items:center;gap:4px;"><div style="height:6px;background:var(--brand-teal);border-radius:2px;width:88.3%;flex:none;"></div><span style="font-size:8px;font-weight:600;min-width:30px;">88.3%</span><span style="font-size:7px;color:var(--text-muted);">VISOR</span></div>
+                                            <div style="display:flex;align-items:center;gap:4px;"><div style="height:6px;background:var(--brand-blue);border-radius:2px;width:77.9%;flex:none;"></div><span style="font-size:8px;font-weight:600;min-width:30px;">77.9%</span><span style="font-size:7px;color:var(--text-muted);">v8n</span></div>
+                                            <div style="display:flex;align-items:center;gap:4px;"><div style="height:6px;background:var(--border-light);border-radius:2px;width:62.4%;flex:none;"></div><span style="font-size:8px;font-weight:600;min-width:30px;">62.4%</span><span style="font-size:7px;color:var(--text-muted);">v5s</span></div>
                                         </div>
-                                        <span class="row-value" id="val-vibe">88.3%</span>
                                     </div>
-                                    <div class="chart-row" style="border-top: 1px solid var(--border-light); padding-top: 8px;">
-                                        <span class="row-label" style="color: var(--brand-teal); font-weight: bold;">Avg mAP@.5</span>
-                                        <div class="row-bar-container">
-                                            <div class="row-bar-fill" id="bar-avg" data-width="87.5%" style="background: var(--brand-teal);"></div>
+                                    <div class="chart-row" style="border-top:1px solid var(--border-light);padding-top:5px;margin-top:3px;">
+                                        <span class="row-label" style="font-size:10px;font-weight:700;color:var(--brand-teal);min-width:55px;">Avg</span>
+                                        <div style="flex:1;display:flex;flex-direction:column;gap:1px;">
+                                            <div style="display:flex;align-items:center;gap:4px;"><div style="height:8px;background:var(--brand-teal);border-radius:2px;width:87.5%;flex:none;"></div><span style="font-size:8px;font-weight:700;min-width:30px;">87.5%</span><span style="font-size:7px;color:var(--text-muted);">VISOR</span></div>
+                                            <div style="display:flex;align-items:center;gap:4px;"><div style="height:8px;background:var(--brand-blue);border-radius:2px;width:77.6%;flex:none;"></div><span style="font-size:8px;font-weight:700;min-width:30px;">77.6%</span><span style="font-size:7px;color:var(--text-muted);">v8n</span></div>
+                                            <div style="display:flex;align-items:center;gap:4px;"><div style="height:8px;background:var(--border-light);border-radius:2px;width:66.5%;flex:none;"></div><span style="font-size:8px;font-weight:700;min-width:30px;">66.5%</span><span style="font-size:7px;color:var(--text-muted);">v5s</span></div>
                                         </div>
-                                        <span class="row-value" id="val-avg" style="color: var(--brand-teal); font-weight: bold;">87.5%</span>
                                     </div>
                                 </div>
                                 <div style="margin-top: 8px; font-size: 10px; line-height: 1.3; color: var(--text-muted);">
@@ -1862,7 +2206,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div style="background: var(--brand-teal-light); border-left: 3px solid var(--brand-teal); padding: 5px 8px; border-radius: 4px; font-size: 9px; color: var(--text-secondary); line-height: 1.3;">
+                                <div class="s9-opt-box" style="background: var(--brand-teal-light); border-left: 3px solid var(--brand-teal); padding: 5px 8px; border-radius: 4px; font-size: 9px; color: var(--text-secondary); line-height: 1.3;">
                                     <strong>4 Optimization Techniques:</strong>
                                     Skip-2 frame (+108% FPS) · TorchScript (+7%) · imgsz=256 (+25%) · Logspace Y-sampling
                                 </div>
@@ -1888,38 +2232,28 @@
                         <div class="slide-header-logo">Paper ID: 20</div>
                     </header>
                     <div class="slide-body" style="align-items: center;">
-                        <div style="display: flex; gap: 25px; align-items: center; height: 100%;">
-                            <div style="flex: 1; text-align: center;">
+                        <div style="display: flex; flex-direction: column; gap: 10px; height: 100%;">
+                            <div style="text-align: center; flex-shrink: 0;" class="s10-img">
                                 <img src="img/visor_app_screenshot.jpeg" alt="VISOR App Screenshot"
-                                    style="max-height: 420px; max-width: 100%; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); object-fit: contain;">
+                                    style="max-height: 280px; max-width: 100%; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); object-fit: contain;">
                             </div>
-                            <div style="width: 300px; flex-shrink: 0;">
-                                <h3 style="font-size: 16px; color: var(--brand-navy); margin-bottom: 6px;">Cross-Platform Tactical Console</h3>
-                                <p style="font-size: 12px; line-height: 1.5; color: var(--text-secondary); margin-bottom: 10px;">
-                                    We developed a cross-platform mobile app (Cordova — Android &amp; iOS) that serves as the rider's command center. It displays a <strong>real-time dashboard</strong> with speed, lean angle, and directional threat levels — all synced from the Pi 5 core over BLE and Wi-Fi.
-                                </p>
-
-                                <!-- E-SOS Feature Card -->
-                                <div style="background: #fef2f2; border-left: 4px solid var(--alert-red); border-radius: 6px; padding: 8px 10px; margin-bottom: 8px;">
-                                    <h4 style="font-size: 12px; color: var(--alert-red); margin-bottom: 3px;"><i class="fa-solid fa-life-ring"></i> E-SOS Emergency Rescue</h4>
-                                    <p style="font-size: 11px; color: var(--text-secondary); line-height: 1.4; margin: 0;">
-                                        If the system detects an <strong>abnormal motorcycle tilt exceeding 15 seconds</strong>, it automatically transmits an emergency SMS containing the rider's <strong>GPS coordinates</strong> to pre-set emergency contacts. No rider action needed — fully autonomous crash response.
-                                    </p>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+                                <div class="s10-card s10-sos-card" style="background: #fef2f2; border-left: 3px solid var(--alert-red); border-radius: 5px; padding: 6px 8px;">
+                                    <h4 style="font-size: 11px; color: var(--alert-red); margin: 0 0 2px;"><i class="fa-solid fa-life-ring"></i> E-SOS</h4>
+                                    <p style="font-size: 10px; color: var(--text-secondary); line-height: 1.3; margin: 0;">Auto SMS with GPS when bike tips over &gt;15s — fully autonomous crash response.</p>
                                 </div>
-
-                                <!-- Gemini AI Feature Card -->
-                                <div style="background: #f5f3ff; border-left: 4px solid #a855f7; border-radius: 6px; padding: 8px 10px; margin-bottom: 8px;">
-                                    <h4 style="font-size: 12px; color: #a855f7; margin-bottom: 3px;"><i class="fa-solid fa-brain"></i> Gemini 2.5 Flash AI Analysis</h4>
-                                    <p style="font-size: 11px; color: var(--text-secondary); line-height: 1.4; margin: 0;">
-                                        Integrated with <strong>Google Gemini</strong>, the system analyzes historical riding data — speeding events, hard braking, dangerous lean angles — and <strong>auto-generates personalized AI safety recommendations</strong> tailored to each rider's behavior patterns.
-                                    </p>
+                                <div class="s10-card" style="background: #f5f3ff; border-left: 3px solid #a855f7; border-radius: 5px; padding: 6px 8px;">
+                                    <h4 style="font-size: 11px; color: #a855f7; margin: 0 0 2px;"><i class="fa-solid fa-brain"></i> Gemini AI</h4>
+                                    <p style="font-size: 10px; color: var(--text-secondary); line-height: 1.3; margin: 0;">Analyzes speeding, hard braking, dangerous lean — generates personalized safety tips.</p>
                                 </div>
-
-                                <ul class="bullet-list" style="font-size: 11px;">
-                                    <li><strong>BLE Auto-Pairing:</strong> visor_bt_agent.py — pair once, auto-connect every ride.</li>
-                                    <li><strong>Supabase Cloud Sync:</strong> Telemetry permanently stored, with real-time TerminalConsole log streaming.</li>
-                                </ul>
+                                <div class="s10-card" style="background: var(--bg-primary); border-left: 3px solid var(--brand-teal); border-radius: 5px; padding: 6px 8px;">
+                                    <h4 style="font-size: 11px; color: var(--brand-teal); margin: 0 0 2px;"><i class="fa-solid fa-diagram-project"></i> Supabase Cloud</h4>
+                                    <p style="font-size: 10px; color: var(--text-secondary); line-height: 1.3; margin: 0;">BLE + Supabase sync. RLS security. TerminalConsole log streaming.</p>
+                                </div>
                             </div>
+                            <p style="font-size: 11px; line-height: 1.4; color: var(--text-secondary); margin: 0; text-align: center;">
+                                Cross-platform app (React + Cordova) — serves as the rider's command center. Displays <strong>real-time dashboard</strong> with speed, lean angle, and threat levels — synced from Pi 5 over BLE.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -1937,7 +2271,7 @@
                     </header>
                     <div class="slide-body">
                         <div class="grid-3col">
-                            <div class="tech-card teal-header">
+                            <div class="tech-card teal-header s11-card">
                                 <div style="font-size: 32px; color: var(--brand-teal); margin-bottom: 12px;"><i
                                         class="fa-solid fa-microchip"></i></div>
                                 <h3>High Edge Efficiency</h3>
@@ -1945,7 +2279,7 @@
                                     Maintains 15-20 FPS on a sub-$100 Raspberry Pi 5 core, processing real-time dual-camera streams and lane tracking.
                                 </p>
                             </div>
-                            <div class="tech-card teal-header">
+                            <div class="tech-card teal-header s11-card">
                                 <div style="font-size: 32px; color: var(--brand-teal); margin-bottom: 12px;"><i
                                         class="fa-solid fa-database"></i></div>
                                 <h3>Data Pipeline Innovation</h3>
@@ -1953,7 +2287,7 @@
                                     Augments real video with Stable Diffusion weather and motion blur, overcoming data scarcity for motorcycle-specific threats.
                                 </p>
                             </div>
-                            <div class="tech-card teal-header">
+                            <div class="tech-card teal-header s11-card">
                                 <div style="font-size: 32px; color: var(--brand-teal); margin-bottom: 12px;"><i
                                         class="fa-solid fa-shield-halved"></i></div>
                                 <h3>Holistic Two-Wheeled ADAS</h3>
@@ -1970,14 +2304,14 @@
             <section class="slide-frame" id="slide-12">
                 <div class="slide-content-container"
                     style="justify-content: center; align-items: center; text-align: center;">
-                    <h1 style="font-size: 42px; color: var(--brand-navy); margin-bottom: 20px;">
+                    <h1 class="s12-thanks s12-d1" style="font-size: 42px; color: var(--brand-navy); margin-bottom: 20px;">
                         Thank You for Your Attention!
                     </h1>
-                    <p style="font-size: 20px; color: var(--brand-teal); font-weight: 700; margin-bottom: 20px;">
+                    <p class="s12-thanks s12-d2" style="font-size: 20px; color: var(--brand-teal); font-weight: 700; margin-bottom: 20px;">
                         Q & A / Thank You
                     </p>
 
-                    <div style="background: #fefce8; border: 1px solid #fde68a; border-radius: 10px; padding: 12px 18px; max-width: 700px; margin: 0 auto 20px auto; text-align: left;">
+                    <div class="s12-future-box" style="background: #fefce8; border: 1px solid #fde68a; border-radius: 10px; padding: 12px 18px; max-width: 700px; margin: 0 auto 20px auto; text-align: left;">
                         <h4 style="font-size: 14px; color: #92400e; margin-bottom: 6px;"><i class="fa-solid fa-flask"></i> Future Work: YOLOv26n Upgrade</h4>
                         <p style="font-size: 13px; color: #78350f; line-height: 1.5; margin: 0;">
                             In this paper, we demonstrated YOLOv8n as our detection backbone. As a next step, we plan to upgrade to <strong style="color: var(--brand-navy);">YOLOv26n</strong> — a lighter (2.6M params) yet more accurate model projected to deliver <strong>+1.3% mAP</strong> and <strong>20-25 FPS</strong> on Pi 5, enabling even faster and more reliable rider assistance.
@@ -2021,7 +2355,7 @@
                         class="fa-solid fa-chevron-left"></i></button>
                 <span id="slide-counter"
                     style="color: var(--text-secondary); font-family: var(--font-mono); font-size: 13px; font-weight: 600; padding: 0 6px; user-select: none;">1
-                    / 18</span>
+                    / 12</span>
                 <button class="nav-btn" onclick="nextSlide()" title="Next slide (Right Arrow)"><i
                         class="fa-solid fa-chevron-right"></i></button>
             </div>
@@ -2253,19 +2587,167 @@
             document.getElementById('progress-bar-fill').style.width = `${percentage}%`;
         }
 
+        // === Slide 2: Counter + Bar Chart Animations ===
+        var s2RafId = null;
+
+        function animateCounter(el, duration) {
+            duration = duration || 1200;
+            var target = parseFloat(el.getAttribute('data-target'));
+            var decimals = parseInt(el.getAttribute('data-decimals')) || 0;
+            var prefix = el.getAttribute('data-prefix') || '';
+            var startTime = performance.now();
+            function update(now) {
+                var elapsed = now - startTime;
+                var progress = Math.min(elapsed / duration, 1);
+                var eased = 1 - Math.pow(1 - progress, 3);
+                var current = target * eased;
+                el.textContent = prefix + current.toFixed(decimals);
+                if (progress < 1) {
+                    s2RafId = requestAnimationFrame(update);
+                } else {
+                    el.textContent = prefix + target.toFixed(decimals);
+                    if (decimals === 0 && prefix) el.textContent = prefix + Math.round(target);
+                    s2RafId = null;
+                }
+            }
+            s2RafId = requestAnimationFrame(update);
+        }
+
+        function startSlide2Animations() {
+            if (s2RafId) { cancelAnimationFrame(s2RafId); s2RafId = null; }
+            var c1 = document.getElementById('s2-counter-1');
+            var c2 = document.getElementById('s2-counter-2');
+            if (c1) { c1.textContent = '0'; animateCounter(c1, 1200); }
+            if (c2) {
+                c2.classList.remove('s2-pop');
+                void c2.offsetWidth;
+                c2.textContent = '1 in 3';
+                setTimeout(function() { c2.classList.add('s2-pop'); }, 200);
+                setTimeout(function() { c2.classList.remove('s2-pop'); }, 800);
+            }
+            var bars = document.querySelectorAll('#slide-2 .s2-bar');
+            var labels = document.querySelectorAll('#slide-2 .s2-bar-label');
+            for (var i = 0; i < bars.length; i++) {
+                bars[i].classList.remove('animate');
+                void bars[i].offsetWidth;
+                bars[i].classList.add('animate');
+            }
+            for (var j = 0; j < labels.length; j++) {
+                labels[j].classList.remove('visible');
+            }
+            setTimeout(function() {
+                for (var k = 0; k < labels.length; k++) {
+                    labels[k].classList.add('visible');
+                }
+            }, 1500);
+        }
+
+        // === Shared: Batched animation restart (avoids per-element reflow stutter) ===
+        function restartAnims(elements, className) {
+            className = className || 'animate';
+            if (!elements || !elements.length) return;
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].classList.remove(className);
+            }
+            document.body.offsetHeight;
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].classList.add(className);
+            }
+        }
+
+        // === Slide 3: Pillar stagger ===
+        function startSlide3PillarAnim() {
+            restartAnims(document.querySelectorAll('#slide-3 .s3-pillar'));
+        }
+
+        // === Slide 4: Pipeline + Table + Active box ===
+        function startSlide4Animations() {
+            restartAnims(document.querySelectorAll('#slide-4 .s4-pipeline-step'));
+            restartAnims(document.querySelectorAll('#slide-4 .s4-table-row'));
+            restartAnims(document.querySelectorAll('#slide-4 .s4-active-box'));
+        }
+
+        // === Slide 5: CPU bars (packets are CSS infinite — restarts on display toggle) ===
+        function startSlide5Animations() {
+            restartAnims(document.querySelectorAll('#slide-5 .s5-cpu-bar'));
+        }
+
+        // === Slide 7: Formula glow + TTC rows ===
+        function startSlide7Animations() {
+            restartAnims(document.querySelectorAll('#slide-7 .s7-formula'));
+            restartAnims(document.querySelectorAll('#slide-7 .s7-ttc-row'));
+        }
+
+        // === Slide 8: Video pulse + stats pop (CSS self-contained — display toggle restarts) ===
+        function startSlide8Animations() {
+            // Both .s8-video-card.pulse and .s8-stat-pop are CSS self-contained
+            // display:none → display:flex restarts them automatically
+        }
+
+        // === Slide 9: Bar chart grow + opt box glow ===
+        function startSlide9Animations() {
+            var allBars = [];
+            var barRows = document.querySelectorAll('#slide-9 .chart-row');
+            for (var r = 0; r < barRows.length; r++) {
+                var flexCol = barRows[r].querySelector('div[style*="flex:1"]');
+                if (!flexCol) continue;
+                var wrappers = flexCol.querySelectorAll('div[style*="display:flex"]');
+                for (var w = 0; w < wrappers.length; w++) {
+                    var barDiv = wrappers[w].querySelector('div[style*="width:"][style*="height:"]');
+                    if (barDiv) allBars.push(barDiv);
+                }
+            }
+            for (var i = 0; i < allBars.length; i++) {
+                allBars[i].classList.remove('animate');
+                allBars[i].classList.add('s9-bar');
+            }
+            document.body.offsetHeight;
+            for (var i = 0; i < allBars.length; i++) {
+                allBars[i].classList.add('animate');
+                allBars[i].style.animationDelay = (i * 0.04) + 's';
+            }
+            restartAnims(document.querySelectorAll('#slide-9 .s9-opt-box'));
+        }
+
+        // === Slide 10: Screenshot + cards + SOS pulse ===
+        function startSlide10Animations() {
+            restartAnims(document.querySelectorAll('#slide-10 .s10-img'));
+            restartAnims(document.querySelectorAll('#slide-10 .s10-card'));
+        }
+
+        // === Slide 11: Card stagger + icon bounce ===
+        function startSlide11Animations() {
+            restartAnims(document.querySelectorAll('#slide-11 .s11-card'));
+        }
+
         // Trigger visual/chart animations on slide entry
         function triggerSlideAnimations(slideIndex) {
             clearAllSlideTimers();
 
-            if (slideIndex === 3) {
+            if (slideIndex === 2) {
+                startSlide2Animations();
+            } else if (slideIndex === 3) {
                 startSlide3AutoLoop();
+                startSlide3PillarAnim();
+            } else if (slideIndex === 4) {
+                startSlide4Animations();
+            } else if (slideIndex === 5) {
+                startSlide5Animations();
             } else if (slideIndex === 6) {
-                // merged: augmentation sandbox + IMU lean
                 startSlideSandboxAutoLoop();
                 startSlide8AutoLoop();
+            } else if (slideIndex === 7) {
+                startSlide7Animations();
+            } else if (slideIndex === 8) {
+                startSlide8Animations();
             } else if (slideIndex === 9) {
                 switchPrecisionModel('visor');
                 startSlideBenchmarkAutoLoop();
+                startSlide9Animations();
+            } else if (slideIndex === 10) {
+                startSlide10Animations();
+            } else if (slideIndex === 11) {
+                startSlide11Animations();
             } else if (slideIndex === 12) {
                 startSlide14AutoLoop();
             }
@@ -2334,7 +2816,17 @@
             }
         });
 
+        // Auto fullscreen on first user interaction
+        let fullscreenEntered = false;
         document.addEventListener('keydown', (e) => {
+            if (!fullscreenEntered && (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || e.key === ' ' || e.key === 'Enter')) {
+                fullscreenEntered = true;
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    const el = document.documentElement;
+                    if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
+                    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+                }
+            }
             if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
                 nextSlide();
             } else if (e.key === 'ArrowLeft') {
@@ -2652,46 +3144,11 @@
 
         // SLIDE 11: MODEL PRECISION CONTRAST TAB
         function switchPrecisionModel(model) {
-            const clear = document.getElementById('bar-clear');
-            const night = document.getElementById('bar-night');
-            const rain = document.getElementById('bar-rain');
-            const vibe = document.getElementById('bar-vibe');
-            const avg = document.getElementById('bar-avg');
-
-            // Labels
-            const lblClear = document.getElementById('val-clear');
-            const lblNight = document.getElementById('val-night');
-            const lblRain = document.getElementById('val-rain');
-            const lblVibe = document.getElementById('val-vibe');
-            const lblAvg = document.getElementById('val-avg');
-
-            // Buttons resets
             document.querySelectorAll('#slide-9 .precision-tabs button').forEach(btn => btn.className = 'interactive-btn secondary');
-
-            let data = {};
-            if (model === 'visor') {
-                const btn = document.getElementById('btn-model-visor');
-                if (btn) btn.className = 'interactive-btn';
-                data = { clear: "94.2%", night: "86.5%", rain: "81.1%", vibe: "88.3%", avg: "87.5%" };
-            } else if (model === 'yolov8') {
-                const btn = document.getElementById('btn-model-yolov8');
-                if (btn) btn.className = 'interactive-btn';
-                data = { clear: "89.1%", night: "74.4%", rain: "69.0%", vibe: "77.9%", avg: "77.6%" };
-            } else if (model === 'yolov5') {
-                const btn = document.getElementById('btn-model-yolov5');
-                if (btn) btn.className = 'interactive-btn';
-                data = { clear: "82.5%", night: "65.1%", rain: "58.3%", vibe: "62.4%", avg: "66.5%" };
-            }
-
-            // Apply width and text change
-            setTimeout(() => {
-                if (clear) { clear.style.width = data.clear; lblClear.innerText = data.clear; }
-                if (night) { night.style.width = data.night; lblNight.innerText = data.night; }
-                if (rain) { rain.style.width = data.rain; lblRain.innerText = data.rain; }
-                if (vibe) { vibe.style.width = data.vibe; lblVibe.innerText = data.vibe; }
-                if (avg) { avg.style.width = data.avg; lblAvg.innerText = data.avg; }
-            }, 50);
+            const btn = document.getElementById('btn-model-' + model);
+            if (btn) btn.className = 'interactive-btn';
         }
+
 
         // SLIDE 13: FPS CONTRAST TIMELINE ANIMATOR
         let fpsAnimId = null;
