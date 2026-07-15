@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hant" data-preloader>
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -91,10 +91,8 @@
 
     /* ===== Page Wrapper ===== */
     .page-wrapper {
-      opacity: 0;
-      transition: opacity 0.8s ease 0.4s;
+      position: relative; overflow: hidden; min-height: 100vh;
     }
-    html:not([data-preloader]) .page-wrapper { opacity: 1; }
 
     /* ===== Navigation ===== */
     .nav {
@@ -218,10 +216,13 @@
     .hero-headline span {
       display: block;
       clip-path: inset(0 0 100% 0);
+      transform: translateY(1em);
+    }
+    .hero-ready .hero-headline span {
       animation: heroReveal 1.2s var(--smooth) forwards;
     }
-    .hero-headline span:nth-child(2) { animation-delay: 0.15s; }
-    .hero-headline span:nth-child(3) { animation-delay: 0.3s; }
+    .hero-ready .hero-headline span:nth-child(2) { animation-delay: 0.15s; }
+    .hero-ready .hero-headline span:nth-child(3) { animation-delay: 0.3s; }
     @keyframes heroReveal {
       0% { clip-path: inset(0 0 100% 0); transform: translateY(1em); }
       100% { clip-path: inset(0 0 0 0); transform: translateY(0); }
@@ -234,13 +235,19 @@
       font-weight: 300; color: rgba(255,255,255,0.55);
       line-height: 1.4; max-width: 500px;
       clip-path: inset(0 0 100% 0);
-      animation: heroReveal 0.8s var(--smooth) 0.6s forwards;
+      transform: translateY(0.5em);
     }
-    .hero-tagline:nth-child(2) { animation-delay: 0.75s; }
+    .hero-ready .hero-tagline {
+      animation: heroReveal 0.8s var(--smooth) 0.5s forwards;
+    }
+    .hero-ready .hero-tagline:nth-child(2) { animation-delay: 0.65s; }
     .hero-cta {
       margin-top: 3rem;
       clip-path: inset(0 0 100% 0);
-      animation: heroReveal 0.8s var(--smooth) 0.9s forwards;
+      transform: translateY(0.5em);
+    }
+    .hero-ready .hero-cta {
+      animation: heroReveal 0.8s var(--smooth) 0.8s forwards;
     }
     .hero-scroll {
       position: absolute; bottom: 2rem; left: 2rem; z-index: 10;
@@ -1054,9 +1061,9 @@
     // ===== Preloader =====
     window.addEventListener('load', () => {
       setTimeout(() => {
-        document.documentElement.removeAttribute('data-preloader');
         const preloader = document.querySelector('[data-preloader]');
         if (preloader) preloader.classList.add('loaded');
+        document.querySelector('.hero-content')?.classList.add('hero-ready');
       }, 800);
     });
 
