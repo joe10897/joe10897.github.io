@@ -784,6 +784,52 @@
             }
         }
 
+        /* Print Styles for PDF Download */
+        @page {
+            size: landscape;
+            margin: 15mm 15mm 15mm 15mm;
+        }
+        @media print {
+            body { overflow: visible; background: white; }
+            #sidebar { display: none !important; }
+            #nav-controls { display: none !important; }
+            #progress-bar-container { display: none !important; }
+            #app-container { display: flex; width: 100%; height: auto; }
+            #presentation-workspace { padding: 0; display: flex; flex-direction: column; width: 100%; height: auto; }
+            .slide-frame { display: flex !important; position: static; break-after: page; padding: 5mm 10mm; height: auto; min-height: 0; box-shadow: none; border: 1px solid #ddd; border-radius: 4px; margin: 0 auto 10mm; width: 100%; max-width: 297mm; page-break-after: always; }
+            .slide-content-container { height: auto; max-height: none; }
+            .slide-body { overflow: visible; height: auto; }
+            .slide-header { flex-shrink: 0; }
+            .slide-body::-webkit-scrollbar { display: none; }
+            .radar-pulse-wave { display: none; }
+            .terminal-panel { break-inside: avoid; }
+            .tech-card { break-inside: avoid; }
+            .graphic-wrapper { break-inside: avoid; }
+            video { display: none !important; }
+            .interactive-btn { display: none !important; }
+            .slide-link { display: none !important; }
+            #speaker-notes-panel { display: none !important; }
+            .sidebar-footer { display: none !important; }
+            .sidebar-header { display: none !important; }
+            .chapter-tree { display: none !important; }
+            input, button, .nav-btn { display: none !important; }
+            .math-block { break-inside: avoid; }
+            #slide-1 .title-slide-logo { animation: none !important; font-size: 48px; }
+            #slide-2 .stat-number { animation: none !important; }
+            .s1-entrance { animation: none !important; opacity: 1 !important; }
+            * { animation: none !important; }
+            .s2-bar { transform: scaleX(1) !important; }
+            .s2-bar-label { opacity: 1 !important; }
+            .s3-pillar { opacity: 1 !important; }
+            .s4-pipeline-step { opacity: 1 !important; }
+            .s4-table-row { opacity: 1 !important; }
+            .s7-ttc-row { opacity: 1 !important; }
+            .s10-card { opacity: 1 !important; }
+            .s10-img { opacity: 1 !important; }
+            .s11-card { opacity: 1 !important; }
+            #slide-4 .s4-active-box { animation: none !important; }
+        }
+
         /* Interactive Elements styling */
         .interactive-btn {
             background-color: var(--brand-navy);
@@ -1486,6 +1532,9 @@
                 <p style="font-size: 10px; color: var(--text-muted); margin-bottom: 4px;">Chihlee UST</p>
                 <button onclick="toggleFullscreen()" title="Fullscreen (F11)" style="font-size: 9px; padding: 3px 8px; border: 1px solid var(--border-light); border-radius: 4px; background: white; cursor: pointer; color: var(--text-secondary); width: 100%;">
                     <i class="fa-solid fa-expand"></i> Fullscreen (F11)
+                </button>
+                <button onclick="downloadPDF()" title="Download as PDF" style="font-size: 9px; padding: 3px 8px; border: 1px solid var(--border-light); border-radius: 4px; background: white; cursor: pointer; color: var(--text-secondary); width: 100%; margin-top: 3px;">
+                    <i class="fa-solid fa-file-pdf"></i> Download PDF
                 </button>
                 <p style="font-size: 8px; color: var(--text-muted); margin-top: 3px;"><kbd>S</kbd> show sidebar &nbsp;|&nbsp; <kbd>←</kbd><kbd>→</kbd> navigate</p>
             </div>
@@ -2763,6 +2812,10 @@
             } else {
                 document.body.classList.remove('sidebar-hidden');
             }
+        }
+
+        function downloadPDF() {
+            window.print();
         }
 
         function toggleFullscreen() {
