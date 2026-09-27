@@ -14,6 +14,7 @@
   <title>Monochrome Lab</title>
   <link rel="icon" href="images/logo.ico" type="image/logo-icon">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/three.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.tailwindcss.com">
@@ -785,253 +786,36 @@
       100% { transform: scale(1.15); opacity: 1; }
     }
 
-    /* ===== Rolleiflex TLR 經典雙鏡反光相機與機械連動系統 ===== */
-    .rolleiflex-hero-wrap {
-      position: relative;
-      display: inline-flex;
+    /* ===== Rolleiflex TLR 3D WebGL Stage ===== */
+    .rolleiflex-3d-stage {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 15;
+      overflow: hidden;
+      display: flex;
       align-items: center;
       justify-content: center;
-      user-select: none;
-      filter: drop-shadow(0 25px 60px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 30px rgba(255, 255, 255, 0.05));
-      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      margin: 0 auto;
+      pointer-events: auto;
+    }
+    #rolleiflex3dCanvas {
+      width: 100%;
+      height: 100%;
+      outline: none;
+      touch-action: none;
+      display: block;
     }
 
-    .rolleiflex-camera-img {
-      max-height: 48vh;
-      width: auto;
-      height: auto;
-      object-fit: contain;
-      pointer-events: none;
-      filter: contrast(1.15) brightness(1.02);
-      transition: transform 0.2s ease-out;
-    }
-    @media (min-width: 640px) {
-      .rolleiflex-camera-img {
-        max-height: 52vh;
-      }
-    }
-    @media (min-width: 1024px) {
-      .rolleiflex-camera-img {
-        max-height: 56vh;
-      }
-    }
-    @media (max-height: 650px) {
-      .rolleiflex-camera-img {
-        max-height: 40vh;
-      }
-    }
-
-    /* 快門曝光後座力機械微震 */
-    .rolleiflex-hero-wrap.recoil {
-      animation: cameraRecoil 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+    /* 3D 鏡頭快門後座力動畫 */
+    .shutter-recoil-flash {
+      animation: cameraRecoil 0.28s cubic-bezier(0.16, 1, 0.3, 1);
     }
     @keyframes cameraRecoil {
       0% { transform: scale(1); }
       30% { transform: scale(0.97) translateY(4px); }
       60% { transform: scale(1.01) translateY(-2px); }
       100% { transform: scale(1) translateY(0); }
-    }
-
-    /* 上鏡頭：光學觀景玻璃反光 (Viewing Lens Glare) */
-    .viewing-lens-optic {
-      position: absolute;
-      top: 33%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 25%;
-      height: 18.5%;
-      border-radius: 50%;
-      pointer-events: none;
-      overflow: hidden;
-      background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
-    }
-    .viewing-lens-glare {
-      position: absolute;
-      width: 150%;
-      height: 150%;
-      top: -25%;
-      left: -25%;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, transparent 45%, rgba(255, 255, 255, 0.1) 85%);
-      mix-blend-mode: screen;
-      transition: transform 0.1s ease-out;
-    }
-
-    /* 下鏡頭：拍攝鏡頭快門觸發熱點 (Taking Lens & Shutter Snap) */
-    .taking-lens-trigger {
-      position: absolute;
-      top: 63%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 28%;
-      height: 21%;
-      border-radius: 50%;
-      cursor: pointer;
-      z-index: 25;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      outline: none;
-      border: none;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .taking-lens-trigger::before {
-      content: '';
-      position: absolute;
-      inset: -4px;
-      border-radius: 50%;
-      border: 1px dashed rgba(255, 255, 255, 0.45);
-      animation: spinPrism 25s linear infinite;
-      opacity: 0.6;
-      transition: all 0.3s ease;
-    }
-    .taking-lens-trigger:hover::before {
-      border-color: rgba(255, 255, 255, 0.95);
-      opacity: 1;
-      inset: -8px;
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.45);
-    }
-    .taking-lens-trigger:hover {
-      box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.25), 0 0 35px rgba(255, 255, 255, 0.25);
-    }
-    .taking-lens-trigger:active,
-    .taking-lens-trigger.firing {
-      transform: translate(-50%, -50%) scale(0.92);
-    }
-
-    /* 拍攝鏡頭光圈葉片縮合 */
-    .taking-lens-iris {
-      position: absolute;
-      width: 58%;
-      height: 58%;
-      border-radius: 50%;
-      border: 1.5px solid rgba(255, 255, 255, 0.7);
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
-      box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
-      transition: transform 0.15s ease, background 0.15s ease;
-    }
-    .taking-lens-trigger.firing .taking-lens-iris {
-      transform: scale(0.15);
-      background: #ffffff;
-      box-shadow: 0 0 35px #ffffff;
-    }
-
-    /* 快門點擊提示標籤 (Shutter Prompt Tag) */
-    .lens-prompt-tag {
-      position: absolute;
-      bottom: -22px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-family: ui-monospace, SFMono-Regular, monospace;
-      font-size: 8px;
-      letter-spacing: 0.2em;
-      white-space: nowrap;
-      color: rgba(255, 255, 255, 0.75);
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(8px);
-      padding: 3px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      pointer-events: none;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
-    }
-    .taking-lens-trigger:hover .lens-prompt-tag {
-      color: #fff;
-      border-color: rgba(255, 255, 255, 0.6);
-      background: rgba(20, 20, 20, 0.95);
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.25);
-    }
-
-    /* ===== 右側金屬機械過片搖柄 (Film Winding Crank) ===== */
-    .film-crank-assembly {
-      position: absolute;
-      right: -24px;
-      top: 53%;
-      transform: translateY(-50%);
-      width: 58px;
-      height: 58px;
-      cursor: pointer;
-      z-index: 26;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      user-select: none;
-    }
-    @media (min-width: 640px) {
-      .film-crank-assembly {
-        right: -32px;
-        width: 70px;
-        height: 70px;
-      }
-    }
-    /* 搖柄指示環 */
-    .crank-guide-ring {
-      position: absolute;
-      inset: 2px;
-      border-radius: 50%;
-      border: 1px dashed rgba(255, 255, 255, 0.25);
-      animation: spinPrism 30s linear infinite;
-      transition: all 0.3s ease;
-    }
-    .film-crank-assembly:hover .crank-guide-ring {
-      border-color: rgba(255, 255, 255, 0.7);
-      box-shadow: 0 0 16px rgba(255, 255, 255, 0.2);
-    }
-    /* 搖柄中央軸盤 */
-    .crank-hub {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #888 0%, #333 60%, #151515 100%);
-      box-shadow: 
-        0 0 0 1.5px rgba(255, 255, 255, 0.25),
-        0 4px 12px rgba(0, 0, 0, 0.8),
-        inset 0 1px 2px rgba(255, 255, 255, 0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-    /* 旋轉搖柄連桿 */
-    .crank-arm-rotator {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      transform-origin: center center;
-      pointer-events: none;
-      will-change: transform;
-    }
-    .crank-lever-rod {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 24px;
-      height: 6px;
-      background: linear-gradient(180deg, #aaa 0%, #444 50%, #222 100%);
-      transform-origin: 0% 50%;
-      border-radius: 3px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
-    }
-    @media (min-width: 640px) {
-      .crank-lever-rod {
-        width: 30px;
-        height: 7px;
-      }
-    }
-    .crank-knob-end {
-      position: absolute;
-      right: -8px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #fff 0%, #999 50%, #222 100%);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.9), inset 0 1px 2px rgba(255, 255, 255, 0.5);
     }
 
     /* ===== 下方引導過片與操作指示列 ===== */
@@ -1401,54 +1185,26 @@
         </div>
       </div>
 
-      <!-- 粒子生命體背景 Canvas -->
-      <canvas id="particleCanvas" class="absolute inset-x-0 top-0 h-full z-10 opacity-40 pointer-events-none mix-blend-screen"></canvas>
-      <div class="content">
+      <!-- 3D Rolleiflex WebGL 互動相機舞台 -->
+      <div class="rolleiflex-3d-stage" id="rolleiflex3dStage">
+        <canvas id="rolleiflex3dCanvas" class="w-full h-full"></canvas>
+      </div>
+
+      <div class="content pointer-events-none">
         <div class="glow-bg"></div>
-        <section class="flex flex-col items-center justify-center h-full w-full relative z-10">
+        <section class="flex flex-col items-center justify-end pb-12 sm:pb-14 h-full w-full relative z-10">
           
-          <!-- Rolleiflex 滿版黑白經典相機與機械過片/快門互動體 -->
-          <div class="rolleiflex-hero-wrap" id="rolleiflexWrap">
-            <!-- Rolleiflex TLR 滿版相機本體 -->
-            <img src="/images/rolleiflex_mono.png" alt="Rolleiflex TLR Camera" class="rolleiflex-camera-img" id="rolleiflexImg" />
-
-            <!-- 上鏡頭：觀景光學玻璃反光 (Viewing Lens) -->
-            <div class="viewing-lens-optic" id="viewingLensOptic">
-              <div class="viewing-lens-glare" id="viewingLensGlare"></div>
-            </div>
-
-            <!-- 下鏡頭：互動拍攝鏡頭 / 快門按鈕 (Taking Lens & Shutter Trigger) -->
-            <button class="taking-lens-trigger" id="takingLensBtn" title="Click Lens to Expose (按下快門)" aria-label="Click Taking Lens to Shoot">
-              <div class="taking-lens-iris" id="takingLensIris"></div>
-              <div class="lens-prompt-tag font-mono">
-                <span class="animate-pulse">CLICK TO EXPOSE</span>
-              </div>
-            </button>
-
-            <!-- 右側金屬機械過片搖柄 (Film Winding Crank - 下拉/點擊過片連動) -->
-            <div class="film-crank-assembly" id="filmCrankAssembly" title="Scroll or Click to Wind Film (下拉或點擊過片)">
-              <div class="crank-guide-ring"></div>
-              <div class="crank-hub">
-                <div class="crank-arm-rotator" id="filmCrankRotator">
-                  <div class="crank-lever-rod">
-                    <div class="crank-knob-end"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <!-- 攝影引導操作與機械刻度欄 -->
-          <div class="camera-interact-guide">
+          <div class="camera-interact-guide pointer-events-auto">
             <div class="guide-telemetry-pill">
-              <div class="guide-action-item" id="guideShutterBtn" title="Click to Expose">
+              <div class="guide-action-item" id="guideShutterBtn" title="Click Lens or Button to Expose">
                 <span class="guide-action-dot"></span>
-                <span>SHUTTER SNAP</span>
+                <span>CLICK TO EXPOSE</span>
               </div>
               <span class="text-white/20 font-light">|</span>
-              <div class="guide-action-item" id="guideWindBtn" title="Click or Scroll to Advance">
+              <div class="guide-action-item" id="guideWindBtn" title="Scroll or Click to Wind Crank">
                 <span class="guide-action-dot"></span>
-                <span>PULL TO WIND</span>
+                <span>SCROLL TO WIND</span>
               </div>
               <span class="text-white/20 font-light">|</span>
               <span id="filmFrameGauge" class="text-white font-bold">EXP 01</span>
@@ -1479,7 +1235,7 @@
 
         <!-- 現代極簡向下指引動畫 (Modern Scroll Down Indicator) -->
         <div
-          class="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex flex-col items-center opacity-60 hover:opacity-100 transition-opacity duration-500 cursor-pointer"
+          class="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex flex-col items-center opacity-60 hover:opacity-100 transition-opacity duration-500 cursor-pointer pointer-events-auto"
           onclick="document.getElementById('portfolio').scrollIntoView({behavior:'smooth'})">
           <span class="text-[9px] uppercase font-mono tracking-[0.35em] mb-2 text-gray-500" data-i18n="scrollDown">SCROLL TO ADVANCE</span>
           <div class="w-[1px] h-8 sm:h-10 bg-white/10 relative overflow-hidden">
@@ -2682,53 +2438,47 @@
       }, { passive: true });
     })();
 
-    // (9) Rolleiflex TLR 雙鏡反光相機機械快門、滾動過片與光學反光互動
+    // (9) Rolleiflex TLR 雙鏡反光相機 3D WebGL 物理渲染與機械連動系統 (Three.js Engine)
     (function() {
-      const rolleiflexWrap = document.getElementById('rolleiflexWrap');
-      const rolleiflexImg = document.getElementById('rolleiflexImg');
-      const takingLensBtn = document.getElementById('takingLensBtn');
-      const guideShutterBtn = document.getElementById('guideShutterBtn');
-      const guideWindBtn = document.getElementById('guideWindBtn');
-      const filmCrankAssembly = document.getElementById('filmCrankAssembly');
-      const filmCrankRotator = document.getElementById('filmCrankRotator');
-      const viewingLensGlare = document.getElementById('viewingLensGlare');
+      const canvas = document.getElementById('rolleiflex3dCanvas');
+      if (!canvas || typeof THREE === 'undefined') return;
+
       const flashOverlay = document.getElementById('shutterFlash');
       const hudFrame = document.getElementById('hudFrame');
       const filmFrameGauge = document.getElementById('filmFrameGauge');
       const hudShutter = document.getElementById('hudShutter');
       const dialBtns = document.querySelectorAll('#shutterSpeedDial .analog-dial-btn');
+      const guideShutterBtn = document.getElementById('guideShutterBtn');
+      const guideWindBtn = document.getElementById('guideWindBtn');
       const heroVideo = document.querySelector('.background-video');
-      const heroEl = document.querySelector('.hero');
+      const heroSection = document.getElementById('heroSection');
 
       let currentExpCount = 1;
-      let totalCrankAngle = 0;
-      let lastScrollY = window.scrollY || window.pageYOffset;
       let isFiring = false;
 
-      // 擬真底片相機機械快門音效合成 (Web Audio API - 零延遲免外載)
+      // Web Audio API 擬真底片相機機械快門音效合成
       function playMechanicalShutterSound() {
         try {
           const AudioContext = window.AudioContext || window.webkitAudioContext;
           if (!AudioContext) return;
           const ctx = new AudioContext();
           if (ctx.state === 'suspended') ctx.resume();
-
           const t = ctx.currentTime;
 
-          // 1. 初段機械快門簧片撞擊聲 (Mechanical Snap)
+          // 1. 初段機械快門撞針 (Initial Mechanical Snap)
           const osc1 = ctx.createOscillator();
           const gain1 = ctx.createGain();
           osc1.type = 'triangle';
-          osc1.frequency.setValueAtTime(820, t);
-          osc1.frequency.exponentialRampToValueAtTime(140, t + 0.04);
-          gain1.gain.setValueAtTime(0.45, t);
+          osc1.frequency.setValueAtTime(840, t);
+          osc1.frequency.exponentialRampToValueAtTime(120, t + 0.04);
+          gain1.gain.setValueAtTime(0.48, t);
           gain1.gain.exponentialRampToValueAtTime(0.001, t + 0.045);
           osc1.connect(gain1);
           gain1.connect(ctx.destination);
           osc1.start(t);
           osc1.stop(t + 0.05);
 
-          // 2. 光圈簧片摩擦白噪音 (Friction / Mirror vibration)
+          // 2. 光圈簧片摩擦白噪音 (Friction / Mirror slap)
           const bufferSize = ctx.sampleRate * 0.06;
           const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
           const output = noiseBuffer.getChannelData(0);
@@ -2744,7 +2494,7 @@
           filter.Q.value = 1.6;
 
           const noiseGain = ctx.createGain();
-          noiseGain.gain.setValueAtTime(0.5, t);
+          noiseGain.gain.setValueAtTime(0.55, t);
           noiseGain.gain.exponentialRampToValueAtTime(0.01, t + 0.06);
 
           whiteNoise.connect(filter);
@@ -2769,7 +2519,6 @@
               osc2.stop(t2 + 0.06);
             } catch(e) {}
           }, 45);
-
         } catch(e) {}
       }
 
@@ -2795,7 +2544,6 @@
         } catch(e) {}
       }
 
-      // 更新底片計數器
       function advanceExposureCounter() {
         currentExpCount = (currentExpCount % 36) + 1;
         const frameStr = currentExpCount < 10 ? '0' + currentExpCount : '' + currentExpCount;
@@ -2811,88 +2559,465 @@
         }
       }
 
-      // 觸發快門拍攝曝光 (Shutter Snap Action)
-      function triggerShutter() {
-        if (isFiring) return;
-        isFiring = true;
+      // ====== Three.js 3D 場景初始化 ======
+      const scene = new THREE.Scene();
 
-        // 鏡頭光圈葉片閉合與相機微後座力
-        if (takingLensBtn) takingLensBtn.classList.add('firing');
-        if (rolleiflexWrap) {
-          rolleiflexWrap.classList.remove('recoil');
-          void rolleiflexWrap.offsetWidth; // 強制重繪觸發動畫
-          rolleiflexWrap.classList.add('recoil');
+      // 相機與視角設定
+      const camera = new THREE.PerspectiveCamera(34, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
+      const isMobile = window.innerWidth < 640;
+      camera.position.set(0, 0, isMobile ? 11.2 : 9.2);
+
+      // WebGL 渲染器
+      const renderer = new THREE.WebGLRenderer({
+        canvas: canvas,
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance'
+      });
+      renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.35;
+
+      // ====== 攝影暗房影棚燈光 (Studio Lighting) ======
+      const ambientLight = new THREE.AmbientLight(0x2a2a2a, 1.2);
+      scene.add(ambientLight);
+
+      // 主光源 (Key Light)
+      const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
+      keyLight.position.set(4, 5, 5);
+      scene.add(keyLight);
+
+      // 經典銀白輪廓邊緣光 (Rim Light - 突顯經典相機金屬邊框)
+      const rimLight1 = new THREE.DirectionalLight(0xddeeff, 2.8);
+      rimLight1.position.set(-5, 6, -3);
+      scene.add(rimLight1);
+
+      const rimLight2 = new THREE.DirectionalLight(0xffffff, 1.6);
+      rimLight2.position.set(5, -4, -2);
+      scene.add(rimLight2);
+
+      // 鏡頭光學反光點光源 (Lens Specular Catchlight)
+      const lensLight = new THREE.PointLight(0xaaccff, 0.8, 6);
+      lensLight.position.set(0, -0.6, 2.5);
+      scene.add(lensLight);
+
+      // ====== 生成 Rolleiflex 精密材質 ======
+      // 1. 純黑皮革荔枝紋紋理生成 (Procedural Leather Grain)
+      function createLeatherCanvas() {
+        const c = document.createElement('canvas');
+        c.width = 128;
+        c.height = 128;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#161616';
+        ctx.fillRect(0, 0, 128, 128);
+        for (let i = 0; i < 3500; i++) {
+          const x = Math.random() * 128;
+          const y = Math.random() * 128;
+          const r = Math.random() * 1.5 + 0.5;
+          const gray = Math.floor(Math.random() * 35 + 10);
+          ctx.fillStyle = `rgb(${gray},${gray},${gray})`;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fill();
         }
+        return new THREE.CanvasTexture(c);
+      }
+      const leatherTexture = createLeatherCanvas();
+      leatherTexture.wrapS = THREE.RepeatWrapping;
+      leatherTexture.wrapT = THREE.RepeatWrapping;
+      leatherTexture.repeat.set(4, 4);
 
-        // 音效
-        playMechanicalShutterSound();
+      // 2. 銘牌紋理 "ROLLEIFLEX"
+      function createNameplateTexture() {
+        const c = document.createElement('canvas');
+        c.width = 512;
+        c.height = 128;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#111111';
+        ctx.fillRect(0, 0, 512, 128);
+        ctx.strokeStyle = '#cccccc';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(6, 6, 500, 116);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 52px "Inter", "Times New Roman", serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('ROLLEIFLEX', 256, 64);
+        return new THREE.CanvasTexture(c);
+      }
+      const nameplateTexture = createNameplateTexture();
 
-        // 全螢幕快門曝光閃光簾
-        if (flashOverlay) {
-          flashOverlay.classList.add('active');
-          setTimeout(() => {
-            flashOverlay.classList.remove('active');
-          }, 85);
-        }
+      // 材質定義
+      const chromeMat = new THREE.MeshStandardMaterial({
+        color: 0xf0f0f0,
+        metalness: 0.95,
+        roughness: 0.12
+      });
 
-        // 底片跳號
-        advanceExposureCounter();
+      const darkMetalMat = new THREE.MeshStandardMaterial({
+        color: 0x1f1f1f,
+        metalness: 0.85,
+        roughness: 0.35
+      });
 
-        // 恢復鏡頭狀態並平滑滑動至精選作品
-        setTimeout(() => {
-          if (takingLensBtn) takingLensBtn.classList.remove('firing');
-          if (rolleiflexWrap) rolleiflexWrap.classList.remove('recoil');
-          isFiring = false;
+      const leatherMat = new THREE.MeshStandardMaterial({
+        color: 0x1a1a1a,
+        metalness: 0.12,
+        roughness: 0.85,
+        bumpMap: leatherTexture,
+        bumpScale: 0.04
+      });
 
-          const portfolio = document.getElementById('portfolio');
-          if (portfolio) {
-            portfolio.scrollIntoView({ behavior: 'smooth' });
-          }
-        }, 360);
+      const glassMat = new THREE.MeshStandardMaterial({
+        color: 0x06151f,
+        metalness: 0.2,
+        roughness: 0.05,
+        transparent: true,
+        opacity: 0.85
+      });
+
+      const lensCoatingMat = new THREE.MeshStandardMaterial({
+        color: 0x224455,
+        metalness: 0.7,
+        roughness: 0.1,
+        transparent: true,
+        opacity: 0.65
+      });
+
+      const redAccentMat = new THREE.MeshStandardMaterial({
+        color: 0xcc2222,
+        metalness: 0.45,
+        roughness: 0.25
+      });
+
+      const nameplateMat = new THREE.MeshStandardMaterial({
+        map: nameplateTexture,
+        metalness: 0.6,
+        roughness: 0.3
+      });
+
+      // ====== 構建 3D Rolleiflex TLR 模型 ======
+      const cameraRoot = new THREE.Group();
+      const cameraPivot = new THREE.Group();
+      cameraRoot.add(cameraPivot);
+      scene.add(cameraRoot);
+
+      // (1) 機身主體 (Main Camera Body)
+      const bodyWidth = 2.4, bodyHeight = 3.4, bodyDepth = 2.0;
+      const bodyMesh = new THREE.Mesh(new THREE.BoxGeometry(bodyWidth, bodyHeight, bodyDepth), leatherMat);
+      cameraPivot.add(bodyMesh);
+
+      // 頂部與底部金屬底板
+      const topPlate = new THREE.Mesh(new THREE.BoxGeometry(bodyWidth + 0.04, 0.08, bodyDepth + 0.04), chromeMat);
+      topPlate.position.y = bodyHeight / 2 + 0.04;
+      cameraPivot.add(topPlate);
+
+      const bottomPlate = new THREE.Mesh(new THREE.BoxGeometry(bodyWidth + 0.04, 0.08, bodyDepth + 0.04), chromeMat);
+      bottomPlate.position.y = -bodyHeight / 2 - 0.04;
+      cameraPivot.add(bottomPlate);
+
+      // 前面板金屬邊框 (Chrome Front Rim)
+      const frontRim = new THREE.Mesh(new THREE.BoxGeometry(bodyWidth * 0.94, bodyHeight * 0.94, 0.05), chromeMat);
+      frontRim.position.z = bodyDepth / 2 + 0.02;
+      cameraPivot.add(frontRim);
+
+      const frontFace = new THREE.Mesh(new THREE.BoxGeometry(bodyWidth * 0.88, bodyHeight * 0.88, 0.06), darkMetalMat);
+      frontFace.position.z = bodyDepth / 2 + 0.04;
+      cameraPivot.add(frontFace);
+
+      // (2) 頂部腰平觀景窗罩 (Waist-Level Viewfinder Hood)
+      const hoodBox = new THREE.Mesh(new THREE.BoxGeometry(2.15, 0.5, 1.85), darkMetalMat);
+      hoodBox.position.set(0, bodyHeight / 2 + 0.32, -0.05);
+      cameraPivot.add(hoodBox);
+
+      // 頂部銘牌 "ROLLEIFLEX"
+      const nameplateMesh = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 0.38), nameplateMat);
+      nameplateMesh.position.set(0, 1.32, bodyDepth / 2 + 0.08);
+      cameraPivot.add(nameplateMesh);
+
+      // (3) 上鏡頭：觀景鏡頭 (Viewing Lens - Heidosmat 75mm)
+      const viewingLensGroup = new THREE.Group();
+      viewingLensGroup.position.set(0, 0.55, bodyDepth / 2 + 0.06);
+      cameraPivot.add(viewingLensGroup);
+
+      const viewBarrel = new THREE.Mesh(new THREE.CylinderGeometry(0.56, 0.56, 0.35, 32), chromeMat);
+      viewBarrel.rotation.x = Math.PI / 2;
+      viewingLensGroup.add(viewBarrel);
+
+      const viewKnurl = new THREE.Mesh(new THREE.TorusGeometry(0.55, 0.025, 12, 32), chromeMat);
+      viewKnurl.position.z = 0.12;
+      viewingLensGroup.add(viewKnurl);
+
+      const viewGlass = new THREE.Mesh(new THREE.SphereGeometry(0.48, 32, 16, 0, Math.PI * 2, 0, Math.PI / 3), glassMat);
+      viewGlass.position.z = 0.06;
+      viewingLensGroup.add(viewGlass);
+
+      // (4) 下鏡頭：拍攝鏡頭 (Taking Lens - Carl Zeiss Planar 75mm)
+      const takingLensGroup = new THREE.Group();
+      takingLensGroup.position.set(0, -0.68, bodyDepth / 2 + 0.06);
+      cameraPivot.add(takingLensGroup);
+
+      const takeBarrel = new THREE.Mesh(new THREE.CylinderGeometry(0.64, 0.64, 0.48, 32), chromeMat);
+      takeBarrel.rotation.x = Math.PI / 2;
+      takingLensGroup.add(takeBarrel);
+
+      const takeKnurl = new THREE.Mesh(new THREE.TorusGeometry(0.63, 0.03, 12, 32), chromeMat);
+      takeKnurl.position.z = 0.18;
+      takingLensGroup.add(takeKnurl);
+
+      // 拍攝鏡頭光圈葉片組 (Mechanical Aperture Blades)
+      const irisGroup = new THREE.Group();
+      irisGroup.position.z = 0.12;
+      takingLensGroup.add(irisGroup);
+
+      for (let i = 0; i < 6; i++) {
+        const blade = new THREE.Mesh(new THREE.PlaneGeometry(0.32, 0.16), darkMetalMat);
+        blade.rotation.z = (i * Math.PI) / 3;
+        blade.position.set(Math.cos((i * Math.PI) / 3) * 0.15, Math.sin((i * Math.PI) / 3) * 0.15, 0);
+        irisGroup.add(blade);
       }
 
-      // 觸發過片旋轉 (Film Advance Action)
-      function triggerFilmAdvance() {
-        totalCrankAngle += 360;
-        playRatchetTickSound();
-        if (filmCrankRotator) {
-          filmCrankRotator.style.transition = 'transform 0.55s cubic-bezier(0.16, 1, 0.3, 1)';
-          filmCrankRotator.style.transform = `rotate(${totalCrankAngle}deg)`;
-          setTimeout(() => {
-            if (filmCrankRotator) filmCrankRotator.style.transition = '';
-          }, 550);
+      const takeGlass = new THREE.Mesh(new THREE.SphereGeometry(0.54, 32, 16, 0, Math.PI * 2, 0, Math.PI / 3), glassMat);
+      takeGlass.position.z = 0.14;
+      takingLensGroup.add(takeGlass);
+
+      const takeCoating = new THREE.Mesh(new THREE.CircleGeometry(0.5, 32), lensCoatingMat);
+      takeCoating.position.z = 0.22;
+      takingLensGroup.add(takeCoating);
+
+      // (5) 鏡頭間雙調速輪 (Dual Thumbwheels)
+      const leftWheel = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.18, 20), chromeMat);
+      leftWheel.rotation.x = Math.PI / 2;
+      leftWheel.position.set(-0.76, -0.06, bodyDepth / 2 + 0.12);
+      cameraPivot.add(leftWheel);
+
+      const rightWheel = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.18, 20), chromeMat);
+      rightWheel.rotation.x = Math.PI / 2;
+      rightWheel.position.set(0.76, -0.06, bodyDepth / 2 + 0.12);
+      cameraPivot.add(rightWheel);
+
+      // (6) 右側機械過片搖柄 (Right-Side Film Winding Crank)
+      const crankPivot = new THREE.Group();
+      crankPivot.position.set(bodyWidth / 2 + 0.08, -0.22, 0);
+      cameraPivot.add(crankPivot);
+
+      const crankBase = new THREE.Mesh(new THREE.CylinderGeometry(0.48, 0.48, 0.16, 24), chromeMat);
+      crankBase.rotation.z = Math.PI / 2;
+      crankPivot.add(crankBase);
+
+      const crankArm = new THREE.Mesh(new THREE.BoxGeometry(0.12, 1.05, 0.14), chromeMat);
+      crankArm.position.set(0.12, -0.48, 0);
+      crankPivot.add(crankArm);
+
+      const crankKnob = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.26, 16), darkMetalMat);
+      crankKnob.rotation.z = Math.PI / 2;
+      crankKnob.position.set(0.22, -0.95, 0);
+      crankPivot.add(crankKnob);
+
+      // (7) 左側大調焦轉盤 (Left-Side Focusing Dial)
+      const focusDial = new THREE.Mesh(new THREE.CylinderGeometry(0.66, 0.66, 0.24, 28), darkMetalMat);
+      focusDial.rotation.z = Math.PI / 2;
+      focusDial.position.set(-bodyWidth / 2 - 0.12, 0.05, 0);
+      cameraPivot.add(focusDial);
+
+      const focusRim = new THREE.Mesh(new THREE.TorusGeometry(0.64, 0.025, 12, 28), chromeMat);
+      focusRim.rotation.y = Math.PI / 2;
+      focusRim.position.set(-bodyWidth / 2 - 0.22, 0.05, 0);
+      cameraPivot.add(focusRim);
+
+      // (8) 前方右下快門按鈕 (Front Shutter Button)
+      const shutterBtnGroup = new THREE.Group();
+      shutterBtnGroup.position.set(0.86, -1.45, bodyDepth / 2 + 0.06);
+      cameraPivot.add(shutterBtnGroup);
+
+      const shutterCollar = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.14, 16), chromeMat);
+      shutterCollar.rotation.x = Math.PI / 2;
+      shutterBtnGroup.add(shutterCollar);
+
+      const shutterPlunger = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.24, 16), redAccentMat);
+      shutterPlunger.rotation.x = Math.PI / 2;
+      shutterPlunger.position.z = 0.06;
+      shutterBtnGroup.add(shutterPlunger);
+
+      // (9) 4只金屬腳釘 (Base Feet)
+      for (let x of [-0.9, 0.9]) {
+        for (let z of [-0.7, 0.7]) {
+          const foot = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.12, 12), chromeMat);
+          foot.position.set(x, -bodyHeight / 2 - 0.1, z);
+          cameraPivot.add(foot);
         }
-        advanceExposureCounter();
-        setTimeout(() => {
-          const portfolio = document.getElementById('portfolio');
-          if (portfolio) portfolio.scrollIntoView({ behavior: 'smooth' });
-        }, 300);
       }
 
-      // 綁定拍攝事件：點擊下鏡頭 (Taking Lens) 與 指示條
-      if (takingLensBtn) takingLensBtn.addEventListener('click', triggerShutter);
-      if (guideShutterBtn) guideShutterBtn.addEventListener('click', triggerShutter);
+      // ====== 3D 浮動暗房銀鹽微粒 (Floating Silver Halide Motes) ======
+      const motesCount = 100;
+      const motesGeo = new THREE.BufferGeometry();
+      const motesPos = new Float32Array(motesCount * 3);
+      for (let i = 0; i < motesCount * 3; i += 3) {
+        motesPos[i] = (Math.random() - 0.5) * 14;
+        motesPos[i + 1] = (Math.random() - 0.5) * 10;
+        motesPos[i + 2] = (Math.random() - 0.5) * 8;
+      }
+      motesGeo.setAttribute('position', new THREE.BufferAttribute(motesPos, 3));
+      const motesMat = new THREE.PointsMaterial({
+        color: 0xffffff,
+        size: 0.035,
+        transparent: true,
+        opacity: 0.35
+      });
+      const motesPoints = new THREE.Points(motesGeo, motesMat);
+      scene.add(motesPoints);
 
-      // 綁定過片事件：點擊右側過片手柄與指示條
-      if (filmCrankAssembly) filmCrankAssembly.addEventListener('click', triggerFilmAdvance);
-      if (guideWindBtn) guideWindBtn.addEventListener('click', triggerFilmAdvance);
+      // ====== 互動控制邏輯 (Orbit, Scroll Linkage & Snap) ======
+      let targetRotY = 0.08;
+      let targetRotX = 0.02;
+      let currentRotY = 0.08;
+      let currentRotX = 0.02;
+      let isDragging = false;
+      let dragDistance = 0;
+      let prevMouseX = 0;
+      let prevMouseY = 0;
+      let crankAngle = 0;
+      let lastScrollY = window.scrollY || window.pageYOffset;
+      let lastTickAngle = 0;
+      let recoilOffsetZ = 0;
+      let recoilVelocity = 0;
 
-      // 下滑滾動連動過片搖柄 (Scroll to Advance Linkage)
+      // 1. 拖曳/觸控 3D 自由旋轉檢視 (3D Drag / Orbit)
+      function onPointerDown(e) {
+        isDragging = true;
+        dragDistance = 0;
+        prevMouseX = e.clientX || (e.touches && e.touches[0].clientX);
+        prevMouseY = e.clientY || (e.touches && e.touches[0].clientY);
+      }
+
+      function onPointerMove(e) {
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+        if (clientX === undefined) return;
+
+        if (isDragging) {
+          const deltaX = clientX - prevMouseX;
+          const deltaY = clientY - prevMouseY;
+          dragDistance += Math.abs(deltaX) + Math.abs(deltaY);
+          prevMouseX = clientX;
+          prevMouseY = clientY;
+
+          targetRotY += deltaX * 0.007;
+          targetRotX += deltaY * 0.007;
+
+          // 限制仰角與旋轉範圍，保持產品美感
+          targetRotX = Math.max(-0.4, Math.min(0.45, targetRotX));
+          targetRotY = Math.max(-0.85, Math.min(0.85, targetRotY));
+        } else {
+          // 未拖曳時微隨滑鼠指引 (Smooth Parallax)
+          const rect = canvas.getBoundingClientRect();
+          const normX = (clientX - (rect.left + rect.width / 2)) / (rect.width / 2);
+          const normY = (clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
+          targetRotY = normX * 0.25;
+          targetRotX = normY * -0.18;
+        }
+      }
+
+      function onPointerUp() {
+        isDragging = false;
+      }
+
+      canvas.addEventListener('mousedown', onPointerDown);
+      window.addEventListener('mousemove', onPointerMove);
+      window.addEventListener('mouseup', onPointerUp);
+
+      canvas.addEventListener('touchstart', onPointerDown, { passive: true });
+      window.addEventListener('touchmove', onPointerMove, { passive: true });
+      window.addEventListener('touchend', onPointerUp);
+
+      // 2. 下滑連動：過片搖柄實時旋轉 (Scroll Advance Linkage)
       window.addEventListener('scroll', () => {
         const currentY = window.scrollY || window.pageYOffset;
         const delta = currentY - lastScrollY;
         lastScrollY = currentY;
 
-        // 當在 Hero 或頁面頂部範圍滾動時，搖柄隨下滑旋轉
         if (currentY < window.innerHeight * 1.5) {
-          totalCrankAngle += delta * 0.75;
-          if (filmCrankRotator) {
-            filmCrankRotator.style.transform = `rotate(${totalCrankAngle}deg)`;
+          crankAngle += delta * 0.015;
+          crankPivot.rotation.x = crankAngle;
+
+          // 每旋轉過一定角度觸發機械棘輪聲
+          if (Math.abs(crankAngle - lastTickAngle) > 0.6) {
+            playRatchetTickSound();
+            lastTickAngle = crankAngle;
           }
         }
       }, { passive: true });
 
-      // 快門速度撥盤切換檔位 (Shutter Speed Dial)
+      // 3. 快門觸發 (Shutter Snap Action)
+      function triggerShutterSnap() {
+        if (isFiring) return;
+        isFiring = true;
+
+        // 快門按鈕實體向下壓入
+        shutterPlunger.position.z = -0.02;
+
+        // 3D 鏡頭光圈葉片閉合縮小 (Aperture Iris Snap)
+        irisGroup.scale.set(0.12, 0.12, 0.12);
+
+        // 3D 相機機械後座力彈跳
+        recoilVelocity = -0.32;
+
+        // 合成音效
+        playMechanicalShutterSound();
+
+        // 全螢幕白色閃光簾
+        if (flashOverlay) {
+          flashOverlay.classList.add('active');
+          setTimeout(() => { flashOverlay.classList.remove('active'); }, 85);
+        }
+
+        // 底片跳號
+        advanceExposureCounter();
+
+        // 彈性復原
+        setTimeout(() => {
+          shutterPlunger.position.z = 0.06;
+          irisGroup.scale.set(1, 1, 1);
+        }, 120);
+
+        setTimeout(() => {
+          isFiring = false;
+          const portfolio = document.getElementById('portfolio');
+          if (portfolio) {
+            portfolio.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 400);
+      }
+
+      // 4. 過片操作連動 (Film Advance Action)
+      function triggerFilmAdvance() {
+        crankAngle += Math.PI * 2;
+        playRatchetTickSound();
+        advanceExposureCounter();
+        setTimeout(() => {
+          const portfolio = document.getElementById('portfolio');
+          if (portfolio) portfolio.scrollIntoView({ behavior: 'smooth' });
+        }, 320);
+      }
+
+      // 點擊 3D 畫布觸發快門 (若為拖曳旋轉則忽略)
+      canvas.addEventListener('click', (e) => {
+        if (dragDistance > 10) return;
+        triggerShutterSnap();
+      });
+
+      if (guideShutterBtn) guideShutterBtn.addEventListener('click', triggerShutterSnap);
+      if (guideWindBtn) guideWindBtn.addEventListener('click', triggerFilmAdvance);
+
+      const guideRotateBtn = document.getElementById('guideRotateBtn');
+      if (guideRotateBtn) {
+        guideRotateBtn.addEventListener('click', () => {
+          targetRotY += Math.PI * 2;
+        });
+      }
+
+      // 快門速度撥盤 (Shutter Speed Dial)
       const speedFilters = {
         '1/60s': 'brightness(0.55) contrast(1.05)',
         '1/125s': 'brightness(0.42) contrast(1.1)',
@@ -2910,30 +3035,56 @@
             heroVideo.style.filter = speedFilters[speed];
           }
           playRatchetTickSound();
+          // 微轉動中央快門盤
+          rightWheel.rotation.y += 0.5;
         });
       });
 
-      // 滑鼠移動：相機微 3D 視差與觀景鏡頭光學反光連動 (Tactile 3D & Optical Glare)
-      if (heroEl && rolleiflexImg) {
-        heroEl.addEventListener('mousemove', (e) => {
-          const rect = heroEl.getBoundingClientRect();
-          const normX = (e.clientX - (rect.left + rect.width / 2)) / (rect.width / 2);
-          const normY = (e.clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
-
-          // 相機微傾角
-          rolleiflexImg.style.transform = `rotateY(${normX * 6}deg) rotateX(${normY * -5}deg)`;
-
-          // 上觀景鏡頭光學玻璃反光偏移
-          if (viewingLensGlare) {
-            viewingLensGlare.style.transform = `translate(${normX * 18}px, ${normY * 18}px)`;
-          }
-        });
-
-        heroEl.addEventListener('mouseleave', () => {
-          rolleiflexImg.style.transform = 'rotateY(0deg) rotateX(0deg)';
-          if (viewingLensGlare) viewingLensGlare.style.transform = 'translate(0px, 0px)';
-        });
+      // 5. 響應式視窗調整 (Resize Handler)
+      function onWindowResize() {
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
+        camera.aspect = width / height;
+        const mobile = window.innerWidth < 640;
+        camera.position.z = mobile ? 11.2 : 9.2;
+        camera.updateProjectionMatrix();
+        renderer.setSize(width, height, false);
       }
+      window.addEventListener('resize', onWindowResize);
+
+      // 6. 主渲染動畫迴圈 (Render Animation Loop)
+      let clock = new THREE.Clock();
+
+      function animate() {
+        requestAnimationFrame(animate);
+        const elapsedTime = clock.getElapsedTime();
+
+        // 柔和阻尼插值 (Smooth Inertia Damping)
+        currentRotY += (targetRotY - currentRotY) * 0.08;
+        currentRotX += (targetRotX - currentRotX) * 0.08;
+
+        // 呼吸式浮動微動 (Breathing Float)
+        const floatY = Math.sin(elapsedTime * 1.6) * 0.06;
+        const floatRotZ = Math.sin(elapsedTime * 1.2) * 0.015;
+
+        // 後座力彈簧物理模擬 (Spring Physics Recoil)
+        recoilOffsetZ += recoilVelocity;
+        recoilVelocity += (0 - recoilOffsetZ) * 0.35; // 彈簧剛度
+        recoilVelocity *= 0.72; // 阻尼衰減
+
+        cameraPivot.position.set(0, floatY, recoilOffsetZ);
+        cameraPivot.rotation.set(currentRotX, currentRotY, floatRotZ);
+
+        // 過片柄旋轉插值
+        crankPivot.rotation.x += (crankAngle - crankPivot.rotation.x) * 0.15;
+
+        // 銀鹽微粒緩慢漂浮
+        motesPoints.rotation.y = elapsedTime * 0.02;
+
+        renderer.render(scene, camera);
+      }
+
+      animate();
     })();
   </script>
 </body>
