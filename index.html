@@ -24,9 +24,27 @@
   <style>
     .hero {
       position: relative;
+      min-height: 90vh;
       height: 100vh;
+      max-height: 980px;
       overflow: hidden;
       background-color: #000;
+      padding-top: 5rem;
+      padding-bottom: 2rem;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .hero {
+        min-height: 85vh;
+        height: 100vh;
+        padding-top: 4.5rem;
+        padding-bottom: 1.5rem;
+      }
     }
 
     .background-video {
@@ -50,7 +68,8 @@
       z-index: 20;
       color: var(--text-main);
       text-align: center;
-      padding: 0 20px;
+      padding: 0 16px;
+      width: 100%;
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -631,48 +650,488 @@
       scroll-margin-top: 80px;
     }
 
-    /* ===== Camera Viewfinder HUD in Hero ===== */
+    /* ===== Camera Viewfinder HUD in Hero (顯著增強旁軸/底片取景器) ===== */
     .viewfinder-hud {
       position: absolute;
-      inset: 24px;
+      inset: 20px;
       pointer-events: none;
       z-index: 25;
-      border: 1px solid transparent;
-      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
     }
     @media (min-width: 768px) {
-      .viewfinder-hud { inset: 48px; }
+      .viewfinder-hud { inset: 36px; }
     }
+    /* 醒目的高對比亮線框 (Brightlines) */
     .vf-corner {
       position: absolute;
-      width: 20px;
-      height: 20px;
-      border-color: rgba(255, 255, 255, 0.3);
+      width: 36px;
+      height: 36px;
+      border-color: rgba(255, 255, 255, 0.85);
+      filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.45));
     }
-    .vf-tl { top: 0; left: 0; border-top: 1.5px solid; border-left: 1.5px solid; }
-    .vf-tr { top: 0; right: 0; border-top: 1.5px solid; border-right: 1.5px solid; }
-    .vf-bl { bottom: 0; left: 0; border-bottom: 1.5px solid; border-left: 1.5px solid; }
-    .vf-br { bottom: 0; right: 0; border-bottom: 1.5px solid; border-right: 1.5px solid; }
-    .vf-center {
+    .vf-tl { top: 0; left: 0; border-top: 2.5px solid; border-left: 2.5px solid; }
+    .vf-tr { top: 0; right: 0; border-top: 2.5px solid; border-right: 2.5px solid; }
+    .vf-bl { bottom: 0; left: 0; border-bottom: 2.5px solid; border-left: 2.5px solid; }
+    .vf-br { bottom: 0; right: 0; border-bottom: 2.5px solid; border-right: 2.5px solid; }
+
+    /* 取景窗次要畫幅框線 (50mm frame lines) */
+    .vf-subframe {
+      position: absolute;
+      inset: 30px;
+      border: 1px dashed rgba(255, 255, 255, 0.25);
+      pointer-events: none;
+    }
+    @media (min-width: 768px) {
+      .vf-subframe { inset: 60px; }
+    }
+
+    /* 頂部相機光學規格雕刻字 */
+    .vf-lens-spec {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      color: rgba(255, 255, 255, 0.75);
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.8), 0 0 5px rgba(255, 255, 255, 0.4);
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .vf-lens-spec span {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 2px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* 經典中央裂焦測距儀核心 (Rangefinder Split-Image Prism) */
+    .vf-center-prism {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 32px;
-      height: 32px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      width: 64px;
+      height: 64px;
       border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.7);
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 60%, transparent 100%);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.25), inset 0 0 12px rgba(255, 255, 255, 0.15);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .vf-center::before, .vf-center::after {
+    .vf-center-prism::before {
       content: '';
       position: absolute;
-      background: rgba(255, 255, 255, 0.4);
+      top: 50%;
+      left: -12px;
+      width: 88px;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.6);
+      box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
     }
-    .vf-center::before {
-      top: 50%; left: -6px; width: 44px; height: 1px;
+    .vf-center-prism::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: -12px;
+      height: 88px;
+      width: 1px;
+      background: rgba(255, 255, 255, 0.6);
+      box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
     }
-    .vf-center::after {
-      left: 50%; top: -6px; height: 44px; width: 1px;
+    .vf-prism-inner {
+      position: absolute;
+      inset: 14px;
+      border-radius: 50%;
+      border: 1px dashed rgba(255, 255, 255, 0.45);
+      animation: spinPrism 40s linear infinite;
+    }
+    @keyframes spinPrism {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* 底部曝光測光標尺 (Exposure Compensation Meter) */
+    .vf-meter-scale {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: rgba(255, 255, 255, 0.7);
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(8px);
+      padding: 4px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+    .vf-meter-indicator {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+      animation: meterBlink 1.5s ease-in-out infinite alternate;
+    }
+    @keyframes meterBlink {
+      0% { transform: scale(0.9); opacity: 0.6; }
+      100% { transform: scale(1.15); opacity: 1; }
+    }
+
+    /* ===== Rolleiflex TLR 經典雙鏡反光相機與機械連動系統 ===== */
+    .rolleiflex-hero-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      filter: drop-shadow(0 25px 60px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 30px rgba(255, 255, 255, 0.05));
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      margin: 0 auto;
+    }
+
+    .rolleiflex-camera-img {
+      max-height: 48vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      pointer-events: none;
+      filter: contrast(1.15) brightness(1.02);
+      transition: transform 0.2s ease-out;
+    }
+    @media (min-width: 640px) {
+      .rolleiflex-camera-img {
+        max-height: 52vh;
+      }
+    }
+    @media (min-width: 1024px) {
+      .rolleiflex-camera-img {
+        max-height: 56vh;
+      }
+    }
+    @media (max-height: 650px) {
+      .rolleiflex-camera-img {
+        max-height: 40vh;
+      }
+    }
+
+    /* 快門曝光後座力機械微震 */
+    .rolleiflex-hero-wrap.recoil {
+      animation: cameraRecoil 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes cameraRecoil {
+      0% { transform: scale(1); }
+      30% { transform: scale(0.97) translateY(4px); }
+      60% { transform: scale(1.01) translateY(-2px); }
+      100% { transform: scale(1) translateY(0); }
+    }
+
+    /* 上鏡頭：光學觀景玻璃反光 (Viewing Lens Glare) */
+    .viewing-lens-optic {
+      position: absolute;
+      top: 33%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 25%;
+      height: 18.5%;
+      border-radius: 50%;
+      pointer-events: none;
+      overflow: hidden;
+      background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
+    }
+    .viewing-lens-glare {
+      position: absolute;
+      width: 150%;
+      height: 150%;
+      top: -25%;
+      left: -25%;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, transparent 45%, rgba(255, 255, 255, 0.1) 85%);
+      mix-blend-mode: screen;
+      transition: transform 0.1s ease-out;
+    }
+
+    /* 下鏡頭：拍攝鏡頭快門觸發熱點 (Taking Lens & Shutter Snap) */
+    .taking-lens-trigger {
+      position: absolute;
+      top: 63%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 28%;
+      height: 21%;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 25;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      outline: none;
+      border: none;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .taking-lens-trigger::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1px dashed rgba(255, 255, 255, 0.45);
+      animation: spinPrism 25s linear infinite;
+      opacity: 0.6;
+      transition: all 0.3s ease;
+    }
+    .taking-lens-trigger:hover::before {
+      border-color: rgba(255, 255, 255, 0.95);
+      opacity: 1;
+      inset: -8px;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.45);
+    }
+    .taking-lens-trigger:hover {
+      box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.25), 0 0 35px rgba(255, 255, 255, 0.25);
+    }
+    .taking-lens-trigger:active,
+    .taking-lens-trigger.firing {
+      transform: translate(-50%, -50%) scale(0.92);
+    }
+
+    /* 拍攝鏡頭光圈葉片縮合 */
+    .taking-lens-iris {
+      position: absolute;
+      width: 58%;
+      height: 58%;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.7);
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+    .taking-lens-trigger.firing .taking-lens-iris {
+      transform: scale(0.15);
+      background: #ffffff;
+      box-shadow: 0 0 35px #ffffff;
+    }
+
+    /* 快門點擊提示標籤 (Shutter Prompt Tag) */
+    .lens-prompt-tag {
+      position: absolute;
+      bottom: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      white-space: nowrap;
+      color: rgba(255, 255, 255, 0.75);
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      pointer-events: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+    }
+    .taking-lens-trigger:hover .lens-prompt-tag {
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.6);
+      background: rgba(20, 20, 20, 0.95);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.25);
+    }
+
+    /* ===== 右側金屬機械過片搖柄 (Film Winding Crank) ===== */
+    .film-crank-assembly {
+      position: absolute;
+      right: -24px;
+      top: 53%;
+      transform: translateY(-50%);
+      width: 58px;
+      height: 58px;
+      cursor: pointer;
+      z-index: 26;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+    @media (min-width: 640px) {
+      .film-crank-assembly {
+        right: -32px;
+        width: 70px;
+        height: 70px;
+      }
+    }
+    /* 搖柄指示環 */
+    .crank-guide-ring {
+      position: absolute;
+      inset: 2px;
+      border-radius: 50%;
+      border: 1px dashed rgba(255, 255, 255, 0.25);
+      animation: spinPrism 30s linear infinite;
+      transition: all 0.3s ease;
+    }
+    .film-crank-assembly:hover .crank-guide-ring {
+      border-color: rgba(255, 255, 255, 0.7);
+      box-shadow: 0 0 16px rgba(255, 255, 255, 0.2);
+    }
+    /* 搖柄中央軸盤 */
+    .crank-hub {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #888 0%, #333 60%, #151515 100%);
+      box-shadow: 
+        0 0 0 1.5px rgba(255, 255, 255, 0.25),
+        0 4px 12px rgba(0, 0, 0, 0.8),
+        inset 0 1px 2px rgba(255, 255, 255, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    /* 旋轉搖柄連桿 */
+    .crank-arm-rotator {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      transform-origin: center center;
+      pointer-events: none;
+      will-change: transform;
+    }
+    .crank-lever-rod {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 24px;
+      height: 6px;
+      background: linear-gradient(180deg, #aaa 0%, #444 50%, #222 100%);
+      transform-origin: 0% 50%;
+      border-radius: 3px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+    }
+    @media (min-width: 640px) {
+      .crank-lever-rod {
+        width: 30px;
+        height: 7px;
+      }
+    }
+    .crank-knob-end {
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff 0%, #999 50%, #222 100%);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.9), inset 0 1px 2px rgba(255, 255, 255, 0.5);
+    }
+
+    /* ===== 下方引導過片與操作指示列 ===== */
+    .camera-interact-guide {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      z-index: 25;
+    }
+    .guide-telemetry-pill {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(10, 10, 10, 0.7);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      padding: 6px 18px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: rgba(255, 255, 255, 0.6);
+    }
+    .guide-action-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+    .guide-action-item:hover {
+      color: #fff;
+    }
+    .guide-action-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #fff;
+      opacity: 0.4;
+      transition: all 0.2s ease;
+    }
+    .guide-action-item:hover .guide-action-dot {
+      opacity: 1;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+    }
+
+    /* 快門閃爍與快門簾遮罩 */
+    .shutter-flash-overlay {
+      position: fixed;
+      inset: 0;
+      background: #ffffff;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 99999;
+      transition: opacity 0.08s ease-out;
+    }
+    .shutter-flash-overlay.active {
+      opacity: 0.95;
+      transition: opacity 0.04s ease-in;
+    }
+
+    /* 機械速度撥盤 (Tactile Dial) */
+    .analog-dial-wrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(15, 15, 15, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      padding: 6px 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+    .analog-dial-btn {
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.45);
+      padding: 4px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: transparent;
+      border: none;
+    }
+    .analog-dial-btn:hover {
+      color: rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .analog-dial-btn.active {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
     }
 
     /* ===== Floating Camera Telemetry HUD ===== */
@@ -910,13 +1369,36 @@
         <source src="/images/bg.mp4" type="video/mp4">
         您的瀏覽器不支援影片標籤。
       </video>
-      <!-- Viewfinder Optical Reticle Overlay -->
+      <!-- 快門曝光瞬間全螢幕閃光簾 -->
+      <div class="shutter-flash-overlay" id="shutterFlash"></div>
+
+      <!-- 醒目的相機取景器 (High-Visibility Viewfinder HUD) -->
       <div class="viewfinder-hud" id="viewfinderHud">
+        <!-- 四角亮框 (Brightlines) -->
         <div class="vf-corner vf-tl"></div>
         <div class="vf-corner vf-tr"></div>
         <div class="vf-corner vf-bl"></div>
         <div class="vf-corner vf-br"></div>
-        <div class="vf-center"></div>
+
+        <!-- 50mm 輔助框線 -->
+        <div class="vf-subframe"></div>
+
+        <!-- 頂部相機光學刻字標示 -->
+        <div class="vf-lens-spec">
+          <span>75MM</span>
+          <span>1:3.5</span>
+          <span>ROLLEIFLEX TLR</span>
+        </div>
+
+        <!-- 底部曝光測光標尺 -->
+        <div class="vf-meter-scale">
+          <span>-2</span>
+          <span>-1</span>
+          <div class="vf-meter-indicator" id="vfMeterDot"></div>
+          <span class="text-white font-bold">0</span>
+          <span>+1</span>
+          <span>+2</span>
+        </div>
       </div>
 
       <!-- 粒子生命體背景 Canvas -->
@@ -924,47 +1406,84 @@
       <div class="content">
         <div class="glow-bg"></div>
         <section class="flex flex-col items-center justify-center h-full w-full relative z-10">
-          <div class="space-y-6 text-center">
-            <h1 class="hero-title text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-2"
-              style="font-family: 'Inter', sans-serif;" data-i18n="heroTitle">
-              THE WEIGHT OF <span class="text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-500">LIGHT.</span>
-            </h1>
-            <h2
-              class="hero-title text-xs md:text-sm font-mono tracking-[0.35em] uppercase text-gray-400 max-w-lg mx-auto"
-              data-i18n="heroSubtitle">
-              35MM ANALOG & DIGITAL ARCHIVE · 1:1.4
-            </h2>
+          
+          <!-- Rolleiflex 滿版黑白經典相機與機械過片/快門互動體 -->
+          <div class="rolleiflex-hero-wrap" id="rolleiflexWrap">
+            <!-- Rolleiflex TLR 滿版相機本體 -->
+            <img src="/images/rolleiflex_mono.png" alt="Rolleiflex TLR Camera" class="rolleiflex-camera-img" id="rolleiflexImg" />
 
-            <div class="hero-title mt-12 flex justify-center gap-4">
-              <button class="btn-glow px-8 py-4 rounded-full text-xs font-semibold tracking-widest uppercase text-white"
-                onclick="document.getElementById('portfolio').scrollIntoView({behavior:'smooth'})">
-                <span data-i18n="heroBtn">Explore</span>
-              </button>
-              
-              <!-- 分享按鈕 -->
-              <button id="sharePromoBtn" class="px-8 py-4 rounded-full text-xs font-semibold tracking-widest uppercase text-white bg-white/10 hover:bg-white/20 border border-white/20 transition-all backdrop-blur-sm shadow-[0_0_15px_rgba(255,255,255,0.1)] flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <!-- 上鏡頭：觀景光學玻璃反光 (Viewing Lens) -->
+            <div class="viewing-lens-optic" id="viewingLensOptic">
+              <div class="viewing-lens-glare" id="viewingLensGlare"></div>
+            </div>
+
+            <!-- 下鏡頭：互動拍攝鏡頭 / 快門按鈕 (Taking Lens & Shutter Trigger) -->
+            <button class="taking-lens-trigger" id="takingLensBtn" title="Click Lens to Expose (按下快門)" aria-label="Click Taking Lens to Shoot">
+              <div class="taking-lens-iris" id="takingLensIris"></div>
+              <div class="lens-prompt-tag font-mono">
+                <span class="animate-pulse">CLICK TO EXPOSE</span>
+              </div>
+            </button>
+
+            <!-- 右側金屬機械過片搖柄 (Film Winding Crank - 下拉/點擊過片連動) -->
+            <div class="film-crank-assembly" id="filmCrankAssembly" title="Scroll or Click to Wind Film (下拉或點擊過片)">
+              <div class="crank-guide-ring"></div>
+              <div class="crank-hub">
+                <div class="crank-arm-rotator" id="filmCrankRotator">
+                  <div class="crank-lever-rod">
+                    <div class="crank-knob-end"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 攝影引導操作與機械刻度欄 -->
+          <div class="camera-interact-guide">
+            <div class="guide-telemetry-pill">
+              <div class="guide-action-item" id="guideShutterBtn" title="Click to Expose">
+                <span class="guide-action-dot"></span>
+                <span>SHUTTER SNAP</span>
+              </div>
+              <span class="text-white/20 font-light">|</span>
+              <div class="guide-action-item" id="guideWindBtn" title="Click or Scroll to Advance">
+                <span class="guide-action-dot"></span>
+                <span>PULL TO WIND</span>
+              </div>
+              <span class="text-white/20 font-light">|</span>
+              <span id="filmFrameGauge" class="text-white font-bold">EXP 01</span>
+            </div>
+
+            <!-- 快門速度撥盤 (Tactile Shutter Speed Dial) -->
+            <div class="analog-dial-wrap" id="shutterSpeedDial">
+              <button class="analog-dial-btn" data-speed="1/60s">1/60</button>
+              <button class="analog-dial-btn" data-speed="1/125s">1/125</button>
+              <button class="analog-dial-btn active" data-speed="1/250s">1/250</button>
+              <button class="analog-dial-btn" data-speed="1/500s">1/500</button>
+              <button class="analog-dial-btn" data-speed="1/1000s">1/1000</button>
+            </div>
+
+            <!-- 分享按鈕 (Minimal Share Icon) -->
+            <div class="mt-1 flex items-center">
+              <button id="sharePromoBtn" class="px-4 py-1.5 rounded-full text-[9px] font-mono tracking-widest uppercase text-white/50 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all backdrop-blur-sm flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-5.368m0 5.368l5.662 3.397M8.684 10.658l5.662-3.397M15 6a3 3 0 11-6 0 3 3 0 016 0zm6 3a3 3 0 11-6 0 3 3 0 016 0zm-6 9a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <span data-i18n="heroShare">Share</span>
+                <span>SHARE</span>
               </button>
-              
-              <!-- 隱藏的 Iframe，用來載入 promo.html 以便截圖 (調整為標準手機比例避免壓縮) -->
+              <!-- 隱藏的 Iframe，用來載入 promo.html 以便截圖 -->
               <iframe id="promoFrame" src="promo.html" class="fixed top-[-9999px] left-[-9999px] w-[390px] h-[844px] opacity-0 pointer-events-none" title="Promo Frame"></iframe>
             </div>
           </div>
         </section>
 
-        <!-- 現代極簡向下指引動畫 (Modern Scroll Indicator) -->
+        <!-- 現代極簡向下指引動畫 (Modern Scroll Down Indicator) -->
         <div
-          class="absolute bottom-10 md:bottom-12 left-1/2 transform -translate-x-1/2 flex flex-col items-center opacity-60 hover:opacity-100 transition-opacity duration-700 cursor-pointer"
+          class="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex flex-col items-center opacity-60 hover:opacity-100 transition-opacity duration-500 cursor-pointer"
           onclick="document.getElementById('portfolio').scrollIntoView({behavior:'smooth'})">
-          <span class="text-[10px] uppercase font-light tracking-[0.4em] mb-4 md:mb-6 text-gray-500 font-mono"
-            data-i18n="scrollDown">SCROLL</span>
-          <div class="w-[1px] h-12 md:h-16 bg-white/10 relative overflow-hidden">
-            <div
-              class="w-full h-1/2 bg-white/70 absolute top-0 -translate-y-full animate-[scrollDrop_2s_cubic-bezier(0.77,0,0.175,1)_infinite]">
-            </div>
+          <span class="text-[9px] uppercase font-mono tracking-[0.35em] mb-2 text-gray-500" data-i18n="scrollDown">SCROLL TO ADVANCE</span>
+          <div class="w-[1px] h-8 sm:h-10 bg-white/10 relative overflow-hidden">
+            <div class="w-full h-1/2 bg-white/70 absolute top-0 -translate-y-full animate-[scrollDrop_2s_cubic-bezier(0.77,0,0.175,1)_infinite]"></div>
           </div>
         </div>
       </div>
@@ -1327,9 +1846,9 @@
                 <p class="text-xs text-gray-300 font-mono">35mm Film & Fine-Art Digital Pipeline</p>
               </div>
             </div>
-            <p class="text-gray-400 text-xs font-mono leading-relaxed text-center md:text-left mx-auto md:mx-0 max-w-xl pt-4 border-t border-white/5"
+            <p class="text-gray-300 text-xs sm:text-sm font-sans leading-relaxed text-center md:text-left mx-auto md:mx-0 max-w-xl pt-4 border-t border-white/10"
               data-i18n="photoDesc">
-              以純粹的光影與真實的情緒為核心。從前期策劃到暗房顯影與數位精修，賦予每幅影像深刻的顆粒感與靈魂。
+              擁有新聞、商業、人像和紀實等多樣影像經驗，具備完整的拍攝與剪輯能力。曾於香港任職新聞攝影記者與媒體總編輯，擅長快速應變與捕捉故事。接案類型涵蓋商業攝影、婚禮紀錄、人像拍攝與文物紀實，熟悉拍攝全流程，能獨立完成從前期規劃到後製調整的工作
             </p>
           </div>
         </div>
@@ -1613,7 +2132,7 @@
         photoTag: 'CREATOR',
         photoTitle: 'SIMON',
         photoRole: 'Founder / Lead Photographer',
-        photoDesc: '以純粹的光影與真實的情緒為核心。從前期策劃到暗房顯影與數位精修，賦予每幅影像深刻的顆粒感與靈魂。',
+        photoDesc: '擁有新聞、商業、人像和紀實等多樣影像經驗，具備完整的拍攝與剪輯能力。曾於香港任職新聞攝影記者與媒體總編輯，擅長快速應變與捕捉故事。接案類型涵蓋商業攝影、婚禮紀錄、人像拍攝與文物紀實，熟悉拍攝全流程，能獨立完成從前期規劃到後製調整的工作',
         contactEmail: 'EMAIL',
         contactSocial: 'INSTAGRAM',
         contactStudio: 'STUDIO',
@@ -2161,6 +2680,260 @@
           focusDist.textContent = distances[idx];
         }
       }, { passive: true });
+    })();
+
+    // (9) Rolleiflex TLR 雙鏡反光相機機械快門、滾動過片與光學反光互動
+    (function() {
+      const rolleiflexWrap = document.getElementById('rolleiflexWrap');
+      const rolleiflexImg = document.getElementById('rolleiflexImg');
+      const takingLensBtn = document.getElementById('takingLensBtn');
+      const guideShutterBtn = document.getElementById('guideShutterBtn');
+      const guideWindBtn = document.getElementById('guideWindBtn');
+      const filmCrankAssembly = document.getElementById('filmCrankAssembly');
+      const filmCrankRotator = document.getElementById('filmCrankRotator');
+      const viewingLensGlare = document.getElementById('viewingLensGlare');
+      const flashOverlay = document.getElementById('shutterFlash');
+      const hudFrame = document.getElementById('hudFrame');
+      const filmFrameGauge = document.getElementById('filmFrameGauge');
+      const hudShutter = document.getElementById('hudShutter');
+      const dialBtns = document.querySelectorAll('#shutterSpeedDial .analog-dial-btn');
+      const heroVideo = document.querySelector('.background-video');
+      const heroEl = document.querySelector('.hero');
+
+      let currentExpCount = 1;
+      let totalCrankAngle = 0;
+      let lastScrollY = window.scrollY || window.pageYOffset;
+      let isFiring = false;
+
+      // 擬真底片相機機械快門音效合成 (Web Audio API - 零延遲免外載)
+      function playMechanicalShutterSound() {
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContext) return;
+          const ctx = new AudioContext();
+          if (ctx.state === 'suspended') ctx.resume();
+
+          const t = ctx.currentTime;
+
+          // 1. 初段機械快門簧片撞擊聲 (Mechanical Snap)
+          const osc1 = ctx.createOscillator();
+          const gain1 = ctx.createGain();
+          osc1.type = 'triangle';
+          osc1.frequency.setValueAtTime(820, t);
+          osc1.frequency.exponentialRampToValueAtTime(140, t + 0.04);
+          gain1.gain.setValueAtTime(0.45, t);
+          gain1.gain.exponentialRampToValueAtTime(0.001, t + 0.045);
+          osc1.connect(gain1);
+          gain1.connect(ctx.destination);
+          osc1.start(t);
+          osc1.stop(t + 0.05);
+
+          // 2. 光圈簧片摩擦白噪音 (Friction / Mirror vibration)
+          const bufferSize = ctx.sampleRate * 0.06;
+          const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+          const output = noiseBuffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            output[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.015));
+          }
+          const whiteNoise = ctx.createBufferSource();
+          whiteNoise.buffer = noiseBuffer;
+
+          const filter = ctx.createBiquadFilter();
+          filter.type = 'bandpass';
+          filter.frequency.value = 2600;
+          filter.Q.value = 1.6;
+
+          const noiseGain = ctx.createGain();
+          noiseGain.gain.setValueAtTime(0.5, t);
+          noiseGain.gain.exponentialRampToValueAtTime(0.01, t + 0.06);
+
+          whiteNoise.connect(filter);
+          filter.connect(noiseGain);
+          noiseGain.connect(ctx.destination);
+          whiteNoise.start(t);
+
+          // 3. 後段快門簾幕回彈聲 (Curtain Rebound)
+          setTimeout(() => {
+            try {
+              const t2 = ctx.currentTime;
+              const osc2 = ctx.createOscillator();
+              const gain2 = ctx.createGain();
+              osc2.type = 'sine';
+              osc2.frequency.setValueAtTime(420, t2);
+              osc2.frequency.exponentialRampToValueAtTime(70, t2 + 0.05);
+              gain2.gain.setValueAtTime(0.35, t2);
+              gain2.gain.exponentialRampToValueAtTime(0.001, t2 + 0.05);
+              osc2.connect(gain2);
+              gain2.connect(ctx.destination);
+              osc2.start(t2);
+              osc2.stop(t2 + 0.06);
+            } catch(e) {}
+          }, 45);
+
+        } catch(e) {}
+      }
+
+      // 機械過片齒輪棘輪微聲 (Ratchet Tick Sound)
+      function playRatchetTickSound() {
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContext) return;
+          const ctx = new AudioContext();
+          if (ctx.state === 'suspended') ctx.resume();
+          const t = ctx.currentTime;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(1400, t);
+          osc.frequency.exponentialRampToValueAtTime(600, t + 0.02);
+          gain.gain.setValueAtTime(0.18, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.025);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.03);
+        } catch(e) {}
+      }
+
+      // 更新底片計數器
+      function advanceExposureCounter() {
+        currentExpCount = (currentExpCount % 36) + 1;
+        const frameStr = currentExpCount < 10 ? '0' + currentExpCount : '' + currentExpCount;
+        if (hudFrame) {
+          hudFrame.textContent = `EXP ${frameStr}/36`;
+          hudFrame.style.color = '#ef4444';
+          setTimeout(() => { hudFrame.style.color = ''; }, 600);
+        }
+        if (filmFrameGauge) {
+          filmFrameGauge.textContent = `EXP ${frameStr}`;
+          filmFrameGauge.style.color = '#ef4444';
+          setTimeout(() => { filmFrameGauge.style.color = ''; }, 600);
+        }
+      }
+
+      // 觸發快門拍攝曝光 (Shutter Snap Action)
+      function triggerShutter() {
+        if (isFiring) return;
+        isFiring = true;
+
+        // 鏡頭光圈葉片閉合與相機微後座力
+        if (takingLensBtn) takingLensBtn.classList.add('firing');
+        if (rolleiflexWrap) {
+          rolleiflexWrap.classList.remove('recoil');
+          void rolleiflexWrap.offsetWidth; // 強制重繪觸發動畫
+          rolleiflexWrap.classList.add('recoil');
+        }
+
+        // 音效
+        playMechanicalShutterSound();
+
+        // 全螢幕快門曝光閃光簾
+        if (flashOverlay) {
+          flashOverlay.classList.add('active');
+          setTimeout(() => {
+            flashOverlay.classList.remove('active');
+          }, 85);
+        }
+
+        // 底片跳號
+        advanceExposureCounter();
+
+        // 恢復鏡頭狀態並平滑滑動至精選作品
+        setTimeout(() => {
+          if (takingLensBtn) takingLensBtn.classList.remove('firing');
+          if (rolleiflexWrap) rolleiflexWrap.classList.remove('recoil');
+          isFiring = false;
+
+          const portfolio = document.getElementById('portfolio');
+          if (portfolio) {
+            portfolio.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 360);
+      }
+
+      // 觸發過片旋轉 (Film Advance Action)
+      function triggerFilmAdvance() {
+        totalCrankAngle += 360;
+        playRatchetTickSound();
+        if (filmCrankRotator) {
+          filmCrankRotator.style.transition = 'transform 0.55s cubic-bezier(0.16, 1, 0.3, 1)';
+          filmCrankRotator.style.transform = `rotate(${totalCrankAngle}deg)`;
+          setTimeout(() => {
+            if (filmCrankRotator) filmCrankRotator.style.transition = '';
+          }, 550);
+        }
+        advanceExposureCounter();
+        setTimeout(() => {
+          const portfolio = document.getElementById('portfolio');
+          if (portfolio) portfolio.scrollIntoView({ behavior: 'smooth' });
+        }, 300);
+      }
+
+      // 綁定拍攝事件：點擊下鏡頭 (Taking Lens) 與 指示條
+      if (takingLensBtn) takingLensBtn.addEventListener('click', triggerShutter);
+      if (guideShutterBtn) guideShutterBtn.addEventListener('click', triggerShutter);
+
+      // 綁定過片事件：點擊右側過片手柄與指示條
+      if (filmCrankAssembly) filmCrankAssembly.addEventListener('click', triggerFilmAdvance);
+      if (guideWindBtn) guideWindBtn.addEventListener('click', triggerFilmAdvance);
+
+      // 下滑滾動連動過片搖柄 (Scroll to Advance Linkage)
+      window.addEventListener('scroll', () => {
+        const currentY = window.scrollY || window.pageYOffset;
+        const delta = currentY - lastScrollY;
+        lastScrollY = currentY;
+
+        // 當在 Hero 或頁面頂部範圍滾動時，搖柄隨下滑旋轉
+        if (currentY < window.innerHeight * 1.5) {
+          totalCrankAngle += delta * 0.75;
+          if (filmCrankRotator) {
+            filmCrankRotator.style.transform = `rotate(${totalCrankAngle}deg)`;
+          }
+        }
+      }, { passive: true });
+
+      // 快門速度撥盤切換檔位 (Shutter Speed Dial)
+      const speedFilters = {
+        '1/60s': 'brightness(0.55) contrast(1.05)',
+        '1/125s': 'brightness(0.42) contrast(1.1)',
+        '1/250s': 'brightness(0.35) contrast(1.15)',
+        '1/500s': 'brightness(0.28) contrast(1.22)',
+        '1/1000s': 'brightness(0.22) contrast(1.3)'
+      };
+      dialBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          dialBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const speed = btn.dataset.speed;
+          if (hudShutter) hudShutter.textContent = speed;
+          if (heroVideo && speedFilters[speed]) {
+            heroVideo.style.filter = speedFilters[speed];
+          }
+          playRatchetTickSound();
+        });
+      });
+
+      // 滑鼠移動：相機微 3D 視差與觀景鏡頭光學反光連動 (Tactile 3D & Optical Glare)
+      if (heroEl && rolleiflexImg) {
+        heroEl.addEventListener('mousemove', (e) => {
+          const rect = heroEl.getBoundingClientRect();
+          const normX = (e.clientX - (rect.left + rect.width / 2)) / (rect.width / 2);
+          const normY = (e.clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
+
+          // 相機微傾角
+          rolleiflexImg.style.transform = `rotateY(${normX * 6}deg) rotateX(${normY * -5}deg)`;
+
+          // 上觀景鏡頭光學玻璃反光偏移
+          if (viewingLensGlare) {
+            viewingLensGlare.style.transform = `translate(${normX * 18}px, ${normY * 18}px)`;
+          }
+        });
+
+        heroEl.addEventListener('mouseleave', () => {
+          rolleiflexImg.style.transform = 'rotateY(0deg) rotateX(0deg)';
+          if (viewingLensGlare) viewingLensGlare.style.transform = 'translate(0px, 0px)';
+        });
+      }
     })();
   </script>
 </body>
