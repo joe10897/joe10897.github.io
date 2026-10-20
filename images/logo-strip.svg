@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 48" width="320" height="48">
+  <defs>
+    <style>
+      .strip-text {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-weight: 800;
+        font-size: 16px;
+        letter-spacing: 0.28em;
+        fill: #FFFFFF;
+      }
+      .strip-tag {
+        font-family: ui-monospace, SFMono-Regular, monospace;
+        font-size: 9px;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        fill: #000000;
+      }
+    </style>
+  </defs>
+  <rect x="1" y="1" width="318" height="46" rx="4" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"/>
+  <rect x="238" y="10" width="68" height="28" rx="2" fill="#FFFFFF"/>
+  <text x="272" y="27" text-anchor="middle" class="strip-tag">LAB.</text>
+  <text x="24" y="30" class="strip-text">MONOCHROME</text>
+</svg>

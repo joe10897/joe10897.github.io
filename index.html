@@ -7,12 +7,14 @@
   <meta name="description" content="Monochrome Lab 人像與紀實，致力捕捉光與情感的每一瞬間。">
   <meta property="og:title" content="Monochrome Lab">
   <meta property="og:description" content="我們擅長以底片的溫度、自然光的層次，捕捉生活與情感的純粹。">
-  <meta property="og:image" content="/images/logo.ico">
-  <meta property="og:url" content="https://yourdomain.github.io/">
+  <meta property="og:image" content="/images/logo.png">
+  <meta property="og:url" content="https://monochromelab.idv.tw/">
   <meta name="google-site-verification" content="kkKoZIvZB7k8bZHBgSJCsfg34_PLow-BJyBTenrUA60" />
 
   <title>Monochrome Lab</title>
-  <link rel="icon" href="images/logo.ico" type="image/logo-icon">
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+  <link rel="alternate icon" type="image/x-icon" href="images/favicon.ico">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="js/three.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -943,12 +945,26 @@
     }
     @media (max-width: 640px) {
       .telemetry-hud {
-        top: auto;
-        bottom: 20px;
-        right: auto;
-        left: 20px;
-        padding: 5px 12px;
+        display: none !important;
+      }
+      .guide-telemetry-pill {
+        padding: 4px 10px;
+        gap: 6px;
+        font-size: 8px;
+        max-width: 95vw;
+      }
+      .analog-dial-wrap {
+        gap: 6px;
+        padding: 3px 8px;
+        max-width: 95vw;
+      }
+      .analog-dial-btn {
+        padding: 3px 6px;
         font-size: 9px;
+      }
+      .vf-meter-scale {
+        bottom: 6px;
+        font-size: 8.5px;
       }
     }
     .telemetry-dot {
@@ -1072,6 +1088,27 @@
 <body
   class="bg-[#0d0d0d] text-[#f0f0f0] font-sans antialiased selection:bg-white selection:text-black overflow-x-hidden w-full m-0 p-0">
 
+  <!-- 2-Second Cinematic Preloader (載入動畫隨進度填滿) -->
+  <div id="sitePreloader" class="fixed inset-0 bg-[#090909] flex flex-col items-center justify-center select-none" style="z-index: 99999; transition: opacity 0.5s ease-out;">
+    <div class="relative flex flex-col items-center max-w-xs sm:max-w-sm w-full px-8 text-center">
+      <!-- Pure White Wordmark Logo -->
+      <div class="mb-8 opacity-0 transform translate-y-3 transition-all duration-700 ease-out" id="preloaderLogo">
+        <img src="images/logo.svg" alt="Monochrome Lab" class="h-10 sm:h-12 w-auto mx-auto filter drop-shadow-[0_0_20px_rgba(255,255,255,0.25)]" />
+      </div>
+
+      <!-- Linear Fill Progress Bar (隨載入進度填滿) -->
+      <div class="w-full bg-white/10 h-[2px] rounded-full overflow-hidden relative mb-4">
+        <div id="preloaderProgressFill" class="h-full bg-gradient-to-r from-white/70 via-white to-white w-0 shadow-[0_0_12px_rgba(255,255,255,0.85)]"></div>
+      </div>
+
+      <!-- Telemetry Status & Percentage Readout -->
+      <div class="w-full flex justify-between items-center text-[10px] font-mono tracking-widest text-white/50">
+        <span id="preloaderStatus">INITIALIZING OPTICS...</span>
+        <span id="preloaderPercent" class="text-white font-bold">00%</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Scroll Progress Bar -->
   <div class="scroll-progress" id="scrollProgress"></div>
   <!-- Cursor Spotlight -->
@@ -1100,7 +1137,9 @@
     <header class="fixed top-0 w-full z-50 fade-in transition-all duration-300 py-3 backdrop-blur-sm bg-black/20">
       <nav class="container mx-auto px-6 py-2 flex justify-between items-center max-w-7xl">
         <div class="text-lg font-semibold tracking-wide flex items-center gap-2 relative z-50">
-          <a href="#" class="font-mono tracking-widest text-xs uppercase text-gray-300 hover:text-white transition-colors">Monochrome Lab.</a>
+          <a href="#" class="flex items-center gap-2 group transition-opacity hover:opacity-80" aria-label="Monochrome Lab">
+            <img src="images/logo-strip.svg" alt="Monochrome Lab" class="h-6 sm:h-7 w-auto" />
+          </a>
         </div>
 
         <!-- 桌布版選單 -->
@@ -1121,9 +1160,9 @@
         <!-- 手機版漢堡按鈕 -->
         <button id="mobileMenuBtn" aria-label="Toggle Mobile Menu" title="Toggle Mobile Menu"
           class="md:hidden flex flex-col justify-center items-center w-8 h-8 space-y-1.5 focus:outline-none z-50 relative">
-          <span class="w-6 h-px bg-white transition-transform duration-300 origin-center"></span>
-          <span class="w-6 h-px bg-white transition-opacity duration-300"></span>
-          <span class="w-6 h-px bg-white transition-transform duration-300 origin-center"></span>
+          <span class="w-6 h-0.5 bg-white rounded-full transition-transform duration-300 origin-center"></span>
+          <span class="w-6 h-0.5 bg-white rounded-full transition-opacity duration-300"></span>
+          <span class="w-6 h-0.5 bg-white rounded-full transition-transform duration-300 origin-center"></span>
         </button>
       </nav>
     </header>
@@ -1147,7 +1186,7 @@
     </div>
 
     <!-- Hero 區塊 -->
-    <div class="hero">
+    <div class="hero" id="heroSection">
       <video autoplay muted loop playsinline preload="metadata" aria-label="Background Video" title="Background Video"
         class="background-video" poster="/images/preview.jpg">
         <source src="/images/bg.mp4" type="video/mp4">
@@ -1171,7 +1210,7 @@
         <div class="vf-lens-spec">
           <span>75MM</span>
           <span>1:3.5</span>
-          <span>ROLLEIFLEX TLR</span>
+          <span>MONOCHROME</span>
         </div>
 
         <!-- 底部曝光測光標尺 -->
@@ -1199,12 +1238,17 @@
             <div class="guide-telemetry-pill">
               <div class="guide-action-item" id="guideShutterBtn" title="Click Lens or Button to Expose">
                 <span class="guide-action-dot"></span>
-                <span>CLICK TO EXPOSE</span>
+                <span><span class="hidden sm:inline">CLICK TO </span>EXPOSE</span>
               </div>
               <span class="text-white/20 font-light">|</span>
               <div class="guide-action-item" id="guideWindBtn" title="Scroll or Click to Wind Crank">
                 <span class="guide-action-dot"></span>
-                <span>SCROLL TO WIND</span>
+                <span><span class="hidden sm:inline">SCROLL TO </span>WIND</span>
+              </div>
+              <span class="text-white/20 font-light">|</span>
+              <div class="guide-action-item" id="guideRotateBtn" title="Rotate 360° Camera View">
+                <span class="guide-action-dot"></span>
+                <span>360°</span>
               </div>
               <span class="text-white/20 font-light">|</span>
               <span id="filmFrameGauge" class="text-white font-bold">EXP 01</span>
@@ -1990,151 +2034,75 @@
       });
     });
 
-    // --- 粒子生命體 (Particle Network) 動畫 ---
-    const canvas = document.getElementById('particleCanvas');
-    if (canvas) {
-      const ctx = canvas.getContext('2d');
-      let particles = [];
-      const particleCount = window.innerWidth < 768 ? 40 : 80; // 手機較少粒子
-      // 設定粒子連線的最大距離
-      const maxDistance = 120;
-      
-      let mouse = { x: null, y: null };
+    // --- 載入動畫 (2 秒隨進度填滿 Preloader) ---
+    (function() {
+      const preloader = document.getElementById('sitePreloader');
+      const logo = document.getElementById('preloaderLogo');
+      const fill = document.getElementById('preloaderProgressFill');
+      const percentEl = document.getElementById('preloaderPercent');
+      const statusEl = document.getElementById('preloaderStatus');
 
-      // 更新 Canvas 大小
-      function resizeCanvas() {
-        const heroSection = document.querySelector('.hero');
-        canvas.width = heroSection.offsetWidth;
-        canvas.height = heroSection.offsetHeight;
-      }
+      if (!preloader || !fill) return;
 
-      // 滑鼠互動
-      canvas.addEventListener('mousemove', (e) => {
-        const rect = canvas.getBoundingClientRect();
-        mouse.x = e.clientX - rect.left;
-        mouse.y = e.clientY - rect.top;
-      });
-      canvas.addEventListener('mouseleave', () => {
-        mouse.x = null;
-        mouse.y = null;
+      requestAnimationFrame(() => {
+        if (logo) {
+          logo.style.opacity = '1';
+          logo.style.transform = 'translateY(0)';
+        }
       });
 
-      class Particle {
-        constructor() {
-          this.x = Math.random() * canvas.width;
-          this.y = Math.random() * canvas.height;
-          // 隨機移動速度與方向
-          this.vx = (Math.random() - 0.5) * 0.8;
-          this.vy = (Math.random() - 0.5) * 0.8;
-          // 隨機大小
-          this.radius = Math.random() * 1.5 + 0.5;
+      const startTime = performance.now();
+      const duration = 2000; // 2 秒進度動畫
+
+      const statusMilestones = [
+        { t: 0.00, text: 'INITIALIZING OPTICS...' },
+        { t: 0.22, text: 'CALIBRATING 75MM LENS...' },
+        { t: 0.52, text: 'SYNCHRONIZING MECHANISM...' },
+        { t: 0.80, text: 'CHARGING SHUTTER SPRINGS...' },
+        { t: 1.00, text: 'EXPOSURE READY' }
+      ];
+
+      function updateProgress(now) {
+        const elapsed = now - startTime;
+        const linearProgress = Math.min(1, elapsed / duration);
+        // 自然流暢的載入進度加速與平滑曲線
+        const easeProgress = linearProgress < 0.65
+          ? Math.pow(linearProgress / 0.65, 1.25) * 0.65
+          : 0.65 + (1 - Math.pow(1 - (linearProgress - 0.65) / 0.35, 2)) * 0.35;
+
+        const currentPercent = Math.min(100, Math.floor(easeProgress * 100));
+        fill.style.width = currentPercent + '%';
+        if (percentEl) {
+          percentEl.textContent = (currentPercent < 10 ? '0' : '') + currentPercent + '%';
         }
 
-        update() {
-          // 移動
-          this.x += this.vx;
-          this.y += this.vy;
-
-          // 邊界反彈
-          if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-          if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-
-          // 滑鼠避開效果 (輕微)
-          if (mouse.x && mouse.y) {
-            let dx = mouse.x - this.x;
-            let dy = mouse.y - this.y;
-            let distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < 100) {
-              this.x -= dx * 0.02;
-              this.y -= dy * 0.02;
+        if (statusEl) {
+          for (let i = statusMilestones.length - 1; i >= 0; i--) {
+            if (linearProgress >= statusMilestones[i].t) {
+              statusEl.textContent = statusMilestones[i].text;
+              break;
             }
           }
         }
 
-        draw() {
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-          ctx.fill();
+        if (linearProgress < 1) {
+          requestAnimationFrame(updateProgress);
+        } else {
+          fill.style.width = '100%';
+          if (percentEl) percentEl.textContent = '100%';
+          if (statusEl) statusEl.textContent = 'EXPOSURE READY';
+          setTimeout(() => {
+            preloader.style.opacity = '0';
+            preloader.style.pointerEvents = 'none';
+            setTimeout(() => {
+              preloader.style.display = 'none';
+            }, 550);
+          }, 80);
         }
       }
 
-      function initParticles() {
-        resizeCanvas();
-        particles = [];
-        for (let i = 0; i < particleCount; i++) {
-          particles.push(new Particle());
-        }
-      }
-
-      function animateParticles() {
-        if (!running) return;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // 更新與繪製粒子
-        for (let i = 0; i < particles.length; i++) {
-          particles[i].update();
-          particles[i].draw();
-
-          // 粒子之間的連線
-          for (let j = i; j < particles.length; j++) {
-            let dx = particles[i].x - particles[j].x;
-            let dy = particles[i].y - particles[j].y;
-            let distance = Math.sqrt(dx * dx + dy * dy);
-
-            // 若距離夠近，則畫線
-            if (distance < maxDistance) {
-              ctx.beginPath();
-              // 距離越近，線條越不透明
-              let opacity = 1 - (distance / maxDistance);
-              ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * 0.2})`;
-              ctx.lineWidth = 0.5;
-              ctx.moveTo(particles[i].x, particles[i].y);
-              ctx.lineTo(particles[j].x, particles[j].y);
-              ctx.stroke();
-            }
-          }
-          
-          // 粒子與滑鼠的連線
-          if (mouse.x && mouse.y) {
-            let dxM = particles[i].x - mouse.x;
-            let dyM = particles[i].y - mouse.y;
-            let distanceM = Math.sqrt(dxM * dxM + dyM * dyM);
-            if (distanceM < maxDistance * 1.2) {
-              ctx.beginPath();
-              let opacityM = 1 - (distanceM / (maxDistance * 1.2));
-              ctx.strokeStyle = `rgba(200, 200, 255, ${opacityM * 0.3})`;
-              ctx.lineWidth = 0.8;
-              ctx.moveTo(particles[i].x, particles[i].y);
-              ctx.lineTo(mouse.x, mouse.y);
-              ctx.stroke();
-            }
-          }
-        }
-        requestAnimationFrame(animateParticles);
-      }
-
-      // IntersectionObserver: 離開 Hero 時暫停動畫以節省資源
-      let running = true;
-      const heroSection = document.querySelector('.hero');
-      const heroObserver = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          running = entry.isIntersecting;
-          if (running) animateParticles();
-        });
-      }, { threshold: 0 });
-      heroObserver.observe(heroSection);
-
-      // Debounce resize
-      let resizeTimer;
-      window.addEventListener('resize', () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(resizeCanvas, 150);
-      });
-
-      initParticles();
-      animateParticles();
-    }
+      requestAnimationFrame(updateProgress);
+    })();
 
     // 動態載入 html2canvas (僅在需要時載入)
     function loadHtml2Canvas() {
@@ -2628,22 +2596,28 @@
       leatherTexture.wrapT = THREE.RepeatWrapping;
       leatherTexture.repeat.set(4, 4);
 
-      // 2. 銘牌紋理 "ROLLEIFLEX"
+      // 2. 銘牌紋理 "MONOCHROME" (純白字條風格)
       function createNameplateTexture() {
         const c = document.createElement('canvas');
         c.width = 512;
         c.height = 128;
         const ctx = c.getContext('2d');
-        ctx.fillStyle = '#111111';
+        ctx.fillStyle = '#0c0c0c';
         ctx.fillRect(0, 0, 512, 128);
-        ctx.strokeStyle = '#cccccc';
+        // 外層金屬邊框
+        ctx.strokeStyle = '#e0e0e0';
         ctx.lineWidth = 4;
         ctx.strokeRect(6, 6, 500, 116);
+        // 內層細線
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(12, 12, 488, 104);
+        // 銘牌文字 "MONOCHROME"
         ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 52px "Inter", "Times New Roman", serif';
+        ctx.font = '800 40px "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText('ROLLEIFLEX', 256, 64);
+        ctx.fillText('M O N O C H R O M E', 256, 64);
         return new THREE.CanvasTexture(c);
       }
       const nameplateTexture = createNameplateTexture();
@@ -2731,8 +2705,8 @@
       hoodBox.position.set(0, bodyHeight / 2 + 0.32, -0.05);
       cameraPivot.add(hoodBox);
 
-      // 頂部銘牌 "ROLLEIFLEX"
-      const nameplateMesh = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 0.38), nameplateMat);
+      // 頂部銘牌 "MONOCHROME"
+      const nameplateMesh = new THREE.Mesh(new THREE.PlaneGeometry(1.68, 0.40), nameplateMat);
       nameplateMesh.position.set(0, 1.32, bodyDepth / 2 + 0.08);
       cameraPivot.add(nameplateMesh);
 
@@ -2750,6 +2724,7 @@
       viewingLensGroup.add(viewKnurl);
 
       const viewGlass = new THREE.Mesh(new THREE.SphereGeometry(0.48, 32, 16, 0, Math.PI * 2, 0, Math.PI / 3), glassMat);
+      viewGlass.rotation.x = Math.PI / 2;
       viewGlass.position.z = 0.06;
       viewingLensGroup.add(viewGlass);
 
@@ -2779,6 +2754,7 @@
       }
 
       const takeGlass = new THREE.Mesh(new THREE.SphereGeometry(0.54, 32, 16, 0, Math.PI * 2, 0, Math.PI / 3), glassMat);
+      takeGlass.rotation.x = Math.PI / 2;
       takeGlass.position.z = 0.14;
       takingLensGroup.add(takeGlass);
 
@@ -3044,13 +3020,28 @@
       function onWindowResize() {
         const width = canvas.clientWidth;
         const height = canvas.clientHeight;
+        if (!width || !height) return;
         camera.aspect = width / height;
-        const mobile = window.innerWidth < 640;
-        camera.position.z = mobile ? 11.2 : 9.2;
+        const aspect = width / height;
+
+        if (aspect < 0.65) {
+          // 直向手機 (Mobile Portrait)
+          camera.position.z = 16.5;
+          cameraPivot.position.y = 0.42;
+        } else if (aspect < 1.0) {
+          // 平板直向 (Tablet)
+          camera.position.z = 12.5;
+          cameraPivot.position.y = 0.22;
+        } else {
+          // 電腦桌面 (Desktop)
+          camera.position.z = 9.8;
+          cameraPivot.position.y = 0.1;
+        }
         camera.updateProjectionMatrix();
         renderer.setSize(width, height, false);
       }
       window.addEventListener('resize', onWindowResize);
+      onWindowResize();
 
       // 6. 主渲染動畫迴圈 (Render Animation Loop)
       let clock = new THREE.Clock();
@@ -3064,7 +3055,9 @@
         currentRotX += (targetRotX - currentRotX) * 0.08;
 
         // 呼吸式浮動微動 (Breathing Float)
-        const floatY = Math.sin(elapsedTime * 1.6) * 0.06;
+        const isNarrow = (canvas.clientWidth / (canvas.clientHeight || 1)) < 0.65;
+        const baseY = isNarrow ? 0.42 : 0.1;
+        const floatY = baseY + Math.sin(elapsedTime * 1.6) * 0.05;
         const floatRotZ = Math.sin(elapsedTime * 1.2) * 0.015;
 
         // 後座力彈簧物理模擬 (Spring Physics Recoil)

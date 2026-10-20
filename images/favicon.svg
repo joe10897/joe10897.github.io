@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="14" fill="#0c0c0c"/>
+  <rect x="2" y="2" width="60" height="60" rx="12" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+  <!-- Pure White Graphic 'M' Monogram with Lens Aperture center -->
+  <path d="M 16 45 L 16 20 L 26 34 L 32 26 L 38 34 L 48 20 L 48 45" 
+        fill="none" 
+        stroke="#FFFFFF" 
+        stroke-width="3.5" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+  <circle cx="32" cy="38" r="2.5" fill="#FFFFFF"/>
+</svg>
