@@ -154,33 +154,6 @@
       z-index: 1;
     }
 
-    /* 8mm Film Filter Overlay */
-    /* 膠片動態顆粒 */
-    .film-grain {
-      position: fixed;
-      top: -50vh; left: -50vw;
-      width: 200vw; height: 200vh;
-      pointer-events: none;
-      z-index: 9999;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-      opacity: 0.18; /* 增強顆粒感與對比 */
-      mix-blend-mode: overlay;
-      animation: filmNoise 0.4s steps(2) infinite;
-      will-change: transform;
-      transform: translateZ(0); /* 強制硬體加速 */
-    }
-    
-    /* 膠片暗角與復古暖色調疊加 */
-    .film-vignette {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      pointer-events: none;
-      z-index: 9998;
-      background: radial-gradient(circle, transparent 60%, rgba(0, 0, 0, 0.6) 130%), 
-                  rgba(130, 90, 40, 0.06); /* 邊緣加深，整體微暖色 */
-      mix-blend-mode: multiply;
-    }
-
     .scroll-progress {
       position: fixed;
       top: 0; left: 0;
@@ -191,37 +164,6 @@
       transition: width 0.15s ease-out;
       box-shadow: 0 0 8px rgba(255,255,255,0.15);
     }
-    #grainToggle {
-      position: fixed;
-      bottom: 80px; right: 20px;
-      z-index: 100;
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.4);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(8px);
-    }
-    #grainToggle:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); border-color: rgba(255,255,255,0.2); }
-    #grainToggle.active { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.12); }
-
-    @keyframes filmNoise {
-      0%, 100% { transform: translate(0, 0); }
-      10% { transform: translate(-2%, -2%); }
-      20% { transform: translate(-4%, 2%); }
-      30% { transform: translate(2%, -4%); }
-      40% { transform: translate(-2%, 6%); }
-      50% { transform: translate(-4%, 2%); }
-      60% { transform: translate(6%, 0); }
-      70% { transform: translate(0, 6%); }
-      80% { transform: translate(1%, 10%); }
-      90% { transform: translate(-4%, 4%); }
-    }
   </style>
 </head>
 <body class="bg-[#0d0d0d] text-[#f0f0f0] font-sans antialiased selection:bg-white selection:text-black overflow-x-hidden w-full m-0 p-0">
@@ -229,10 +171,6 @@
   <div class="scroll-progress" id="scrollProgress"></div>
 
   <div id="app-wrapper" class="relative w-full overflow-hidden min-h-screen flex flex-col pt-24">
-    <!-- 8mm Film Filter Overlays -->
-    <div class="film-grain"></div>
-    <div class="film-vignette"></div>
-
   <div class="glow-bg"></div>
 
   <!-- 導覽列 -->
@@ -472,12 +410,6 @@
     <p class="text-[10px] sm:text-xs tracking-[0.2em] text-gray-600 uppercase">&copy; 2026 Monochrome Lab. All Rights Reserved.</p>
   </footer>
 
-    <!-- 底片顆粒開關 -->
-    <button id="grainToggle" title="Toggle Film Grain">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-    </button>
   </div> <!-- End of app-wrapper -->
 
   <script>
@@ -701,20 +633,6 @@
       progressBar.style.width = (winScroll / height * 100) + '%';
     });
 
-    // Film Grain Toggle
-    (function() {
-      const btn = document.getElementById('grainToggle');
-      const grain = document.querySelector('.film-grain');
-      if (btn && grain) {
-        btn.classList.add('active');
-        btn.addEventListener('click', () => {
-          const isActive = grain.style.opacity !== '0';
-          grain.style.opacity = isActive ? '0' : '';
-          grain.style.transition = 'opacity 0.4s ease';
-          btn.classList.toggle('active');
-        });
-      }
-    })();
   </script>
 </body>
 </html>

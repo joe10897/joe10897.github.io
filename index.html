@@ -395,14 +395,11 @@
       object-fit: cover;
       transform: translate(-50%, -50%) scale(1.02);
       z-index: 1;
-      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
-      filter: contrast(1.05) brightness(0.95);
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .image-container img:hover {
       transform: translate(-50%, -50%) scale(1.06);
-      filter: contrast(1.05) brightness(1.05);
-      /* 輕微提亮，保留原圖色彩 */
     }
 
     /* 現代化載入動畫 (Skeleton Loading) - 線性掃光 */
@@ -431,85 +428,6 @@
 
     img.loading {
       opacity: 0;
-    }
-
-    /* 8mm Film Filter Overlay */
-    /* 膠片動態顆粒 */
-    .film-grain {
-      position: fixed;
-      top: -50vh;
-      left: -50vw;
-      width: 200vw;
-      height: 200vh;
-      pointer-events: none;
-      z-index: 9999;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-      opacity: 0.18;
-      /* 增強顆粒感與對比 */
-      mix-blend-mode: overlay;
-      animation: filmNoise 0.4s steps(2) infinite;
-      will-change: transform;
-      transform: translateZ(0);
-      /* 強制硬體加速 */
-    }
-
-    /* 膠片暗角與復古暖色調疊加 */
-    .film-vignette {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      z-index: 9998;
-      background: radial-gradient(circle, transparent 60%, rgba(0, 0, 0, 0.6) 130%),
-        rgba(130, 90, 40, 0.06);
-      /* 邊緣加深，整體微暖色 */
-      mix-blend-mode: multiply;
-    }
-
-    @keyframes filmNoise {
-
-      0%,
-      100% {
-        transform: translate(0, 0);
-      }
-
-      10% {
-        transform: translate(-2%, -2%);
-      }
-
-      20% {
-        transform: translate(-4%, 2%);
-      }
-
-      30% {
-        transform: translate(2%, -4%);
-      }
-
-      40% {
-        transform: translate(-2%, 6%);
-      }
-
-      50% {
-        transform: translate(-4%, 2%);
-      }
-
-      60% {
-        transform: translate(6%, 0);
-      }
-
-      70% {
-        transform: translate(0, 6%);
-      }
-
-      80% {
-        transform: translate(1%, 10%);
-      }
-
-      90% {
-        transform: translate(-4%, 4%);
-      }
     }
 
     @keyframes scrollDrop {
@@ -616,36 +534,6 @@
     }
     .filter-grid-wrap > .image-container {
       transition: opacity 0.4s ease, transform 0.4s ease;
-    }
-
-    /* Film Grain Toggle */
-    #grainToggle {
-      position: fixed;
-      bottom: 80px;
-      right: 20px;
-      z-index: 100;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.4);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(8px);
-    }
-    #grainToggle:hover {
-      background: rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.8);
-      border-color: rgba(255,255,255,0.2);
-    }
-    #grainToggle.active {
-      color: rgba(255,255,255,0.8);
-      background: rgba(255,255,255,0.12);
     }
 
     /* Smooth scroll offset for fixed header */
@@ -1082,32 +970,171 @@
       background: rgba(255, 255, 255, 0.05);
       flex-shrink: 0;
     }
+
+    /* ===== 滿版大字 Preloader (純白同步進度填滿) ===== */
+    .preloader-massive-title {
+      font-size: clamp(2.5rem, 9.6vw, 11rem);
+      font-weight: 900;
+      line-height: 0.92;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      user-select: none;
+      text-align: center;
+    }
+    @media (max-width: 640px) {
+      .preloader-massive-title {
+        font-size: clamp(1.6rem, 7.8vw, 2.8rem);
+        letter-spacing: 0.01em;
+      }
+    }
+    .preloader-text-hollow {
+      color: rgba(255, 255, 255, 0.04);
+      -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.28);
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+    }
+    .preloader-text-filled {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      color: #ffffff;
+      -webkit-text-stroke: 1.5px #ffffff;
+      text-shadow: 0 0 25px rgba(255, 255, 255, 0.7), 0 0 60px rgba(255, 255, 255, 0.3);
+      clip-path: inset(0 100% 0 0);
+      will-change: clip-path;
+      text-align: center;
+    }
+    .fill-beam-indicator {
+      position: absolute;
+      top: -10%;
+      bottom: -10%;
+      width: 2px;
+      background: #ffffff;
+      box-shadow: 0 0 15px #ffffff, 0 0 30px #ffffff;
+      pointer-events: none;
+      transform: translateX(-50%);
+      left: 0%;
+      opacity: 0.95;
+      will-change: left;
+    }
   </style>
 </head>
 
 <body
   class="bg-[#0d0d0d] text-[#f0f0f0] font-sans antialiased selection:bg-white selection:text-black overflow-x-hidden w-full m-0 p-0">
 
-  <!-- 2-Second Cinematic Preloader (載入動畫隨進度填滿) -->
-  <div id="sitePreloader" class="fixed inset-0 bg-[#090909] flex flex-col items-center justify-center select-none" style="z-index: 99999; transition: opacity 0.5s ease-out;">
-    <div class="relative flex flex-col items-center max-w-xs sm:max-w-sm w-full px-8 text-center">
-      <!-- Pure White Wordmark Logo -->
-      <div class="mb-8 opacity-0 transform translate-y-3 transition-all duration-700 ease-out" id="preloaderLogo">
-        <img src="images/logo.svg" alt="Monochrome Lab" class="h-10 sm:h-12 w-auto mx-auto filter drop-shadow-[0_0_20px_rgba(255,255,255,0.25)]" />
+  <!-- 2-Second Cinematic Preloader (MONOCHROME 滿版大字隨進度填滿) -->
+  <div id="sitePreloader" class="fixed inset-0 bg-[#080808] flex flex-col items-center justify-center select-none px-4" style="z-index: 99999; transition: opacity 0.6s ease-out;">
+    <div class="w-full flex flex-col items-center justify-center max-w-7xl mx-auto">
+      
+      <!-- 滿版大字容器 (MONOCHROME) -->
+      <div class="relative inline-block text-center mx-auto" id="titleWrapper">
+        <!-- 底層：鏤空邊框大字 -->
+        <div class="preloader-massive-title preloader-text-hollow">
+          MONOCHROME
+        </div>
+        <!-- 頂層：純白填滿大字 (同步進度填滿) -->
+        <div id="preloaderFillText" class="preloader-massive-title preloader-text-filled">
+          MONOCHROME
+        </div>
+        <!-- 填滿光刀垂直切線 -->
+        <div id="fillBeam" class="fill-beam-indicator"></div>
       </div>
 
-      <!-- Linear Fill Progress Bar (隨載入進度填滿) -->
-      <div class="w-full bg-white/10 h-[2px] rounded-full overflow-hidden relative mb-4">
-        <div id="preloaderProgressFill" class="h-full bg-gradient-to-r from-white/70 via-white to-white w-0 shadow-[0_0_12px_rgba(255,255,255,0.85)]"></div>
+      <!-- 底部進度細節列 -->
+      <div class="w-full max-w-2xl px-4 mt-8 flex justify-between items-center text-[10px] sm:text-xs font-mono tracking-widest text-white/50">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-white shadow-[0_0_8px_#fff] animate-pulse"></span>
+          <span id="preloaderStatusText">INITIALIZING OPTICS...</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-white/30 hidden sm:inline">EXPOSURE</span>
+          <span id="preloaderPercentVal" class="text-white font-bold text-xs sm:text-sm tracking-wider">00%</span>
+        </div>
       </div>
 
-      <!-- Telemetry Status & Percentage Readout -->
-      <div class="w-full flex justify-between items-center text-[10px] font-mono tracking-widest text-white/50">
-        <span id="preloaderStatus">INITIALIZING OPTICS...</span>
-        <span id="preloaderPercent" class="text-white font-bold">00%</span>
+      <!-- 輔助細光條 (同步呼應) -->
+      <div class="w-full max-w-2xl px-4 mt-3">
+        <div class="w-full bg-white/10 h-[1.5px] rounded-full overflow-hidden">
+          <div id="preloaderProgressBar" class="h-full bg-white w-0 shadow-[0_0_10px_#fff]"></div>
+        </div>
       </div>
+
     </div>
   </div>
+  <script>
+    // --- 載入動畫 (MONOCHROME 滿版大字 2 秒隨進度純白填滿) ---
+    (function() {
+      const preloader = document.getElementById('sitePreloader');
+      const fillText = document.getElementById('preloaderFillText');
+      const fillBeam = document.getElementById('fillBeam');
+      const percentVal = document.getElementById('preloaderPercentVal');
+      const statusText = document.getElementById('preloaderStatusText');
+      const progressBar = document.getElementById('preloaderProgressBar');
+
+      if (!preloader || !fillText) return;
+
+      document.body.style.overflow = 'hidden';
+      const duration = 2000; // 2 秒進度動畫
+      let startTime = null;
+
+      const milestones = [
+        { t: 0.00, text: 'INITIALIZING OPTICS...' },
+        { t: 0.22, text: 'CALIBRATING 75MM LENS...' },
+        { t: 0.52, text: 'SYNCHRONIZING MECHANISM...' },
+        { t: 0.80, text: 'CHARGING SHUTTER SPRINGS...' },
+        { t: 1.00, text: 'EXPOSURE READY' }
+      ];
+
+      function tick(now) {
+        if (!startTime) startTime = now;
+        const elapsed = now - startTime;
+        const p = Math.min(1, elapsed / duration);
+        const percent = Math.floor(p * 100);
+
+        // 同步填滿字體 clip-path (由左至右純白填滿)
+        const remain = (100 - (p * 100)).toFixed(2);
+        fillText.style.clipPath = `inset(0 ${remain}% 0 0)`;
+        if (fillBeam) {
+          fillBeam.style.left = `${(p * 100).toFixed(2)}%`;
+          if (p >= 1) fillBeam.style.opacity = '0';
+        }
+
+        // 同步數值與進度條
+        if (percentVal) percentVal.textContent = (percent < 10 ? '0' : '') + percent + '%';
+        if (progressBar) progressBar.style.width = (p * 100) + '%';
+
+        if (statusText) {
+          for (let i = milestones.length - 1; i >= 0; i--) {
+            if (p >= milestones[i].t) {
+              statusText.textContent = milestones[i].text;
+              break;
+            }
+          }
+        }
+
+        if (p < 1) {
+          requestAnimationFrame(tick);
+        } else {
+          if (percentVal) percentVal.textContent = '100%';
+          if (progressBar) progressBar.style.width = '100%';
+          if (statusText) statusText.textContent = 'EXPOSURE READY';
+          setTimeout(() => {
+            preloader.style.opacity = '0';
+            preloader.style.pointerEvents = 'none';
+            document.body.style.overflow = '';
+            setTimeout(() => {
+              preloader.style.display = 'none';
+            }, 600);
+          }, 120);
+        }
+      }
+
+      requestAnimationFrame(tick);
+    })();
+  </script>
 
   <!-- Scroll Progress Bar -->
   <div class="scroll-progress" id="scrollProgress"></div>
@@ -1129,10 +1156,6 @@
   </div>
 
   <div id="app-wrapper" class="relative w-full overflow-hidden min-h-screen flex flex-col pt-0">
-    <!-- 8mm Film Filter Overlays -->
-    <div class="film-grain"></div>
-    <div class="film-vignette"></div>
-
     <!-- 導覽列 -->
     <header class="fixed top-0 w-full z-50 fade-in transition-all duration-300 py-3 backdrop-blur-sm bg-black/20">
       <nav class="container mx-auto px-6 py-2 flex justify-between items-center max-w-7xl">
@@ -1629,7 +1652,7 @@
               class="absolute inset-0 border border-white/10 rounded-2xl transform translate-x-3 translate-y-3 transition-transform duration-500 group-hover:translate-x-1 group-hover:translate-y-1">
             </div>
             <img src="/images/366425.jpg" alt="攝影師Simon" loading="lazy"
-              class="relative z-10 w-full h-full object-cover rounded-2xl filter brightness-90 transition-all duration-500 group-hover:brightness-105 group-hover:scale-105 border border-white/10 shadow-2xl" />
+              class="relative z-10 w-full h-full object-cover rounded-2xl transition-all duration-500 group-hover:scale-105 border border-white/10 shadow-2xl" />
           </div>
           <div class="text-center md:text-left space-y-4 flex flex-col items-center md:items-start w-full">
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full text-left">
@@ -1685,13 +1708,6 @@
       <p class="text-xs tracking-[0.2em] text-gray-600 uppercase ml-[0.2em]">&copy; 2026 Monochrome Lab. All Rights
         Reserved.</p>
     </footer>
-
-    <!-- 底片顆粒開關 -->
-    <button id="grainToggle" title="Toggle Film Grain" aria-label="Toggle Film Grain">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-    </button>
 
     <!-- 滾動到頂部按鈕 -->
     <button id="scrollToTop" onclick="scrollToTop()">
@@ -2034,76 +2050,6 @@
       });
     });
 
-    // --- 載入動畫 (2 秒隨進度填滿 Preloader) ---
-    (function() {
-      const preloader = document.getElementById('sitePreloader');
-      const logo = document.getElementById('preloaderLogo');
-      const fill = document.getElementById('preloaderProgressFill');
-      const percentEl = document.getElementById('preloaderPercent');
-      const statusEl = document.getElementById('preloaderStatus');
-
-      if (!preloader || !fill) return;
-
-      requestAnimationFrame(() => {
-        if (logo) {
-          logo.style.opacity = '1';
-          logo.style.transform = 'translateY(0)';
-        }
-      });
-
-      const startTime = performance.now();
-      const duration = 2000; // 2 秒進度動畫
-
-      const statusMilestones = [
-        { t: 0.00, text: 'INITIALIZING OPTICS...' },
-        { t: 0.22, text: 'CALIBRATING 75MM LENS...' },
-        { t: 0.52, text: 'SYNCHRONIZING MECHANISM...' },
-        { t: 0.80, text: 'CHARGING SHUTTER SPRINGS...' },
-        { t: 1.00, text: 'EXPOSURE READY' }
-      ];
-
-      function updateProgress(now) {
-        const elapsed = now - startTime;
-        const linearProgress = Math.min(1, elapsed / duration);
-        // 自然流暢的載入進度加速與平滑曲線
-        const easeProgress = linearProgress < 0.65
-          ? Math.pow(linearProgress / 0.65, 1.25) * 0.65
-          : 0.65 + (1 - Math.pow(1 - (linearProgress - 0.65) / 0.35, 2)) * 0.35;
-
-        const currentPercent = Math.min(100, Math.floor(easeProgress * 100));
-        fill.style.width = currentPercent + '%';
-        if (percentEl) {
-          percentEl.textContent = (currentPercent < 10 ? '0' : '') + currentPercent + '%';
-        }
-
-        if (statusEl) {
-          for (let i = statusMilestones.length - 1; i >= 0; i--) {
-            if (linearProgress >= statusMilestones[i].t) {
-              statusEl.textContent = statusMilestones[i].text;
-              break;
-            }
-          }
-        }
-
-        if (linearProgress < 1) {
-          requestAnimationFrame(updateProgress);
-        } else {
-          fill.style.width = '100%';
-          if (percentEl) percentEl.textContent = '100%';
-          if (statusEl) statusEl.textContent = 'EXPOSURE READY';
-          setTimeout(() => {
-            preloader.style.opacity = '0';
-            preloader.style.pointerEvents = 'none';
-            setTimeout(() => {
-              preloader.style.display = 'none';
-            }, 550);
-          }, 80);
-        }
-      }
-
-      requestAnimationFrame(updateProgress);
-    })();
-
     // 動態載入 html2canvas (僅在需要時載入)
     function loadHtml2Canvas() {
       if (window.html2canvas) return Promise.resolve();
@@ -2292,22 +2238,7 @@
       });
     })();
 
-    // (5) Film Grain Toggle
-    (function() {
-      const btn = document.getElementById('grainToggle');
-      const grain = document.querySelector('.film-grain');
-      if (btn && grain) {
-        btn.classList.add('active');
-        btn.addEventListener('click', () => {
-          const isActive = grain.style.opacity !== '0';
-          grain.style.opacity = isActive ? '0' : '';
-          grain.style.transition = 'opacity 0.4s ease';
-          btn.classList.toggle('active');
-        });
-      }
-    })();
-
-    // (6) 下滑連動：相機遙測數據 (Telemetry) 與 Hero 取景器 (Viewfinder HUD)
+    // (5) 下滑連動：相機遙測數據 (Telemetry) 與 Hero 取景器 (Viewfinder HUD)
     (function() {
       const hudFrame = document.getElementById('hudFrame');
       const hudEv = document.getElementById('hudEv');
